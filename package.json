@@ -1,7 +1,7 @@
 {
-  "name": "illa",
-  "version": "0.1.0",
-  "description": "Common TypeScript classes - illa berek, nádak erek.",
+  "name": "andraaspar-illa",
+  "version": "1.0.0",
+  "description": "Common TypeScript classes.",
   "repository": {
     "type": "git",
     "url": "https://github.com/andraaspar/illa.git"
