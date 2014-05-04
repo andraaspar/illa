@@ -1,0 +1,24 @@
+{
+  "name": "illa",
+  "version": "0.1.0",
+  "description": "Common TypeScript classes - illa berek, nádak erek.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andraaspar/illa.git"
+  },
+  "keywords": [
+    "TypeScript",
+    "common"
+  ],
+  "author": "András Parditka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andraaspar/illa/issues"
+  },
+  "homepage": "https://github.com/andraaspar/illa",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-typescript": "^0.3.5",
+    "grunt-contrib-clean": "^0.5.0"
+  }
+}

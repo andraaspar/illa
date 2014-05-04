@@ -1,0 +1,31 @@
+/// <reference path='deps/illa.Log.ts'/>
+/// <reference path='deps/illa.Ticker.ts'/>
+/// <reference path='deps/JQuery.ts'/>
+
+module test1 {
+	export class Main {
+		ticker = new illa.Ticker();
+
+		constructor() {
+			jQuery(jQuery.proxy(this.onDOMLoaded, this));
+
+			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick, this);
+		}
+
+		onDOMLoaded(): void {
+			illa.Log.info('DOM loaded.');
+		}
+
+		onTick(e: illa.Ivent): void {
+			if ((this.ticker.getTickCount() % 60) == 0) {
+				illa.Log.info('Tick: ' + this.ticker.getTickCount());
+			}
+			if (this.ticker.getTickCount() > 5 * 60) {
+				illa.Log.info('Stopping ticker.');
+				this.ticker.setIsStarted(false);
+			}
+		}
+	}
+}
+
+var test1Main = new test1.Main();
