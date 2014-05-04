@@ -1,6 +1,6 @@
-/// <reference path='deps/illa.Log.ts'/>
-/// <reference path='deps/illa.Ticker.ts'/>
-/// <reference path='deps/JQuery.ts'/>
+/// <reference path='../../lib/JQuery.d.ts'/>
+/// <reference path='../../src/illa/Log.ts'/>
+/// <reference path='../../src/illa/Ticker.ts'/>
 
 module test1 {
 	export class Main {

@@ -1,5 +1,3 @@
-/// <reference path='Ivent.ts'/>
-/// <reference path='IventCallbackReg.ts'/>
 /// <reference path='IIventHandler.ts'/>
 
 module illa {

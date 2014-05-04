@@ -104,6 +104,17 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var IventCallbackReg = (function () {
+        function IventCallbackReg(callback, thisObj) {
+            this.callback = callback;
+            this.thisObj = thisObj;
+        }
+        return IventCallbackReg;
+    })();
+    illa.IventCallbackReg = IventCallbackReg;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var Ivent = (function () {
         function Ivent(type, target) {
             this.type = type;
@@ -161,17 +172,6 @@ var illa;
         return Ivent;
     })();
     illa.Ivent = Ivent;
-})(illa || (illa = {}));
-var illa;
-(function (illa) {
-    var IventCallbackReg = (function () {
-        function IventCallbackReg(callback, thisObj) {
-            this.callback = callback;
-            this.thisObj = thisObj;
-        }
-        return IventCallbackReg;
-    })();
-    illa.IventCallbackReg = IventCallbackReg;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {

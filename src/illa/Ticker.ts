@@ -1,4 +1,5 @@
-/// <reference path='deps/JQuery.ts'/>
+/// <reference path='../../lib/JQuery.d.ts'/>
+/// <reference path='Ivent.ts'/>
 /// <reference path='IventHandler.ts'/>
 
 module illa {

@@ -1,1 +1,0 @@
-/// <reference path='../../../src/illa/Ticker.ts'/>
