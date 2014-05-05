@@ -1,5 +1,6 @@
 /// <reference path='../../lib/JQuery.d.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
+/// <reference path='../../src/illa/ScrollbarUtil.ts'/>
 /// <reference path='../../src/illa/Ticker.ts'/>
 
 module test1 {
@@ -14,6 +15,9 @@ module test1 {
 
 		onDOMLoaded(): void {
 			illa.Log.info('DOM loaded.');
+			
+			illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getSize(illa.Axis2D.X));
+			illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getSize(illa.Axis2D.Y));
 		}
 
 		onTick(e: illa.Ivent): void {

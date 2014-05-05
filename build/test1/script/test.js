@@ -104,6 +104,56 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    (function (Axis2D) {
+        Axis2D[Axis2D["X"] = 0] = "X";
+        Axis2D[Axis2D["Y"] = 1] = "Y";
+    })(illa.Axis2D || (illa.Axis2D = {}));
+    var Axis2D = illa.Axis2D;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var ScrollbarUtil = (function () {
+        function ScrollbarUtil() {
+        }
+        ScrollbarUtil.getSize = function (axis) {
+            var result = NaN;
+            if (!this.box) {
+                this.box = jQuery('<div>');
+                this.box.addClass(ScrollbarUtil.BOX_CSS_CLASS);
+                this.box.appendTo('body');
+            }
+
+            if (isNaN(this.width)) {
+                var boxElement = this.box[0];
+                this.width = boxElement.offsetWidth - boxElement.clientWidth;
+                this.height = boxElement.offsetHeight - boxElement.clientHeight;
+            }
+
+            switch (axis) {
+                case 0 /* X */:
+                    result = this.width;
+                    break;
+                case 1 /* Y */:
+                    result = this.height;
+                    break;
+            }
+
+            return result;
+        };
+
+        ScrollbarUtil.clearSizeCache = function () {
+            this.width = NaN;
+        };
+        ScrollbarUtil.BOX_CSS_CLASS = 'illa_ScrollbarUtil_box';
+
+        ScrollbarUtil.width = NaN;
+        ScrollbarUtil.height = NaN;
+        return ScrollbarUtil;
+    })();
+    illa.ScrollbarUtil = ScrollbarUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var IventCallbackReg = (function () {
         function IventCallbackReg(callback, thisObj) {
             this.callback = callback;
@@ -293,6 +343,9 @@ var test1;
         }
         Main.prototype.onDOMLoaded = function () {
             illa.Log.info('DOM loaded.');
+
+            illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getSize(0 /* X */));
+            illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getSize(1 /* Y */));
         };
 
         Main.prototype.onTick = function (e) {
