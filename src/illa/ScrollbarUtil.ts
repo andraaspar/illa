@@ -3,7 +3,7 @@
 
 module illa {
 	export class ScrollbarUtil {
-		static BOX_CSS_CLASS = 'illa_ScrollbarUtil_box';
+		static BOX_CSS_CLASS = 'illa-ScrollbarUtil-box';
 		private static box: JQuery;
 		private static defaultWidth = NaN;
 		private static defaultHeight = NaN;

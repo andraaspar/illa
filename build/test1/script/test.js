@@ -173,7 +173,7 @@ var illa;
             }
             return false;
         };
-        ScrollbarUtil.BOX_CSS_CLASS = 'illa_ScrollbarUtil_box';
+        ScrollbarUtil.BOX_CSS_CLASS = 'illa-ScrollbarUtil-box';
 
         ScrollbarUtil.defaultWidth = NaN;
         ScrollbarUtil.defaultHeight = NaN;
