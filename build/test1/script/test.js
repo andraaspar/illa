@@ -115,7 +115,7 @@ var illa;
     var ScrollbarUtil = (function () {
         function ScrollbarUtil() {
         }
-        ScrollbarUtil.getSize = function (axis) {
+        ScrollbarUtil.getDefaultSize = function (axis) {
             var result = NaN;
             if (!this.box) {
                 this.box = jQuery('<div>');
@@ -123,31 +123,60 @@ var illa;
                 this.box.appendTo('body');
             }
 
-            if (isNaN(this.width)) {
+            if (isNaN(this.defaultWidth)) {
                 var boxElement = this.box[0];
-                this.width = boxElement.offsetWidth - boxElement.clientWidth;
-                this.height = boxElement.offsetHeight - boxElement.clientHeight;
+                this.defaultWidth = boxElement.offsetWidth - boxElement.clientWidth;
+                this.defaultHeight = boxElement.offsetHeight - boxElement.clientHeight;
             }
 
             switch (axis) {
                 case 0 /* X */:
-                    result = this.width;
+                    result = this.defaultWidth;
                     break;
                 case 1 /* Y */:
-                    result = this.height;
+                    result = this.defaultHeight;
                     break;
             }
 
             return result;
         };
 
-        ScrollbarUtil.clearSizeCache = function () {
-            this.width = NaN;
+        ScrollbarUtil.clearDefaultSizeCache = function () {
+            this.defaultWidth = NaN;
+        };
+
+        ScrollbarUtil.isVisibleOn = function (jq, axis) {
+            var elem = jq[0];
+            if (!elem)
+                return false;
+            var overflow = '';
+            switch (axis) {
+                case 0 /* X */:
+                    overflow = jq.css('overflow-x');
+                    break;
+                case 1 /* Y */:
+                    overflow = jq.css('overflow-y');
+                    break;
+            }
+            switch (overflow) {
+                case 'scroll':
+                    return true;
+                case 'auto':
+                case 'overlay':
+                    switch (axis) {
+                        case 0 /* X */:
+                            return elem.scrollWidth > jq.innerWidth();
+                        case 1 /* Y */:
+                            return elem.scrollHeight > jq.innerHeight();
+                    }
+                    break;
+            }
+            return false;
         };
         ScrollbarUtil.BOX_CSS_CLASS = 'illa_ScrollbarUtil_box';
 
-        ScrollbarUtil.width = NaN;
-        ScrollbarUtil.height = NaN;
+        ScrollbarUtil.defaultWidth = NaN;
+        ScrollbarUtil.defaultHeight = NaN;
         return ScrollbarUtil;
     })();
     illa.ScrollbarUtil = ScrollbarUtil;
@@ -344,8 +373,8 @@ var test1;
         Main.prototype.onDOMLoaded = function () {
             illa.Log.info('DOM loaded.');
 
-            illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getSize(0 /* X */));
-            illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getSize(1 /* Y */));
+            illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getDefaultSize(0 /* X */));
+            illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getDefaultSize(1 /* Y */));
         };
 
         Main.prototype.onTick = function (e) {

@@ -16,8 +16,8 @@ module test1 {
 		onDOMLoaded(): void {
 			illa.Log.info('DOM loaded.');
 			
-			illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getSize(illa.Axis2D.X));
-			illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getSize(illa.Axis2D.Y));
+			illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getDefaultSize(illa.Axis2D.X));
+			illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getDefaultSize(illa.Axis2D.Y));
 		}
 
 		onTick(e: illa.Ivent): void {
