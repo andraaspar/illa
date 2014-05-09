@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/andraaspar/illa",
   "files": [
-    "src", "lib"
+    "src", "lib", "LICENSE"
   ],
   "devDependencies": {
     "grunt": "^0.4.4",
