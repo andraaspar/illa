@@ -1,28 +1,10 @@
 {
-  "name": "andraaspar-illa",
-  "version": "1.0.1",
-  "description": "Common TypeScript classes.",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/andraaspar/illa.git"
-  },
-  "keywords": [
-    "TypeScript",
-    "common"
-  ],
-  "author": "András Parditka",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/andraaspar/illa/issues"
-  },
-  "homepage": "https://github.com/andraaspar/illa",
-  "files": [
-    "src", "lib", "LICENSE"
-  ],
+  "private": true,
   "devDependencies": {
     "grunt": "^0.4.4",
     "grunt-typescript": "^0.3.5",
     "grunt-contrib-less": "^0.11.0",
-    "grunt-contrib-clean": "^0.5.0"
+    "grunt-contrib-clean": "^0.5.0",
+    "bower": "^1.3.3"
   }
 }

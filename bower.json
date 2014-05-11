@@ -1,0 +1,27 @@
+{
+  "name": "andraaspar-illa",
+  "version": "1.0.2",
+  "homepage": "https://github.com/andraaspar/illa",
+  "authors": [
+    "András Parditka"
+  ],
+  "description": "Common TypeScript classes.",
+  "main": [
+    "src/illa",
+    "lib/**/*"
+  ],
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "TypeScript",
+    "common"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
