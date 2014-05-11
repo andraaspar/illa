@@ -1,15 +1,11 @@
 {
   "name": "illa",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/andraaspar/illa",
   "authors": [
     "András Parditka"
   ],
   "description": "Common TypeScript classes.",
-  "main": [
-    "src/illa",
-    "lib/**/*"
-  ],
   "moduleType": [
     "globals"
   ],
