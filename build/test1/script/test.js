@@ -40,6 +40,11 @@ var illa;
     }
     illa.isUndefinedOrNull = isUndefinedOrNull;
 
+    function isObjectNotNull(v) {
+        return typeof v == "object" && v !== null;
+    }
+    illa.isObjectNotNull = isObjectNotNull;
+
     function get(v) {
         return jQuery.type(v);
     }
@@ -443,6 +448,10 @@ var test1;
             illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(null));
             illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('undefined'));
             illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('null'));
+            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull({}));
+            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
+            illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
+            illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
         };
 
         Main.prototype.onTick = function (e) {

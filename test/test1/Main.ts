@@ -38,6 +38,10 @@ module test1 {
 			illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(null));
 			illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('undefined'));
 			illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('null'));
+			illa.Log.info('isObjectNotNull:', illa.isObjectNotNull({}));
+			illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
+			illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
+			illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
 		}
 
 		onTick(e: illa.Ivent): void {
