@@ -40,7 +40,7 @@ module illa {
 	 * Returns true if the value is undefined.
 	 */
 	export function isUndefined(v): boolean {
-		return typeof v == "undefined";
+		return typeof v == 'undefined';
 	}
 
 	/**
@@ -54,14 +54,15 @@ module illa {
 	 * Returns true if the value is undefined or null.
 	 */
 	export function isUndefinedOrNull(v): boolean {
-		return typeof v == "undefined" || v === null;
+		return typeof v == 'undefined' || v === null;
 	}
 	
 	/**
-	 * Returns true if the value is an object and not null.
+	 * Returns true if the value is an object and not null. Includes functions.
 	 */
 	export function isObjectNotNull(v): boolean {
-		return typeof v == "object" && v !== null;
+		var t = typeof v;
+		return t == 'object' && v !== null || t == 'function';
 	}
 
 	/**

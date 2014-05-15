@@ -26,7 +26,7 @@ var illa;
     illa.isArray = isArray;
 
     function isUndefined(v) {
-        return typeof v == "undefined";
+        return typeof v == 'undefined';
     }
     illa.isUndefined = isUndefined;
 
@@ -36,12 +36,13 @@ var illa;
     illa.isNull = isNull;
 
     function isUndefinedOrNull(v) {
-        return typeof v == "undefined" || v === null;
+        return typeof v == 'undefined' || v === null;
     }
     illa.isUndefinedOrNull = isUndefinedOrNull;
 
     function isObjectNotNull(v) {
-        return typeof v == "object" && v !== null;
+        var t = typeof v;
+        return t == 'object' && v !== null || t == 'function';
     }
     illa.isObjectNotNull = isObjectNotNull;
 
@@ -475,6 +476,8 @@ var test1;
             illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('null'));
             illa.Log.info('isObjectNotNull:', illa.isObjectNotNull({}));
             illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
+            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull(function () {
+            }));
             illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
             illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
 
