@@ -1,5 +1,52 @@
 var illa;
 (function (illa) {
+    function isString(v) {
+        return typeof v == 'string';
+    }
+    illa.isString = isString;
+
+    function isBoolean(v) {
+        return typeof v == 'boolean';
+    }
+    illa.isBoolean = isBoolean;
+
+    function isNumber(v) {
+        return typeof v == 'number';
+    }
+    illa.isNumber = isNumber;
+
+    function isFunction(v) {
+        return typeof v == 'function';
+    }
+    illa.isFunction = isFunction;
+
+    function isArray(v) {
+        return jQuery.isArray(v);
+    }
+    illa.isArray = isArray;
+
+    function isUndefined(v) {
+        return typeof v == "undefined";
+    }
+    illa.isUndefined = isUndefined;
+
+    function isNull(v) {
+        return v === null;
+    }
+    illa.isNull = isNull;
+
+    function isUndefinedOrNull(v) {
+        return typeof v == "undefined" || v === null;
+    }
+    illa.isUndefinedOrNull = isUndefinedOrNull;
+
+    function get(v) {
+        return jQuery.type(v);
+    }
+    illa.get = get;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var Log = (function () {
         function Log() {
         }
@@ -375,6 +422,27 @@ var test1;
 
             illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getDefaultSize(0 /* X */));
             illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getDefaultSize(1 /* Y */));
+
+            illa.Log.info('isString:', illa.isString('undefined'));
+            illa.Log.info('!isString:', illa.isString(true));
+            illa.Log.info('isBoolean:', illa.isBoolean(true));
+            illa.Log.info('!isBoolean:', illa.isBoolean(5));
+            illa.Log.info('isNumber:', illa.isNumber(5));
+            illa.Log.info('!isNumber:', illa.isNumber([5]));
+            illa.Log.info('isArray:', illa.isArray([5]));
+            illa.Log.info('!isArray:', illa.isArray(function () {
+            }));
+            illa.Log.info('isFunction:', illa.isFunction(function () {
+            }));
+            illa.Log.info('!isFunction:', illa.isFunction(null));
+            illa.Log.info('isNull:', illa.isNull(null));
+            illa.Log.info('!isNull:', illa.isNull(undefined));
+            illa.Log.info('isUndefined:', illa.isUndefined(undefined));
+            illa.Log.info('!isUndefined:', illa.isUndefined('undefined'));
+            illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(undefined));
+            illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(null));
+            illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('undefined'));
+            illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('null'));
         };
 
         Main.prototype.onTick = function (e) {
