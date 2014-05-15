@@ -2,6 +2,7 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
 /// <reference path='../../src/illa/ScrollbarUtil.ts'/>
+/// <reference path='../../src/illa/StringUtil.ts'/>
 /// <reference path='../../src/illa/Ticker.ts'/>
 
 module test1 {
@@ -16,10 +17,10 @@ module test1 {
 
 		onDOMLoaded(): void {
 			illa.Log.info('DOM loaded.');
-			
+
 			illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getDefaultSize(illa.Axis2D.X));
 			illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getDefaultSize(illa.Axis2D.Y));
-			
+
 			illa.Log.info('isString:', illa.isString('undefined'));
 			illa.Log.info('!isString:', illa.isString(true));
 			illa.Log.info('isBoolean:', illa.isBoolean(true));
@@ -27,8 +28,8 @@ module test1 {
 			illa.Log.info('isNumber:', illa.isNumber(5));
 			illa.Log.info('!isNumber:', illa.isNumber([5]));
 			illa.Log.info('isArray:', illa.isArray([5]));
-			illa.Log.info('!isArray:', illa.isArray(function() {}));
-			illa.Log.info('isFunction:', illa.isFunction(function() {}));
+			illa.Log.info('!isArray:', illa.isArray(function() { }));
+			illa.Log.info('isFunction:', illa.isFunction(function() { }));
 			illa.Log.info('!isFunction:', illa.isFunction(null));
 			illa.Log.info('isNull:', illa.isNull(null));
 			illa.Log.info('!isNull:', illa.isNull(undefined));
@@ -42,6 +43,13 @@ module test1 {
 			illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
 			illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
 			illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
+
+			illa.Log.info('<h1>"T&amp;C\'s"</h1> escaped:', illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>'));
+
+			illa.Log.info(
+				illa.StringUtil.castNicely(undefined) +
+				illa.StringUtil.castNicely(null) +
+				illa.StringUtil.castNicely({ toString: function() { return 'Nice.' } }));
 		}
 
 		onTick(e: illa.Ivent): void {

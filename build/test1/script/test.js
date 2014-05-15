@@ -235,6 +235,31 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var StringUtil = (function () {
+        function StringUtil() {
+        }
+        StringUtil.escapeHTML = function (str) {
+            return str.replace(/[&<>"']/g, function (s) {
+                return StringUtil.CHAR_TO_HTML[s];
+            });
+        };
+
+        StringUtil.castNicely = function (str) {
+            return str == null ? '' : String(str);
+        };
+        StringUtil.CHAR_TO_HTML = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return StringUtil;
+    })();
+    illa.StringUtil = StringUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var IventCallbackReg = (function () {
         function IventCallbackReg(callback, thisObj) {
             this.callback = callback;
@@ -452,6 +477,12 @@ var test1;
             illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
             illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
             illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
+
+            illa.Log.info('<h1>"T&amp;C\'s"</h1> escaped:', illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>'));
+
+            illa.Log.info(illa.StringUtil.castNicely(undefined) + illa.StringUtil.castNicely(null) + illa.StringUtil.castNicely({ toString: function () {
+                    return 'Nice.';
+                } }));
         };
 
         Main.prototype.onTick = function (e) {
