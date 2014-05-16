@@ -3,18 +3,23 @@
 
 module illa {
 	export class ScrollbarUtil {
-		static BOX_CSS_CLASS = 'illa-ScrollbarUtil-box';
-		private static box: JQuery;
-		private static defaultWidth = NaN;
-		private static defaultHeight = NaN;
-
-		static getDefaultSize(axis: Axis2D): number {
-			var result = NaN;
-			if (!this.box) {
+		static CSS_CLASS = 'illa-ScrollbarUtil-box';
+		private box: JQuery;
+		private defaultWidth = NaN;
+		private defaultHeight = NaN;
+		
+		constructor(box?: JQuery) {
+			if (box) {
+				this.box = box;
+			} else {
 				this.box = jQuery('<div>');
-				this.box.addClass(ScrollbarUtil.BOX_CSS_CLASS);
-				this.box.appendTo('body');
 			}
+			this.box.addClass(ScrollbarUtil.CSS_CLASS);
+			this.box.appendTo('body');
+		}
+
+		getDefaultSize(axis: Axis2D): number {
+			var result = NaN;
 
 			if (isNaN(this.defaultWidth)) {
 				var boxElement = this.box[0];
@@ -34,7 +39,7 @@ module illa {
 			return result;
 		}
 
-		static clearDefaultSizeCache() {
+		clearDefaultSizeCache() {
 			// Only the width is checked
 			this.defaultWidth = NaN;
 		}
@@ -54,7 +59,6 @@ module illa {
 			switch (overflow) {
 				case 'scroll': return true;
 				case 'auto':
-				case 'overlay': // Webkit specific: scrollbar over content
 					switch (axis) {
 						case Axis2D.X: return elem.scrollWidth > jq.innerWidth();
 						case Axis2D.Y: return elem.scrollHeight > jq.innerHeight();

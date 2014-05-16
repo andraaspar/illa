@@ -46,10 +46,15 @@ var illa;
     }
     illa.isObjectNotNull = isObjectNotNull;
 
-    function get(v) {
+    function getType(v) {
         return jQuery.type(v);
     }
-    illa.get = get;
+    illa.getType = getType;
+
+    function as(c, v) {
+        return v instanceof c ? v : null;
+    }
+    illa.as = as;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
@@ -166,15 +171,19 @@ var illa;
 var illa;
 (function (illa) {
     var ScrollbarUtil = (function () {
-        function ScrollbarUtil() {
-        }
-        ScrollbarUtil.getDefaultSize = function (axis) {
-            var result = NaN;
-            if (!this.box) {
+        function ScrollbarUtil(box) {
+            this.defaultWidth = NaN;
+            this.defaultHeight = NaN;
+            if (box) {
+                this.box = box;
+            } else {
                 this.box = jQuery('<div>');
-                this.box.addClass(ScrollbarUtil.BOX_CSS_CLASS);
-                this.box.appendTo('body');
             }
+            this.box.addClass(ScrollbarUtil.CSS_CLASS);
+            this.box.appendTo('body');
+        }
+        ScrollbarUtil.prototype.getDefaultSize = function (axis) {
+            var result = NaN;
 
             if (isNaN(this.defaultWidth)) {
                 var boxElement = this.box[0];
@@ -194,7 +203,7 @@ var illa;
             return result;
         };
 
-        ScrollbarUtil.clearDefaultSizeCache = function () {
+        ScrollbarUtil.prototype.clearDefaultSizeCache = function () {
             this.defaultWidth = NaN;
         };
 
@@ -215,7 +224,6 @@ var illa;
                 case 'scroll':
                     return true;
                 case 'auto':
-                case 'overlay':
                     switch (axis) {
                         case 0 /* X */:
                             return elem.scrollWidth > jq.innerWidth();
@@ -226,10 +234,7 @@ var illa;
             }
             return false;
         };
-        ScrollbarUtil.BOX_CSS_CLASS = 'illa-ScrollbarUtil-box';
-
-        ScrollbarUtil.defaultWidth = NaN;
-        ScrollbarUtil.defaultHeight = NaN;
+        ScrollbarUtil.CSS_CLASS = 'illa-ScrollbarUtil-box';
         return ScrollbarUtil;
     })();
     illa.ScrollbarUtil = ScrollbarUtil;
@@ -439,63 +444,207 @@ var illa;
     })(illa.IventHandler);
     illa.Ticker = Ticker;
 })(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var UnitTest = (function () {
+        function UnitTest(printTarget) {
+            this.printTarget = printTarget;
+            this.testCount = 0;
+            this.successCount = 0;
+            this.failCount = 0;
+        }
+        UnitTest.prototype.assert = function (test, desc) {
+            if (typeof desc === "undefined") { desc = ''; }
+            this.testCount++;
+            if (test === true) {
+                this.successCount++;
+            } else {
+                this.failCount++;
+                if (desc) {
+                    this.warn('Test failed:', desc);
+                } else {
+                    throw 'Test failed.';
+                }
+            }
+            return test;
+        };
+
+        UnitTest.prototype.printStats = function () {
+            this.info(this.testCount, 'tests completed:', this.successCount, 'succeeded,', this.failCount, 'failed.');
+        };
+
+        UnitTest.prototype.info = function () {
+            var r = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                r[_i] = arguments[_i + 0];
+            }
+            if (this.printTarget) {
+                var out = jQuery('<p>').text(r.join(' '));
+                this.printTarget.append(out);
+            } else {
+                illa.Log.info.apply(illa.Log, r);
+            }
+        };
+
+        UnitTest.prototype.warn = function () {
+            var r = [];
+            for (var _i = 0; _i < (arguments.length - 0); _i++) {
+                r[_i] = arguments[_i + 0];
+            }
+            if (this.printTarget) {
+                var out = jQuery('<p>').text(r.join(' ')).prepend('<b>WARNING: </b>');
+                this.printTarget.append(out);
+            } else {
+                illa.Log.warn.apply(illa.Log, r);
+            }
+        };
+        return UnitTest;
+    })();
+    illa.UnitTest = UnitTest;
+})(illa || (illa = {}));
 var test1;
 (function (test1) {
     var Main = (function () {
         function Main() {
-            this.ticker = new illa.Ticker();
             jQuery(jQuery.proxy(this.onDOMLoaded, this));
-
-            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick, this);
         }
         Main.prototype.onDOMLoaded = function () {
-            illa.Log.info('DOM loaded.');
+            var u = this.unitTest = new illa.UnitTest(jQuery('body'));
+            u.info('Testing...');
 
-            illa.Log.info('Scrollbar width:', illa.ScrollbarUtil.getDefaultSize(0 /* X */));
-            illa.Log.info('Scrollbar height:', illa.ScrollbarUtil.getDefaultSize(1 /* Y */));
+            var scrollbarUtil = new illa.ScrollbarUtil();
+            u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(0 /* X */)), 'ScrollbarUtil.getDefaultSize 1');
+            u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(1 /* Y */)), 'ScrollbarUtil.getDefaultSize 2');
+            u.assert(scrollbarUtil.getDefaultSize(0 /* X */) >= 0, 'ScrollbarUtil.getDefaultSize 3');
+            u.assert(scrollbarUtil.getDefaultSize(1 /* Y */) >= 0, 'ScrollbarUtil.getDefaultSize 4');
 
-            illa.Log.info('isString:', illa.isString('undefined'));
-            illa.Log.info('!isString:', illa.isString(true));
-            illa.Log.info('isBoolean:', illa.isBoolean(true));
-            illa.Log.info('!isBoolean:', illa.isBoolean(5));
-            illa.Log.info('isNumber:', illa.isNumber(5));
-            illa.Log.info('!isNumber:', illa.isNumber([5]));
-            illa.Log.info('isArray:', illa.isArray([5]));
-            illa.Log.info('!isArray:', illa.isArray(function () {
-            }));
-            illa.Log.info('isFunction:', illa.isFunction(function () {
-            }));
-            illa.Log.info('!isFunction:', illa.isFunction(null));
-            illa.Log.info('isNull:', illa.isNull(null));
-            illa.Log.info('!isNull:', illa.isNull(undefined));
-            illa.Log.info('isUndefined:', illa.isUndefined(undefined));
-            illa.Log.info('!isUndefined:', illa.isUndefined('undefined'));
-            illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(undefined));
-            illa.Log.info('isUndefinedOrNull:', illa.isUndefinedOrNull(null));
-            illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('undefined'));
-            illa.Log.info('!isUndefinedOrNull:', illa.isUndefinedOrNull('null'));
-            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull({}));
-            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull([]));
-            illa.Log.info('isObjectNotNull:', illa.isObjectNotNull(function () {
-            }));
-            illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(null));
-            illa.Log.info('!isObjectNotNull:', illa.isObjectNotNull(undefined));
+            var scrolling = jQuery('<div style="overflow-x: scroll; overflow-y: scroll">');
+            var scrolling2 = jQuery('<div style="overflow: scroll">');
+            var nonScrolling = jQuery('<div style="overflow-x: hidden; overflow-y: hidden">');
+            var nonScrolling2 = jQuery('<div style="overflow-x: visible; overflow-y: visible">');
+            var nonScrolling3 = jQuery('<div style="overflow: visible">');
 
-            illa.Log.info('<h1>"T&amp;C\'s"</h1> escaped:', illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>'));
+            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, 0 /* X */), 'ScrollbarUtil.isVisibleOn 1');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, 1 /* Y */), 'ScrollbarUtil.isVisibleOn 2');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 3');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 4');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 5');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 6');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, 0 /* X */), 'ScrollbarUtil.isVisibleOn 7');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, 1 /* Y */), 'ScrollbarUtil.isVisibleOn 8');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 9');
+            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 10');
 
-            illa.Log.info(illa.StringUtil.castNicely(undefined) + illa.StringUtil.castNicely(null) + illa.StringUtil.castNicely({ toString: function () {
+            u.assert(illa.isString('undefined'), 'isString 1');
+            u.assert(illa.isString(true) === false, 'isString 2');
+
+            u.assert(illa.isBoolean(true), 'isBoolean 1');
+            u.assert(illa.isBoolean(false), 'isBoolean 2');
+            u.assert(illa.isBoolean('true') === false, 'isBoolean 3');
+            u.assert(illa.isBoolean(1) === false, 'isBoolean 4');
+
+            u.assert(illa.isNumber(0), 'isNumber 1');
+            u.assert(illa.isNumber(NaN), 'isNumber 2');
+            u.assert(illa.isNumber(Infinity), 'isNumber 3');
+            u.assert(illa.isNumber('1') === false, 'isNumber 4');
+
+            u.assert(illa.isArray([]), 'isArray 1');
+            u.assert(illa.isArray(new Array()), 'isArray 2');
+            u.assert(illa.isArray({ '0': 0, length: 1 }) === false, 'isArray 3');
+
+            var arraySub = function () {
+                Array.call(this);
+            };
+            arraySub.prototype = new Array();
+            arraySub.prototype.constructor = Array;
+
+            u.assert(illa.isArray(new arraySub()) === false, 'isArray 4');
+
+            u.assert(illa.isFunction(function () {
+            }), 'isFunction 1');
+            u.assert(illa.isFunction(test1.Main), 'isFunction 2');
+            u.assert(illa.isFunction(Function), 'isFunction 3');
+            u.assert(illa.isFunction(new Function()), 'isFunction 4');
+            u.assert(illa.isFunction({}) === false, 'isFunction 5');
+
+            u.assert(illa.isNull(null), 'isNull 1');
+            u.assert(illa.isNull(undefined) === false, 'isNull 2');
+            u.assert(illa.isNull({}) === false, 'isNull 3');
+
+            u.assert(illa.isUndefined(undefined), 'isUndefined 1');
+            u.assert(illa.isUndefined(null) === false, 'isUndefined 2');
+            u.assert(illa.isUndefined('undefined') === false, 'isUndefined 3');
+
+            u.assert(illa.isUndefinedOrNull(undefined), 'isUndefinedOrNull 1');
+            u.assert(illa.isUndefinedOrNull(null), 'isUndefinedOrNull 2');
+            u.assert(illa.isUndefinedOrNull('undefined') === false, 'isUndefinedOrNull 3');
+            u.assert(illa.isUndefinedOrNull('null') === false, 'isUndefinedOrNull 4');
+
+            u.assert(illa.isObjectNotNull({}), 'isObjectNotNull 1');
+            u.assert(illa.isObjectNotNull([]), 'isObjectNotNull 2');
+            u.assert(illa.isObjectNotNull(function () {
+            }), 'isObjectNotNull 3');
+            u.assert(illa.isObjectNotNull(null) === false, 'isObjectNotNull 4');
+            u.assert(illa.isObjectNotNull(undefined) === false, 'isObjectNotNull 5');
+            u.assert(illa.isObjectNotNull(NaN) === false, 'isObjectNotNull 6');
+            u.assert(illa.isObjectNotNull('foo') === false, 'isObjectNotNull 7');
+
+            u.assert(illa.as(Main, this) === this, 'as 1');
+            u.assert(illa.as(illa.Ivent, this) === null, 'as 2');
+            var ivent = new illa.Ivent('test', null);
+            u.assert(illa.as(illa.Ivent, ivent) === ivent, 'as 3');
+
+            u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
+
+            u.assert(illa.StringUtil.castNicely(undefined) === '', 'StringUtil.castNicely 1');
+            u.assert(illa.StringUtil.castNicely(null) === '', 'StringUtil.castNicely 2');
+            u.assert(illa.StringUtil.castNicely({ toString: function () {
                     return 'Nice.';
-                } }));
+                } }) === 'Nice.', 'StringUtil.castNicely 3');
+            u.assert(illa.StringUtil.castNicely('foo') === 'foo', 'StringUtil.castNicely 4');
+
+            u.printStats();
+
+            u = this.unitTest = new illa.UnitTest(jQuery('body'));
+            u.info('Testing Ticker...');
+
+            this.ticker = new illa.Ticker();
+            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
         };
 
-        Main.prototype.onTick = function (e) {
-            if ((this.ticker.getTickCount() % 60) == 0) {
-                illa.Log.info('Tick: ' + this.ticker.getTickCount());
-            }
-            if (this.ticker.getTickCount() > 5 * 60) {
-                illa.Log.info('Stopping ticker.');
-                this.ticker.setIsStarted(false);
-            }
+        Main.prototype.onTick1 = function (e) {
+            this.unitTest.assert(this.ticker.getTickCount() === 1, 'Ticker 1');
+            this.ticker.removeIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
+            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick2, this);
+            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick3, this);
+        };
+
+        Main.prototype.onTick2 = function (e) {
+            this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 2');
+        };
+
+        Main.prototype.onTick3 = function (e) {
+            this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 3');
+            this.ticker.removeAllIventCallbacks();
+            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
+            this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick5, this);
+        };
+
+        Main.prototype.onTick4 = function (e) {
+            this.unitTest.assert(this.ticker.getTickCount() === 3, 'Ticker 4');
+            e.setStopImmediatePropagation(true);
+            this.ticker.removeIventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
+        };
+
+        Main.prototype.onTick5 = function (e) {
+            this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5');
+            this.ticker.setIsStarted(false);
+            setTimeout(jQuery.proxy(this.onTickerFinished, this), 500);
+        };
+
+        Main.prototype.onTickerFinished = function () {
+            this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 6');
+            this.unitTest.printStats();
         };
         return Main;
     })();

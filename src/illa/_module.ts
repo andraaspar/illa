@@ -31,6 +31,7 @@ module illa {
 
 	/**
 	 * Returns true if the value is an array.
+	 * Array subclasses are not recognized as arrays.
 	 */
 	export function isArray(v): boolean {
 		return jQuery.isArray(v);
@@ -49,14 +50,14 @@ module illa {
 	export function isNull(v): boolean {
 		return v === null;
 	}
-	
+
 	/**
 	 * Returns true if the value is undefined or null.
 	 */
 	export function isUndefinedOrNull(v): boolean {
 		return typeof v == 'undefined' || v === null;
 	}
-	
+
 	/**
 	 * Returns true if the value is an object and not null. Includes functions.
 	 */
@@ -68,7 +69,14 @@ module illa {
 	/**
 	 * Returns the type of value as reported by jQuery.
 	 */
-	export function get(v): string {
+	export function getType(v): string {
 		return jQuery.type(v);
+	}
+
+	/**
+	 * Returns the value if instanceof is true for the given constructor.
+	 */
+	export function as<T>(c: new (...r) => T, v): T {
+		return v instanceof c ? v : null;
 	}
 }
