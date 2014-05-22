@@ -102,6 +102,15 @@ module test1 {
 			u.assert(illa.as(illa.Ivent, this) === null, 'as 2');
 			var ivent = new illa.Ivent('test', null);
 			u.assert(illa.as(illa.Ivent, ivent) === ivent, 'as 3');
+			
+			var fun = illa.bind(function(suffix: string): string {
+				return this.prefix + suffix;
+			}, {prefix: 'foo'});
+			u.assert(fun('bar') === 'foobar', 'bind 1');
+			
+			u.assertThrowsError(function() {
+				illa.bind(null, {});
+			}, 'bind 2');
 
 
 

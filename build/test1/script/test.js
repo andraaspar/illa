@@ -55,6 +55,15 @@ var illa;
         return v instanceof c ? v : null;
     }
     illa.as = as;
+
+    function bind(fn, obj) {
+        if (!fn)
+            throw 'No function.';
+        return function () {
+            return fn.apply(obj, arguments);
+        };
+    }
+    illa.bind = bind;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
@@ -469,6 +478,17 @@ var illa;
             return test;
         };
 
+        UnitTest.prototype.assertThrowsError = function (fn, desc) {
+            if (typeof desc === "undefined") { desc = ''; }
+            var errorThrown = false;
+            try  {
+                fn();
+            } catch (e) {
+                errorThrown = true;
+            }
+            return this.assert(errorThrown, desc);
+        };
+
         UnitTest.prototype.printStats = function () {
             this.info(this.testCount, 'tests completed:', this.successCount, 'succeeded,', this.failCount, 'failed.');
         };
@@ -593,6 +613,15 @@ var test1;
             u.assert(illa.as(illa.Ivent, this) === null, 'as 2');
             var ivent = new illa.Ivent('test', null);
             u.assert(illa.as(illa.Ivent, ivent) === ivent, 'as 3');
+
+            var fun = illa.bind(function (suffix) {
+                return this.prefix + suffix;
+            }, { prefix: 'foo' });
+            u.assert(fun('bar') === 'foobar', 'bind 1');
+
+            u.assertThrowsError(function () {
+                illa.bind(null, {});
+            }, 'bind 2');
 
             u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
 

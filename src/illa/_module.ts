@@ -74,9 +74,20 @@ module illa {
 	}
 
 	/**
-	 * Returns the value if instanceof is true for the given constructor.
+	 * Returns the value if ‘instanceof’ is true for the given constructor.
 	 */
 	export function as<T>(c: new (...r) => T, v): T {
 		return v instanceof c ? v : null;
+	}
+	
+	/**
+	 * Binds a function to a ‘this’ context.
+	 * No argument binding allows us to keep function type safety.
+	 */
+	export function bind<T extends Function>(fn: T, obj: Object): T {
+		if (!fn) throw 'No function.';
+		return <any>function() {
+			return fn.apply(obj, arguments);
+		};
 	}
 }

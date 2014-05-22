@@ -25,6 +25,16 @@ module illa {
 			}
 			return test;
 		}
+		
+		assertThrowsError(fn: Function, desc = ''): boolean {
+			var errorThrown = false;
+			try {
+				fn();
+			} catch (e) {
+				errorThrown = true;
+			}
+			return this.assert(errorThrown, desc);
+		}
 
 		printStats(): void {
 			this.info(this.testCount, 'tests completed:',
