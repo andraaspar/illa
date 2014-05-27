@@ -18,6 +18,22 @@ See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
 
+interface JQueryAJAXSuccessCallback {
+	(data: any, textStatus: string, jqXHR: JQueryXHR): any;
+}
+
+interface JQueryAJAXErrorCallback {
+	(jqXHR: JQueryXHR, textStatus: string, errorThrown: string): any;
+}
+
+interface JQueryAJAXBeforeSendCallback {
+	(jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
+}
+
+interface JQueryAJAXCompleteCallback {
+	(jqXHR: JQueryXHR, textStatus: string): any;
+}
+
 
 /**
  * Interface for the AJAX setting that will configure the AJAX request
@@ -34,7 +50,7 @@ interface JQueryAjaxSettings {
     /**
      * A pre-request callback function that can be used to modify the jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object before it is sent. Use this to set custom headers, etc. The jqXHR and settings objects are passed as arguments. This is an Ajax Event. Returning false in the beforeSend function will cancel the request. As of jQuery 1.5, the beforeSend option will be called regardless of the type of request.
      */
-    beforeSend? (jqXHR: JQueryXHR, settings: JQueryAjaxSettings): any;
+    beforeSend?: JQueryAJAXBeforeSendCallback;
     /**
      * If set to false, it will force requested pages not to be cached by the browser. Note: Setting cache to false will only work correctly with HEAD and GET requests. It works by appending "_={timestamp}" to the GET parameters. The parameter is not needed for other types of requests, except in IE8 when a POST is made to a URL that has already been requested by a GET.
      */
@@ -42,7 +58,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called when the request finishes (after success and error callbacks are executed). The function gets passed two arguments: The jqXHR (in jQuery 1.4.x, XMLHTTPRequest) object and a string categorizing the status of the request ("success", "notmodified", "error", "timeout", "abort", or "parsererror"). As of jQuery 1.5, the complete setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    complete? (jqXHR: JQueryXHR, textStatus: string): any;
+    complete?: JQueryAJAXCompleteCallback;
     /**
      * An object of string/regular-expression pairs that determine how jQuery will parse the response, given its content type. (version added: 1.5)
      */
@@ -80,7 +96,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request fails. The function receives three arguments: The jqXHR (in jQuery 1.4.x, XMLHttpRequest) object, a string describing the type of error that occurred and an optional exception object, if one occurred. Possible values for the second argument (besides null) are "timeout", "error", "abort", and "parsererror". When an HTTP error occurs, errorThrown receives the textual portion of the HTTP status, such as "Not Found" or "Internal Server Error." As of jQuery 1.5, the error setting can accept an array of functions. Each function will be called in turn. Note: This handler is not called for cross-domain script and cross-domain JSONP requests. This is an Ajax Event.
      */
-    error? (jqXHR: JQueryXHR, textStatus: string, errorThrow: string): any;
+    error?: JQueryAJAXErrorCallback;
     /**
      * Whether to trigger global Ajax event handlers for this request. The default is true. Set to false to prevent the global handlers like ajaxStart or ajaxStop from being triggered. This can be used to control various Ajax Events.
      */
@@ -128,7 +144,7 @@ interface JQueryAjaxSettings {
     /**
      * A function to be called if the request succeeds. The function gets passed three arguments: The data returned from the server, formatted according to the dataType parameter; a string describing the status; and the jqXHR (in jQuery 1.4.x, XMLHttpRequest) object. As of jQuery 1.5, the success setting can accept an array of functions. Each function will be called in turn. This is an Ajax Event.
      */
-    success? (data: any, textStatus: string, jqXHR: JQueryXHR): any;
+    success?: JQueryAJAXSuccessCallback;
     /**
      * Set a timeout (in milliseconds) for the request. This will override any global timeout set with $.ajaxSetup(). The timeout period starts at the point the $.ajax call is made; if several other requests are in progress and the browser has no connections available, it is possible for a request to time out before it can be sent. In jQuery 1.4.x and below, the XMLHttpRequest object will be in an invalid state if the request times out; accessing any object members may throw an exception. In Firefox 3.0+ only, script and JSONP requests cannot be cancelled by a timeout; the script will run even if it arrives after the timeout period.
      */
