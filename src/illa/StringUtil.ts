@@ -17,5 +17,9 @@ module illa {
 		static castNicely(str): string {
 			return str == null ? '' : String(str);
 		}
+		
+		static trim(str: string): string {
+			return str.replace(/^\s+|\s+$/g, '');
+		}
 	}
 }

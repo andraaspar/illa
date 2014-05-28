@@ -122,6 +122,9 @@ module test1 {
 			u.assert(illa.StringUtil.castNicely({ toString: function() { return 'Nice.' } }) === 'Nice.', 'StringUtil.castNicely 3');
 			u.assert(illa.StringUtil.castNicely('foo') === 'foo', 'StringUtil.castNicely 4');
 			
+			u.assert(illa.StringUtil.trim('  foo   ') === 'foo', 'StringUtil.trim 1');
+			u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
+			
 			
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'foo') === 0, 'ArrayUtil.indexOf 1');
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'quux') === -1, 'ArrayUtil.indexOf 2');
