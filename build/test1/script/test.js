@@ -67,6 +67,38 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var ArrayUtil = (function () {
+        function ArrayUtil() {
+        }
+        ArrayUtil.indexOf = function (a, v) {
+            return jQuery.inArray(v, a);
+        };
+
+        ArrayUtil.removeFirst = function (a, v) {
+            var i = this.indexOf(a, v);
+            var removed = i >= 0;
+            if (removed) {
+                a.splice(i, 1)[0];
+            }
+            return removed;
+        };
+
+        ArrayUtil.removeAll = function (a, v) {
+            var removed = false;
+            for (var i = a.length - 1; i >= 0; i--) {
+                if (a[i] === v) {
+                    a.splice(i, 1);
+                    removed = true;
+                }
+            }
+            return removed;
+        };
+        return ArrayUtil;
+    })();
+    illa.ArrayUtil = ArrayUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var Log = (function () {
         function Log() {
         }
@@ -631,6 +663,41 @@ var test1;
                     return 'Nice.';
                 } }) === 'Nice.', 'StringUtil.castNicely 3');
             u.assert(illa.StringUtil.castNicely('foo') === 'foo', 'StringUtil.castNicely 4');
+
+            u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'foo') === 0, 'ArrayUtil.indexOf 1');
+            u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'quux') === -1, 'ArrayUtil.indexOf 2');
+            u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], undefined) === -1, 'ArrayUtil.indexOf 3');
+            u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], NaN) === -1, 'ArrayUtil.indexOf 4');
+            u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], false) === -1, 'ArrayUtil.indexOf 5');
+            u.assert(illa.ArrayUtil.indexOf([0, 1, NaN, 3], NaN) === -1, 'ArrayUtil.indexOf 6');
+            u.assert(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined) === 2, 'ArrayUtil.indexOf 7');
+            u.assert(illa.ArrayUtil.indexOf([0, 1, null, 3], null) === 2, 'ArrayUtil.indexOf 8');
+            u.assert(illa.ArrayUtil.indexOf([0, 1, Infinity, 3], Infinity) === 2, 'ArrayUtil.indexOf 9');
+
+            (function () {
+                var testArr = ['foo', 'bar', 'baz', 'foo'];
+                var removed = illa.ArrayUtil.removeFirst(testArr, 'foo');
+                u.assert(testArr.length === 3, 'ArrayUtil.removeFirst 1');
+                u.assert(testArr[0] === 'bar', 'ArrayUtil.removeFirst 2');
+                u.assert(testArr[2] === 'foo', 'ArrayUtil.removeFirst 3');
+                u.assert(removed, 'ArrayUtil.removeFirst 4');
+            })();
+
+            (function () {
+                var testArr = ['foo', 'bar', 'baz', 'foo'];
+                var removed = illa.ArrayUtil.removeFirst(testArr, 'quux');
+                u.assert(testArr.length === 4, 'ArrayUtil.removeFirst 5');
+                u.assert(removed === false, 'ArrayUtil.removeFirst 6');
+            })();
+
+            (function () {
+                var testArr = ['foo', 'bar', 'baz', 'foo'];
+                var removed = illa.ArrayUtil.removeAll(testArr, 'foo');
+                u.assert(testArr.length === 2, 'ArrayUtil.removeAll 1');
+                u.assert(testArr[0] === 'bar', 'ArrayUtil.removeAll 2');
+                u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
+                u.assert(removed, 'ArrayUtil.removeAll 4');
+            })();
 
             u.printStats();
 
