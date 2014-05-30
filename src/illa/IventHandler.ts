@@ -6,7 +6,7 @@ module illa {
 
 		getCallbackRegsByType(type: string): IventCallbackReg[] {
 			var result = this.callbacksByType[type];
-			if (!jQuery.isArray(result)) result = [];
+			if (!illa.isArray(result)) result = [];
 			return result;
 		}
 
@@ -16,7 +16,7 @@ module illa {
 
 		addIventCallback(type: string, cb: IIventCallback, thisObj: Object): void {
 			var reg = new IventCallbackReg(cb, thisObj);
-			if (jQuery.isArray(this.callbacksByType[type])) {
+			if (illa.isArray(this.callbacksByType[type])) {
 				this.removeIventCallback(type, cb, thisObj);
 				this.callbacksByType[type].push(reg);
 			} else {
@@ -27,7 +27,7 @@ module illa {
 
 		removeIventCallback(type: string, cb: IIventCallback, thisObj: Object): void {
 			var callbacks = this.callbacksByType[type];
-			if (jQuery.isArray(callbacks)) {
+			if (illa.isArray(callbacks)) {
 				for (var i = 0, n = callbacks.length; i < n; i++) {
 					var callback = callbacks[i];
 					if (callback.callback === cb && callback.thisObj === thisObj) {

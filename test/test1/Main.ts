@@ -1,8 +1,6 @@
-/// <reference path='../../lib/JQuery.d.ts'/>
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
-/// <reference path='../../src/illa/ScrollbarUtil.ts'/>
 /// <reference path='../../src/illa/StringUtil.ts'/>
 /// <reference path='../../src/illa/Ticker.ts'/>
 /// <reference path='../../src/illa/UnitTest.ts'/>
@@ -13,37 +11,8 @@ module test1 {
 		ticker: illa.Ticker;
 
 		constructor() {
-			jQuery(jQuery.proxy(this.onDOMLoaded, this));
-		}
-
-		onDOMLoaded(): void {
-			var u = this.unitTest = new illa.UnitTest(jQuery('body'));
+			var u = this.unitTest = new illa.UnitTest();
 			u.info('Testing...');
-
-
-
-			var scrollbarUtil = new illa.ScrollbarUtil();
-			u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(illa.Axis2D.X)), 'ScrollbarUtil.getDefaultSize 1');
-			u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(illa.Axis2D.Y)), 'ScrollbarUtil.getDefaultSize 2');
-			u.assert(scrollbarUtil.getDefaultSize(illa.Axis2D.X) >= 0, 'ScrollbarUtil.getDefaultSize 3');
-			u.assert(scrollbarUtil.getDefaultSize(illa.Axis2D.Y) >= 0, 'ScrollbarUtil.getDefaultSize 4');
-
-			var scrolling = jQuery('<div style="overflow-x: scroll; overflow-y: scroll">');
-			var scrolling2 = jQuery('<div style="overflow: scroll">');
-			var nonScrolling = jQuery('<div style="overflow-x: hidden; overflow-y: hidden">');
-			var nonScrolling2 = jQuery('<div style="overflow-x: visible; overflow-y: visible">');
-			var nonScrolling3 = jQuery('<div style="overflow: visible">');
-
-			u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, illa.Axis2D.X), 'ScrollbarUtil.isVisibleOn 1');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, illa.Axis2D.Y), 'ScrollbarUtil.isVisibleOn 2');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, illa.Axis2D.X) === false, 'ScrollbarUtil.isVisibleOn 3');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, illa.Axis2D.Y) === false, 'ScrollbarUtil.isVisibleOn 4');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, illa.Axis2D.X) === false, 'ScrollbarUtil.isVisibleOn 5');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, illa.Axis2D.Y) === false, 'ScrollbarUtil.isVisibleOn 6');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, illa.Axis2D.X), 'ScrollbarUtil.isVisibleOn 7');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, illa.Axis2D.Y), 'ScrollbarUtil.isVisibleOn 8');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, illa.Axis2D.X) === false, 'ScrollbarUtil.isVisibleOn 9');
-			u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, illa.Axis2D.Y) === false, 'ScrollbarUtil.isVisibleOn 10');
 
 
 
@@ -167,7 +136,7 @@ module test1 {
 
 
 
-			u = this.unitTest = new illa.UnitTest(jQuery('body'));
+			u = this.unitTest = new illa.UnitTest();
 			u.info('Testing Ticker...');
 
 			this.ticker = new illa.Ticker();
@@ -201,7 +170,7 @@ module test1 {
 		onTick5(e: illa.Ivent): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5');
 			this.ticker.setIsStarted(false);
-			setTimeout(jQuery.proxy(this.onTickerFinished, this), 500);
+			setTimeout(illa.bind(this.onTickerFinished, this), 500);
 		}
 
 		onTickerFinished(): void {

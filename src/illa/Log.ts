@@ -1,8 +1,7 @@
 module illa {
 	export class Log {
-		static logSupported = 'console' in window && 'log' in window.console;
 		static log(...args) {
-			if (window.console && console.log) {
+			if (illa.win.console && console.log) {
 				if (console.log.apply) {
 					console.log.apply(console, args);
 				} else {
@@ -11,7 +10,7 @@ module illa {
 			}
 		}
 		static info(...args) {
-			if (window.console && console.info) {
+			if (illa.win.console && console.info) {
 				if (console.info.apply) {
 					console.info.apply(console, args);
 				} else {
@@ -22,7 +21,7 @@ module illa {
 			}
 		}
 		static warn(...args) {
-			if (window.console && console.warn) {
+			if (illa.win.console && console.warn) {
 				if (console.warn.apply) {
 					console.warn.apply(console, args);
 				} else {
@@ -33,7 +32,7 @@ module illa {
 			}
 		}
 		static error(...args) {
-			if (window.console && console.error) {
+			if (illa.win.console && console.error) {
 				if (console.error.apply) {
 					console.error.apply(console, args);
 				} else {

@@ -1,6 +1,17 @@
-/// <reference path='../../lib/JQuery.d.ts'/>
-
 module illa {
+	export var win = (function() {
+		return this.window || this.global;
+	})();
+	
+	export var typeByClass = (function() {
+		var klass = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+		var result: { [s: string]: string } = {};
+		for (var i = 0, n = klass.length; i < n; i++) {
+			result['[object ' + klass[i] + ']'] = klass[i].toLowerCase();
+		}
+		return result;
+	})();
+
 	/**
 	 * Returns true if the value is a string primitive.
 	 */
@@ -34,8 +45,10 @@ module illa {
 	 * Array subclasses are not recognized as arrays.
 	 */
 	export function isArray(v): boolean {
-		return jQuery.isArray(v);
+		return illa.getType(v) == 'array';
 	}
+	
+	if (Array.isArray) illa.isArray = Array.isArray;
 
 	/**
 	 * Returns true if the value is undefined.
@@ -67,10 +80,19 @@ module illa {
 	}
 
 	/**
-	 * Returns the type of value as reported by jQuery.
+	 * Returns the type of value.
 	 */
 	export function getType(v): string {
-		return jQuery.type(v);
+		var result = '';
+		if (v == null) {
+			result = v + '';
+		} else {
+			result = typeof v;
+			if (result == 'object' || result == 'function') {
+				result = illa.typeByClass[toString.call(v)] || 'object';
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -79,7 +101,7 @@ module illa {
 	export function as<T>(c: new (...r) => T, v): T {
 		return v instanceof c ? v : null;
 	}
-	
+
 	/**
 	 * Binds a function to a ‘this’ context.
 	 * No argument binding allows us to keep function type safety.
@@ -88,6 +110,12 @@ module illa {
 		if (!fn) throw 'No function.';
 		return <any>function() {
 			return fn.apply(obj, arguments);
+		};
+	}
+	
+	if (Function.prototype.bind) {
+		illa.bind = function(fn, obj) {
+			return fn.call.apply(fn.bind, arguments);
 		};
 	}
 }

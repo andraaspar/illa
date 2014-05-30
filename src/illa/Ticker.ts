@@ -1,4 +1,3 @@
-/// <reference path='../../lib/JQuery.d.ts'/>
 /// <reference path='Ivent.ts'/>
 /// <reference path='IventHandler.ts'/>
 
@@ -6,9 +5,9 @@ module illa {
 	export class Ticker extends IventHandler {
 		static EVENT_TICK = 'illa_Ticker_EVENT_TICK';
 		
-		private supportsAnimationFrame = jQuery.isFunction(window.requestAnimationFrame) && jQuery.isFunction(window.cancelAnimationFrame);
-		private intervalID = NaN;
-		private onTickBound = jQuery.proxy(this.onTick, this);
+		private supportsAnimationFrame = illa.isFunction(illa.win.requestAnimationFrame) && illa.isFunction(illa.win.cancelAnimationFrame);
+		private intervalID;
+		private onTickBound = illa.bind(this.onTick, this);
 		private tickCount = 0;
 		
 		constructor() {
@@ -17,7 +16,7 @@ module illa {
 		}
 		
 		getIsStarted(): boolean {
-			return !isNaN(this.intervalID);
+			return !illa.isUndefined(this.intervalID);
 		}
 		
 		setIsStarted(flag: boolean): void {
@@ -35,7 +34,7 @@ module illa {
 				} else {
 					clearInterval(this.intervalID);
 				}
-				this.intervalID = NaN;
+				this.intervalID = undefined;
 			}
 		}
 		

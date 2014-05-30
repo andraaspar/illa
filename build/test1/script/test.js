@@ -1,5 +1,18 @@
 var illa;
 (function (illa) {
+    illa.win = (function () {
+        return this.window || this.global;
+    })();
+
+    illa.typeByClass = (function () {
+        var klass = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+        var result = {};
+        for (var i = 0, n = klass.length; i < n; i++) {
+            result['[object ' + klass[i] + ']'] = klass[i].toLowerCase();
+        }
+        return result;
+    })();
+
     function isString(v) {
         return typeof v == 'string';
     }
@@ -21,9 +34,12 @@ var illa;
     illa.isFunction = isFunction;
 
     function isArray(v) {
-        return jQuery.isArray(v);
+        return illa.getType(v) == 'array';
     }
     illa.isArray = isArray;
+
+    if (Array.isArray)
+        illa.isArray = Array.isArray;
 
     function isUndefined(v) {
         return typeof v == 'undefined';
@@ -47,7 +63,16 @@ var illa;
     illa.isObjectNotNull = isObjectNotNull;
 
     function getType(v) {
-        return jQuery.type(v);
+        var result = '';
+        if (v == null) {
+            result = v + '';
+        } else {
+            result = typeof v;
+            if (result == 'object' || result == 'function') {
+                result = illa.typeByClass[toString.call(v)] || 'object';
+            }
+        }
+        return result;
     }
     illa.getType = getType;
 
@@ -64,14 +89,35 @@ var illa;
         };
     }
     illa.bind = bind;
+
+    if (Function.prototype.bind) {
+        illa.bind = function (fn, obj) {
+            return fn.call.apply(fn.bind, arguments);
+        };
+    }
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
     var ArrayUtil = (function () {
         function ArrayUtil() {
         }
-        ArrayUtil.indexOf = function (a, v) {
-            return jQuery.inArray(v, a);
+        ArrayUtil.indexOf = function (a, v, fromIndex) {
+            if (Array.prototype.indexOf) {
+                return Array.prototype.indexOf.call(a, v, fromIndex);
+            } else {
+                var length = a.length;
+                if (fromIndex == null) {
+                    fromIndex = 0;
+                } else if (fromIndex < 0) {
+                    fromIndex = Math.max(0, length + fromIndex);
+                }
+                for (var i = fromIndex; i < length; i++) {
+                    if (i in a && a[i] === v) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
         };
 
         ArrayUtil.removeFirst = function (a, v) {
@@ -107,7 +153,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            if (window.console && console.log) {
+            if (illa.win.console && console.log) {
                 if (console.log.apply) {
                     console.log.apply(console, args);
                 } else {
@@ -120,7 +166,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            if (window.console && console.info) {
+            if (illa.win.console && console.info) {
                 if (console.info.apply) {
                     console.info.apply(console, args);
                 } else {
@@ -135,7 +181,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            if (window.console && console.warn) {
+            if (illa.win.console && console.warn) {
                 if (console.warn.apply) {
                     console.warn.apply(console, args);
                 } else {
@@ -150,7 +196,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
             }
-            if (window.console && console.error) {
+            if (illa.win.console && console.error) {
                 if (console.error.apply) {
                     console.error.apply(console, args);
                 } else {
@@ -196,89 +242,9 @@ var illa;
                 Log.error.apply(this, [test].concat(args));
             }
         };
-        Log.logSupported = 'console' in window && 'log' in window.console;
         return Log;
     })();
     illa.Log = Log;
-})(illa || (illa = {}));
-var illa;
-(function (illa) {
-    (function (Axis2D) {
-        Axis2D[Axis2D["X"] = 0] = "X";
-        Axis2D[Axis2D["Y"] = 1] = "Y";
-    })(illa.Axis2D || (illa.Axis2D = {}));
-    var Axis2D = illa.Axis2D;
-})(illa || (illa = {}));
-var illa;
-(function (illa) {
-    var ScrollbarUtil = (function () {
-        function ScrollbarUtil(box) {
-            this.defaultWidth = NaN;
-            this.defaultHeight = NaN;
-            if (box) {
-                this.box = box;
-            } else {
-                this.box = jQuery('<div>');
-            }
-            this.box.addClass(ScrollbarUtil.CSS_CLASS);
-            this.box.appendTo('body');
-        }
-        ScrollbarUtil.prototype.getDefaultSize = function (axis) {
-            var result = NaN;
-
-            if (isNaN(this.defaultWidth)) {
-                var boxElement = this.box[0];
-                this.defaultWidth = boxElement.offsetWidth - boxElement.clientWidth;
-                this.defaultHeight = boxElement.offsetHeight - boxElement.clientHeight;
-            }
-
-            switch (axis) {
-                case 0 /* X */:
-                    result = this.defaultWidth;
-                    break;
-                case 1 /* Y */:
-                    result = this.defaultHeight;
-                    break;
-            }
-
-            return result;
-        };
-
-        ScrollbarUtil.prototype.clearDefaultSizeCache = function () {
-            this.defaultWidth = NaN;
-        };
-
-        ScrollbarUtil.isVisibleOn = function (jq, axis) {
-            var elem = jq[0];
-            if (!elem)
-                return false;
-            var overflow = '';
-            switch (axis) {
-                case 0 /* X */:
-                    overflow = jq.css('overflow-x');
-                    break;
-                case 1 /* Y */:
-                    overflow = jq.css('overflow-y');
-                    break;
-            }
-            switch (overflow) {
-                case 'scroll':
-                    return true;
-                case 'auto':
-                    switch (axis) {
-                        case 0 /* X */:
-                            return elem.scrollWidth > jq.innerWidth();
-                        case 1 /* Y */:
-                            return elem.scrollHeight > jq.innerHeight();
-                    }
-                    break;
-            }
-            return false;
-        };
-        ScrollbarUtil.CSS_CLASS = 'illa-ScrollbarUtil-box';
-        return ScrollbarUtil;
-    })();
-    illa.ScrollbarUtil = ScrollbarUtil;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
@@ -388,7 +354,7 @@ var illa;
         }
         IventHandler.prototype.getCallbackRegsByType = function (type) {
             var result = this.callbacksByType[type];
-            if (!jQuery.isArray(result))
+            if (!illa.isArray(result))
                 result = [];
             return result;
         };
@@ -399,7 +365,7 @@ var illa;
 
         IventHandler.prototype.addIventCallback = function (type, cb, thisObj) {
             var reg = new illa.IventCallbackReg(cb, thisObj);
-            if (jQuery.isArray(this.callbacksByType[type])) {
+            if (illa.isArray(this.callbacksByType[type])) {
                 this.removeIventCallback(type, cb, thisObj);
                 this.callbacksByType[type].push(reg);
             } else {
@@ -409,7 +375,7 @@ var illa;
 
         IventHandler.prototype.removeIventCallback = function (type, cb, thisObj) {
             var callbacks = this.callbacksByType[type];
-            if (jQuery.isArray(callbacks)) {
+            if (illa.isArray(callbacks)) {
                 for (var i = 0, n = callbacks.length; i < n; i++) {
                     var callback = callbacks[i];
                     if (callback.callback === cb && callback.thisObj === thisObj) {
@@ -439,14 +405,13 @@ var illa;
         __extends(Ticker, _super);
         function Ticker() {
             _super.call(this);
-            this.supportsAnimationFrame = jQuery.isFunction(window.requestAnimationFrame) && jQuery.isFunction(window.cancelAnimationFrame);
-            this.intervalID = NaN;
-            this.onTickBound = jQuery.proxy(this.onTick, this);
+            this.supportsAnimationFrame = illa.isFunction(illa.win.requestAnimationFrame) && illa.isFunction(illa.win.cancelAnimationFrame);
+            this.onTickBound = illa.bind(this.onTick, this);
             this.tickCount = 0;
             this.setIsStarted(true);
         }
         Ticker.prototype.getIsStarted = function () {
-            return !isNaN(this.intervalID);
+            return !illa.isUndefined(this.intervalID);
         };
 
         Ticker.prototype.setIsStarted = function (flag) {
@@ -465,7 +430,7 @@ var illa;
                 } else {
                     clearInterval(this.intervalID);
                 }
-                this.intervalID = NaN;
+                this.intervalID = undefined;
             }
         };
 
@@ -492,8 +457,7 @@ var illa;
 var illa;
 (function (illa) {
     var UnitTest = (function () {
-        function UnitTest(printTarget) {
-            this.printTarget = printTarget;
+        function UnitTest() {
             this.testCount = 0;
             this.successCount = 0;
             this.failCount = 0;
@@ -534,12 +498,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 r[_i] = arguments[_i + 0];
             }
-            if (this.printTarget) {
-                var out = jQuery('<p>').text(r.join(' '));
-                this.printTarget.append(out);
-            } else {
-                illa.Log.info.apply(illa.Log, r);
-            }
+            illa.Log.info.apply(illa.Log, r);
         };
 
         UnitTest.prototype.warn = function () {
@@ -547,12 +506,7 @@ var illa;
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 r[_i] = arguments[_i + 0];
             }
-            if (this.printTarget) {
-                var out = jQuery('<p>').text(r.join(' ')).prepend('<b>WARNING: </b>');
-                this.printTarget.append(out);
-            } else {
-                illa.Log.warn.apply(illa.Log, r);
-            }
+            illa.Log.warn.apply(illa.Log, r);
         };
         return UnitTest;
     })();
@@ -562,34 +516,8 @@ var test1;
 (function (test1) {
     var Main = (function () {
         function Main() {
-            jQuery(jQuery.proxy(this.onDOMLoaded, this));
-        }
-        Main.prototype.onDOMLoaded = function () {
-            var u = this.unitTest = new illa.UnitTest(jQuery('body'));
+            var u = this.unitTest = new illa.UnitTest();
             u.info('Testing...');
-
-            var scrollbarUtil = new illa.ScrollbarUtil();
-            u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(0 /* X */)), 'ScrollbarUtil.getDefaultSize 1');
-            u.assert(illa.isNumber(scrollbarUtil.getDefaultSize(1 /* Y */)), 'ScrollbarUtil.getDefaultSize 2');
-            u.assert(scrollbarUtil.getDefaultSize(0 /* X */) >= 0, 'ScrollbarUtil.getDefaultSize 3');
-            u.assert(scrollbarUtil.getDefaultSize(1 /* Y */) >= 0, 'ScrollbarUtil.getDefaultSize 4');
-
-            var scrolling = jQuery('<div style="overflow-x: scroll; overflow-y: scroll">');
-            var scrolling2 = jQuery('<div style="overflow: scroll">');
-            var nonScrolling = jQuery('<div style="overflow-x: hidden; overflow-y: hidden">');
-            var nonScrolling2 = jQuery('<div style="overflow-x: visible; overflow-y: visible">');
-            var nonScrolling3 = jQuery('<div style="overflow: visible">');
-
-            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, 0 /* X */), 'ScrollbarUtil.isVisibleOn 1');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling, 1 /* Y */), 'ScrollbarUtil.isVisibleOn 2');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 3');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 4');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 5');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling2, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 6');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, 0 /* X */), 'ScrollbarUtil.isVisibleOn 7');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(scrolling2, 1 /* Y */), 'ScrollbarUtil.isVisibleOn 8');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, 0 /* X */) === false, 'ScrollbarUtil.isVisibleOn 9');
-            u.assert(illa.ScrollbarUtil.isVisibleOn(nonScrolling3, 1 /* Y */) === false, 'ScrollbarUtil.isVisibleOn 10');
 
             u.assert(illa.isString('undefined'), 'isString 1');
             u.assert(illa.isString(true) === false, 'isString 2');
@@ -708,13 +636,12 @@ var test1;
 
             u.printStats();
 
-            u = this.unitTest = new illa.UnitTest(jQuery('body'));
+            u = this.unitTest = new illa.UnitTest();
             u.info('Testing Ticker...');
 
             this.ticker = new illa.Ticker();
             this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
-        };
-
+        }
         Main.prototype.onTick1 = function (e) {
             this.unitTest.assert(this.ticker.getTickCount() === 1, 'Ticker 1');
             this.ticker.removeIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
@@ -742,7 +669,7 @@ var test1;
         Main.prototype.onTick5 = function (e) {
             this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5');
             this.ticker.setIsStarted(false);
-            setTimeout(jQuery.proxy(this.onTickerFinished, this), 500);
+            setTimeout(illa.bind(this.onTickerFinished, this), 500);
         };
 
         Main.prototype.onTickerFinished = function () {
