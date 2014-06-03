@@ -1,13 +1,17 @@
 module illa {
-	export var win = (function() {
-		return this.window || this.global;
+	/**
+	 * A reference to the global object.
+	 * This is the window in a browser, and the global in node.
+	 */
+	export var GLOBAL = (function() {
+		return this;
 	})();
-	
-	export var typeByClass = (function() {
-		var klass = "Boolean Number String Function Array Date RegExp Object Error".split(" ");
+
+	export var classByType = (function() {
+		var classes = 'Boolean Number String Function Array Date RegExp Object Error'.split(' ');
 		var result: { [s: string]: string } = {};
-		for (var i = 0, n = klass.length; i < n; i++) {
-			result['[object ' + klass[i] + ']'] = klass[i].toLowerCase();
+		for (var i = 0, n = classes.length; i < n; i++) {
+			result['[object ' + classes[i] + ']'] = classes[i].toLowerCase();
 		}
 		return result;
 	})();
@@ -47,7 +51,7 @@ module illa {
 	export function isArray(v): boolean {
 		return illa.getType(v) == 'array';
 	}
-	
+
 	if (Array.isArray) illa.isArray = Array.isArray;
 
 	/**
@@ -89,7 +93,7 @@ module illa {
 		} else {
 			result = typeof v;
 			if (result == 'object' || result == 'function') {
-				result = illa.typeByClass[toString.call(v)] || 'object';
+				result = illa.classByType[toString.call(v)] || 'object';
 			}
 		}
 		return result;
@@ -112,7 +116,7 @@ module illa {
 			return fn.apply(obj, arguments);
 		};
 	}
-	
+
 	if (Function.prototype.bind) {
 		illa.bind = function(fn, obj) {
 			return fn.call.apply(fn.bind, arguments);

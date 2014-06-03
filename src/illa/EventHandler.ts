@@ -1,23 +1,23 @@
-/// <reference path='IIventHandler.ts'/>
+/// <reference path='IEventHandler.ts'/>
 
 module illa {
-	export class IventHandler implements IIventHandler {
-		private callbacksByType: { [s: string]: IventCallbackReg[] } = {};
+	export class EventHandler implements IEventHandler {
+		private callbacksByType: { [s: string]: EventCallbackReg[] } = {};
 
-		getCallbackRegsByType(type: string): IventCallbackReg[] {
+		getCallbackRegsByType(type: string): EventCallbackReg[] {
 			var result = this.callbacksByType[type];
 			if (!illa.isArray(result)) result = [];
 			return result;
 		}
 
-		getEventParent(): IIventHandler {
+		getEventParent(): IEventHandler {
 			return null;
 		}
 
-		addIventCallback(type: string, cb: IIventCallback, thisObj: Object): void {
-			var reg = new IventCallbackReg(cb, thisObj);
+		addEventCallback(type: string, cb: IEventCallback, thisObj: Object): void {
+			var reg = new EventCallbackReg(cb, thisObj);
 			if (illa.isArray(this.callbacksByType[type])) {
-				this.removeIventCallback(type, cb, thisObj);
+				this.removeEventCallback(type, cb, thisObj);
 				this.callbacksByType[type].push(reg);
 			} else {
 				this.callbacksByType[type] = [reg];
@@ -25,7 +25,7 @@ module illa {
 
 		}
 
-		removeIventCallback(type: string, cb: IIventCallback, thisObj: Object): void {
+		removeEventCallback(type: string, cb: IEventCallback, thisObj: Object): void {
 			var callbacks = this.callbacksByType[type];
 			if (illa.isArray(callbacks)) {
 				for (var i = 0, n = callbacks.length; i < n; i++) {
@@ -38,7 +38,7 @@ module illa {
 			}
 		}
 
-		removeAllIventCallbacks(): void {
+		removeAllEventCallbacks(): void {
 			this.callbacksByType = {};
 		}
 	}

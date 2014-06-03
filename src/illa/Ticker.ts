@@ -1,11 +1,11 @@
-/// <reference path='Ivent.ts'/>
-/// <reference path='IventHandler.ts'/>
+/// <reference path='Event.ts'/>
+/// <reference path='EventHandler.ts'/>
 
 module illa {
-	export class Ticker extends IventHandler {
+	export class Ticker extends EventHandler {
 		static EVENT_TICK = 'illa_Ticker_EVENT_TICK';
 		
-		private supportsAnimationFrame = illa.isFunction(illa.win.requestAnimationFrame) && illa.isFunction(illa.win.cancelAnimationFrame);
+		private supportsAnimationFrame = illa.isFunction(illa.GLOBAL.requestAnimationFrame) && illa.isFunction(illa.GLOBAL.cancelAnimationFrame);
 		private intervalID;
 		private onTickBound = illa.bind(this.onTick, this);
 		private tickCount = 0;
@@ -47,7 +47,7 @@ module illa {
 			if (this.supportsAnimationFrame) {
 				this.intervalID = requestAnimationFrame(this.onTickBound);
 			}
-			new Ivent(Ticker.EVENT_TICK, this).dispatch();
+			new Event(Ticker.EVENT_TICK, this).dispatch();
 		}
 		
 		getTickCount(): number {

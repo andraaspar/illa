@@ -69,18 +69,20 @@ module test1 {
 			u.assert(illa.isObjectNotNull('foo') === false, 'isObjectNotNull 7');
 
 			u.assert(illa.as(Main, this) === this, 'as 1');
-			u.assert(illa.as(illa.Ivent, this) === null, 'as 2');
-			var ivent = new illa.Ivent('test', null);
-			u.assert(illa.as(illa.Ivent, ivent) === ivent, 'as 3');
-			
+			u.assert(illa.as(illa.Event, this) === null, 'as 2');
+			var ivent = new illa.Event('test', null);
+			u.assert(illa.as(illa.Event, ivent) === ivent, 'as 3');
+
 			var fun = illa.bind(function(suffix: string): string {
 				return this.prefix + suffix;
-			}, {prefix: 'foo'});
+			}, { prefix: 'foo' });
 			u.assert(fun('bar') === 'foobar', 'bind 1');
-			
+
 			u.assertThrowsError(function() {
 				illa.bind(null, {});
 			}, 'bind 2');
+
+			u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 
 
 
@@ -90,11 +92,11 @@ module test1 {
 			u.assert(illa.StringUtil.castNicely(null) === '', 'StringUtil.castNicely 2');
 			u.assert(illa.StringUtil.castNicely({ toString: function() { return 'Nice.' } }) === 'Nice.', 'StringUtil.castNicely 3');
 			u.assert(illa.StringUtil.castNicely('foo') === 'foo', 'StringUtil.castNicely 4');
-			
+
 			u.assert(illa.StringUtil.trim('  foo   ') === 'foo', 'StringUtil.trim 1');
 			u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
-			
-			
+
+
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'foo') === 0, 'ArrayUtil.indexOf 1');
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'quux') === -1, 'ArrayUtil.indexOf 2');
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], undefined) === -1, 'ArrayUtil.indexOf 3');
@@ -104,7 +106,7 @@ module test1 {
 			u.assert(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined) === 2, 'ArrayUtil.indexOf 7');
 			u.assert(illa.ArrayUtil.indexOf([0, 1, null, 3], null) === 2, 'ArrayUtil.indexOf 8');
 			u.assert(illa.ArrayUtil.indexOf([0, 1, Infinity, 3], Infinity) === 2, 'ArrayUtil.indexOf 9');
-			
+
 			(function() {
 				var testArr = ['foo', 'bar', 'baz', 'foo'];
 				var removed = illa.ArrayUtil.removeFirst(testArr, 'foo');
@@ -113,14 +115,14 @@ module test1 {
 				u.assert(testArr[2] === 'foo', 'ArrayUtil.removeFirst 3');
 				u.assert(removed, 'ArrayUtil.removeFirst 4');
 			})();
-			
+
 			(function() {
 				var testArr = ['foo', 'bar', 'baz', 'foo'];
 				var removed = illa.ArrayUtil.removeFirst(testArr, 'quux');
 				u.assert(testArr.length === 4, 'ArrayUtil.removeFirst 5');
 				u.assert(removed === false, 'ArrayUtil.removeFirst 6');
 			})();
-			
+
 			(function() {
 				var testArr = ['foo', 'bar', 'baz', 'foo'];
 				var removed = illa.ArrayUtil.removeAll(testArr, 'foo');
@@ -132,42 +134,35 @@ module test1 {
 
 
 
-			u.printStats();
-
-
-
-			u = this.unitTest = new illa.UnitTest();
-			u.info('Testing Ticker...');
-
 			this.ticker = new illa.Ticker();
-			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
+			this.ticker.addEventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
 		}
 
-		onTick1(e: illa.Ivent): void {
+		onTick1(e: illa.Event): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 1, 'Ticker 1');
-			this.ticker.removeIventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
-			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick2, this);
-			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick3, this);
+			this.ticker.removeEventCallback(illa.Ticker.EVENT_TICK, this.onTick1, this);
+			this.ticker.addEventCallback(illa.Ticker.EVENT_TICK, this.onTick2, this);
+			this.ticker.addEventCallback(illa.Ticker.EVENT_TICK, this.onTick3, this);
 		}
 
-		onTick2(e: illa.Ivent): void {
+		onTick2(e: illa.Event): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 2');
 		}
 
-		onTick3(e: illa.Ivent): void {
+		onTick3(e: illa.Event): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 3');
-			this.ticker.removeAllIventCallbacks();
-			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
-			this.ticker.addIventCallback(illa.Ticker.EVENT_TICK, this.onTick5, this);
+			this.ticker.removeAllEventCallbacks();
+			this.ticker.addEventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
+			this.ticker.addEventCallback(illa.Ticker.EVENT_TICK, this.onTick5, this);
 		}
 
-		onTick4(e: illa.Ivent): void {
+		onTick4(e: illa.Event): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 3, 'Ticker 4');
 			e.setStopImmediatePropagation(true);
-			this.ticker.removeIventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
+			this.ticker.removeEventCallback(illa.Ticker.EVENT_TICK, this.onTick4, this);
 		}
 
-		onTick5(e: illa.Ivent): void {
+		onTick5(e: illa.Event): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5');
 			this.ticker.setIsStarted(false);
 			setTimeout(illa.bind(this.onTickerFinished, this), 500);

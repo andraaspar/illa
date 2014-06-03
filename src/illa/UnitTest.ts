@@ -14,7 +14,7 @@ module illa {
 			} else {
 				this.failCount++;
 				if (desc) {
-					this.warn('Test failed:', desc);
+					this.warn('Test failed: ' + desc);
 				} else {
 					throw 'Test failed.';
 				}
@@ -33,9 +33,9 @@ module illa {
 		}
 
 		printStats(): void {
-			this.info(this.testCount, 'tests completed:',
-				this.successCount, 'succeeded,',
-				this.failCount, 'failed.');
+			this.info(this.testCount + ' tests completed: ' +
+				this.successCount + ' succeeded, ' +
+				this.failCount + ' failed.');
 		}
 
 		info(...r): void {

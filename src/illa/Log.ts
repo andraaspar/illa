@@ -1,7 +1,8 @@
 module illa {
 	export class Log {
 		static log(...args) {
-			if (illa.win.console && console.log) {
+			var console = illa.GLOBAL.console;
+			if (console && console.log) {
 				if (console.log.apply) {
 					console.log.apply(console, args);
 				} else {
@@ -10,7 +11,8 @@ module illa {
 			}
 		}
 		static info(...args) {
-			if (illa.win.console && console.info) {
+			var console = illa.GLOBAL.console;
+			if (console && console.info) {
 				if (console.info.apply) {
 					console.info.apply(console, args);
 				} else {
@@ -21,7 +23,8 @@ module illa {
 			}
 		}
 		static warn(...args) {
-			if (illa.win.console && console.warn) {
+			var console = illa.GLOBAL.console;
+			if (console && console.warn) {
 				if (console.warn.apply) {
 					console.warn.apply(console, args);
 				} else {
@@ -32,7 +35,8 @@ module illa {
 			}
 		}
 		static error(...args) {
-			if (illa.win.console && console.error) {
+			var console = illa.GLOBAL.console;
+			if (console && console.error) {
 				if (console.error.apply) {
 					console.error.apply(console, args);
 				} else {

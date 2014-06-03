@@ -1,12 +1,12 @@
-/// <reference path='IIventHandler.ts'/>
+/// <reference path='IEventHandler.ts'/>
 
 module illa {
-	export class Ivent {
+	export class Event {
 		private isPropagationStopped = false;
 		private isImmediatePropagationStopped = false;
-		private currentTarget: IIventHandler;
+		private currentTarget: IEventHandler;
 		
-		constructor(private type: string, private target: IIventHandler) {
+		constructor(private type: string, private target: IEventHandler) {
 
 		}
 
@@ -14,7 +14,7 @@ module illa {
 			this.processHandler(this.target);
 		}
 
-		processHandler(handler: IIventHandler): void {
+		processHandler(handler: IEventHandler): void {
 			this.currentTarget = handler;
 			var callbackRegs = handler.getCallbackRegsByType(this.type).slice(0);
 			for (var i = 0, n = callbackRegs.length; i < n; i++) {
@@ -32,11 +32,11 @@ module illa {
 			return this.type;
 		}
 		
-		getTarget(): IIventHandler {
+		getTarget(): IEventHandler {
 			return this.target;
 		}
 		
-		getCurrentTarget(): IIventHandler {
+		getCurrentTarget(): IEventHandler {
 			return this.currentTarget;
 		}
 		
