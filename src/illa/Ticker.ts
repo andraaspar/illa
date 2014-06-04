@@ -1,3 +1,4 @@
+/// <reference path='_module.ts'/>
 /// <reference path='Event.ts'/>
 /// <reference path='EventHandler.ts'/>
 

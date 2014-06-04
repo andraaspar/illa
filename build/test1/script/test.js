@@ -591,7 +591,7 @@ var test1;
                 illa.bind(null, {});
             }, 'bind 2');
 
-            u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'global 1');
+            u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 
             u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
 

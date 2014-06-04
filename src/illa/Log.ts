@@ -1,3 +1,5 @@
+/// <reference path='_module.ts'/>
+
 module illa {
 	export class Log {
 		static log(...args) {
