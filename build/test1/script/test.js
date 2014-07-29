@@ -252,6 +252,111 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    (function (Axis2D) {
+        Axis2D[Axis2D["X"] = 0] = "X";
+        Axis2D[Axis2D["Y"] = 1] = "Y";
+    })(illa.Axis2D || (illa.Axis2D = {}));
+    var Axis2D = illa.Axis2D;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
+    (function (Alignment) {
+        Alignment[Alignment["START"] = 0] = "START";
+        Alignment[Alignment["CENTER"] = 1] = "CENTER";
+        Alignment[Alignment["END"] = 2] = "END";
+    })(illa.Alignment || (illa.Alignment = {}));
+    var Alignment = illa.Alignment;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var Rectangle = (function () {
+        function Rectangle(x, y, width, height) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            if (width < 0) {
+                throw 'Invalid width.';
+            }
+            if (height < 0) {
+                throw 'Invalid height.';
+            }
+        }
+        Rectangle.prototype.getOffset = function (axis, alignment) {
+            if (typeof alignment === "undefined") { alignment = 0 /* START */; }
+            var offset = NaN;
+
+            switch (axis) {
+                case 0 /* X */:
+                    offset = this.x;
+                    break;
+                case 1 /* Y */:
+                    offset = this.y;
+                    break;
+            }
+
+            switch (alignment) {
+                case 1 /* CENTER */:
+                    offset += this.getSize(axis) / 2;
+                    break;
+                case 2 /* END */:
+                    offset += this.getSize(axis);
+                    break;
+            }
+
+            return offset;
+        };
+
+        Rectangle.prototype.getSize = function (axis) {
+            var result = NaN;
+
+            switch (axis) {
+                case 0 /* X */:
+                    result = this.width;
+                    break;
+                case 1 /* Y */:
+                    result = this.height;
+                    break;
+            }
+
+            return result;
+        };
+
+        Rectangle.prototype.equals = function (value) {
+            return !!value && value.getOffset(0 /* X */) == this.getOffset(0 /* X */) && value.getOffset(1 /* Y */) == this.getOffset(1 /* Y */) && value.getSize(0 /* X */) == this.getSize(0 /* X */) && value.getSize(1 /* Y */) == this.getSize(1 /* Y */);
+        };
+
+        Rectangle.prototype.toString = function () {
+            return '[illa.Rectangle x=' + this.getOffset(0 /* X */) + ' y=' + this.getOffset(1 /* Y */) + ' width=' + this.getSize(0 /* X */) + ' height=' + this.getSize(1 /* Y */) + ']';
+        };
+
+        Rectangle.prototype.expand = function (top, right, bottom, left) {
+            return new Rectangle(this.getOffset(0 /* X */) - left, this.getOffset(1 /* Y */) - top, this.getSize(0 /* X */) + left + right, this.getSize(1 /* Y */) + top + bottom);
+        };
+
+        Rectangle.prototype.containsRect = function (rect) {
+            var result = false;
+            if (rect) {
+                result = true;
+                for (var axis = 0 /* X */; axis <= 1 /* Y */; axis++) {
+                    if (rect.getOffset(axis, 0 /* START */) < this.getOffset(axis, 0 /* START */) || rect.getOffset(axis, 2 /* END */) > this.getOffset(axis, 2 /* END */)) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            return result;
+        };
+
+        Rectangle.prototype.contains = function (x, y) {
+            return x >= this.x && x < this.x + this.width && y >= this.y && y < this.y + this.height;
+        };
+        return Rectangle;
+    })();
+    illa.Rectangle = Rectangle;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var StringUtil = (function () {
         function StringUtil() {
         }

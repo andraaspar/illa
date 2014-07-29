@@ -1,6 +1,7 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
+/// <reference path='../../src/illa/Rectangle.ts'/>
 /// <reference path='../../src/illa/StringUtil.ts'/>
 /// <reference path='../../src/illa/Ticker.ts'/>
 /// <reference path='../../src/illa/UnitTest.ts'/>
