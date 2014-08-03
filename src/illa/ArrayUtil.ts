@@ -11,7 +11,7 @@ module illa {
 					fromIndex = Math.max(0, length + fromIndex);
 				}
 				for (var i = fromIndex; i < length; i++) {
-					if (i in a && a[i] === v) {
+					if (a[i] === v) {
 						return i;
 					}
 				}

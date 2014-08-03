@@ -93,7 +93,7 @@ module illa {
 		} else {
 			result = typeof v;
 			if (result == 'object' || result == 'function') {
-				result = illa.classByType[toString.call(v)] || 'object';
+				result = illa.classByType[illa.classByType.toString.call(v)] || 'object';
 			}
 		}
 		return result;

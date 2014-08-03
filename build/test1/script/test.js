@@ -69,7 +69,7 @@ var illa;
         } else {
             result = typeof v;
             if (result == 'object' || result == 'function') {
-                result = illa.classByType[toString.call(v)] || 'object';
+                result = illa.classByType[illa.classByType.toString.call(v)] || 'object';
             }
         }
         return result;
@@ -112,7 +112,7 @@ var illa;
                     fromIndex = Math.max(0, length + fromIndex);
                 }
                 for (var i = fromIndex; i < length; i++) {
-                    if (i in a && a[i] === v) {
+                    if (a[i] === v) {
                         return i;
                     }
                 }
@@ -721,6 +721,7 @@ var test1;
             u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], false) === -1, 'ArrayUtil.indexOf 5');
             u.assert(illa.ArrayUtil.indexOf([0, 1, NaN, 3], NaN) === -1, 'ArrayUtil.indexOf 6');
             u.assert(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined) === 2, 'ArrayUtil.indexOf 7');
+            illa.Log.info(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined));
             u.assert(illa.ArrayUtil.indexOf([0, 1, null, 3], null) === 2, 'ArrayUtil.indexOf 8');
             u.assert(illa.ArrayUtil.indexOf([0, 1, Infinity, 3], Infinity) === 2, 'ArrayUtil.indexOf 9');
 
