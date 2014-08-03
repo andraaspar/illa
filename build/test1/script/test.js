@@ -548,17 +548,21 @@ var illa;
         };
 
         Ticker.prototype.onTick = function () {
+            new illa.Event(Ticker.EVENT_BEFORE_TICK, this).dispatch();
             this.tickCount++;
             if (this.supportsAnimationFrame) {
                 this.intervalID = requestAnimationFrame(this.onTickBound);
             }
             new illa.Event(Ticker.EVENT_TICK, this).dispatch();
+            new illa.Event(Ticker.EVENT_AFTER_TICK, this).dispatch();
         };
 
         Ticker.prototype.getTickCount = function () {
             return this.tickCount;
         };
+        Ticker.EVENT_BEFORE_TICK = 'illa_Ticker_EVENT_BEFORE_TICK';
         Ticker.EVENT_TICK = 'illa_Ticker_EVENT_TICK';
+        Ticker.EVENT_AFTER_TICK = 'illa_Ticker_EVENT_AFTER_TICK';
         return Ticker;
     })(illa.EventHandler);
     illa.Ticker = Ticker;

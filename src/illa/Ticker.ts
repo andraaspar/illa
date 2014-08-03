@@ -4,7 +4,9 @@
 
 module illa {
 	export class Ticker extends EventHandler {
+		static EVENT_BEFORE_TICK = 'illa_Ticker_EVENT_BEFORE_TICK';
 		static EVENT_TICK = 'illa_Ticker_EVENT_TICK';
+		static EVENT_AFTER_TICK = 'illa_Ticker_EVENT_AFTER_TICK';
 		
 		private supportsAnimationFrame = illa.isFunction(illa.GLOBAL.requestAnimationFrame) && illa.isFunction(illa.GLOBAL.cancelAnimationFrame);
 		private intervalID;
@@ -44,11 +46,13 @@ module illa {
 		}
 		
 		onTick(): void {
+			new Event(Ticker.EVENT_BEFORE_TICK, this).dispatch();
 			this.tickCount++;
 			if (this.supportsAnimationFrame) {
 				this.intervalID = requestAnimationFrame(this.onTickBound);
 			}
 			new Event(Ticker.EVENT_TICK, this).dispatch();
+			new Event(Ticker.EVENT_AFTER_TICK, this).dispatch();
 		}
 		
 		getTickCount(): number {
