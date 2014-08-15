@@ -1,6 +1,7 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
+/// <reference path='../../src/illa/ObjectUtil.ts'/>
 /// <reference path='../../src/illa/Rectangle.ts'/>
 /// <reference path='../../src/illa/StringUtil.ts'/>
 /// <reference path='../../src/illa/Ticker.ts'/>
@@ -131,6 +132,21 @@ module test1 {
 				u.assert(testArr[0] === 'bar', 'ArrayUtil.removeAll 2');
 				u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
 				u.assert(removed, 'ArrayUtil.removeAll 4');
+			})();
+
+			(function() {
+				var testObj = {'a': undefined, 'b': null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': []};
+				var keys = illa.ObjectUtil.getKeys(testObj);
+				u.assert(keys.length === 9, 'ObjectUtil.getKeys 1');
+				u.assert(keys[0] === 'a', 'ObjectUtil.getKeys 2');
+				u.assert(keys[1] === 'b', 'ObjectUtil.getKeys 3');
+				u.assert(keys[2] === 'c', 'ObjectUtil.getKeys 4');
+				u.assert(keys[3] === 'd', 'ObjectUtil.getKeys 5');
+				u.assert(keys[4] === 'e', 'ObjectUtil.getKeys 6');
+				u.assert(keys[5] === 'f', 'ObjectUtil.getKeys 7');
+				u.assert(keys[6] === 'g', 'ObjectUtil.getKeys 8');
+				u.assert(keys[7] === 'h', 'ObjectUtil.getKeys 9');
+				u.assert(keys[8] === 'i', 'ObjectUtil.getKeys 10');
 			})();
 
 

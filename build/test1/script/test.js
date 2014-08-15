@@ -252,6 +252,24 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var ObjectUtil = (function () {
+        function ObjectUtil() {
+        }
+        ObjectUtil.getKeys = function (obj) {
+            var result = [];
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    result.push(key);
+                }
+            }
+            return result;
+        };
+        return ObjectUtil;
+    })();
+    illa.ObjectUtil = ObjectUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     (function (Axis2D) {
         Axis2D[Axis2D["X"] = 0] = "X";
         Axis2D[Axis2D["Y"] = 1] = "Y";
@@ -721,7 +739,6 @@ var test1;
             u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], false) === -1, 'ArrayUtil.indexOf 5');
             u.assert(illa.ArrayUtil.indexOf([0, 1, NaN, 3], NaN) === -1, 'ArrayUtil.indexOf 6');
             u.assert(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined) === 2, 'ArrayUtil.indexOf 7');
-            illa.Log.info(illa.ArrayUtil.indexOf([0, 1, undefined, 3], undefined));
             u.assert(illa.ArrayUtil.indexOf([0, 1, null, 3], null) === 2, 'ArrayUtil.indexOf 8');
             u.assert(illa.ArrayUtil.indexOf([0, 1, Infinity, 3], Infinity) === 2, 'ArrayUtil.indexOf 9');
 
@@ -748,6 +765,21 @@ var test1;
                 u.assert(testArr[0] === 'bar', 'ArrayUtil.removeAll 2');
                 u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
                 u.assert(removed, 'ArrayUtil.removeAll 4');
+            })();
+
+            (function () {
+                var testObj = { 'a': undefined, 'b': null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': [] };
+                var keys = illa.ObjectUtil.getKeys(testObj);
+                u.assert(keys.length === 9, 'ObjectUtil.getKeys 1');
+                u.assert(keys[0] === 'a', 'ObjectUtil.getKeys 2');
+                u.assert(keys[1] === 'b', 'ObjectUtil.getKeys 3');
+                u.assert(keys[2] === 'c', 'ObjectUtil.getKeys 4');
+                u.assert(keys[3] === 'd', 'ObjectUtil.getKeys 5');
+                u.assert(keys[4] === 'e', 'ObjectUtil.getKeys 6');
+                u.assert(keys[5] === 'f', 'ObjectUtil.getKeys 7');
+                u.assert(keys[6] === 'g', 'ObjectUtil.getKeys 8');
+                u.assert(keys[7] === 'h', 'ObjectUtil.getKeys 9');
+                u.assert(keys[8] === 'i', 'ObjectUtil.getKeys 10');
             })();
 
             this.ticker = new illa.Ticker();
