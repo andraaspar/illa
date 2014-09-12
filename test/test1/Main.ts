@@ -1,6 +1,7 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
+/// <reference path='../../src/illa/Map.ts'/>
 /// <reference path='../../src/illa/ObjectUtil.ts'/>
 /// <reference path='../../src/illa/Rectangle.ts'/>
 /// <reference path='../../src/illa/StringUtil.ts'/>
@@ -132,6 +133,61 @@ module test1 {
 				u.assert(testArr[0] === 'bar', 'ArrayUtil.removeAll 2');
 				u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
 				u.assert(removed, 'ArrayUtil.removeAll 4');
+			})();
+			
+			(function() {
+				var testMap = new illa.Map<number, string>();
+				testMap.set(0, 'zero');
+				testMap.set(7.5, 'seven and a half');
+				testMap.set(undefined, 'not a number');
+				testMap.set(Infinity, 'infinity');
+				testMap.set(-Infinity, 'negative infinity');
+				
+				u.assert(testMap.getLength() === 5, 'Map 1');
+				u.assert(testMap.get(0) === 'zero', 'Map 2');
+				u.assert(testMap.get(7.5) === 'seven and a half', 'Map 3');
+				u.assert(testMap.get(undefined) === 'not a number', 'Map 4');
+				u.assert(testMap.get(Infinity) === 'infinity', 'Map 5');
+				u.assert(testMap.get(-Infinity) === 'negative infinity', 'Map 6');
+				
+				testMap.set(0, 'nothing');
+				
+				u.assert(testMap.getLength() === 5, 'Map 7');
+				u.assert(testMap.get(0) === 'nothing', 'Map 8');
+				
+				testMap.remove(7.5);
+				
+				u.assert(testMap.getLength() === 4, 'Map 9');
+				u.assert(illa.isUndefined(testMap.get(7.5)), 'Map 10');
+				u.assert(testMap.get(undefined) === 'not a number', 'Map 11');
+				
+				testMap.setAll(new illa.Map([1, 2, 3], ['one', 'two', 'three']));
+				
+				u.assert(testMap.getLength() === 7, 'Map 12');
+				u.assert(testMap.get(1) === 'one', 'Map 13');
+				u.assert(testMap.get(2) === 'two', 'Map 14');
+				u.assert(testMap.get(3) === 'three', 'Map 15');
+				
+				testMap.removeAll();
+				
+				u.assert(testMap.getLength() === 0, 'Map 16');
+			})();
+			
+			(function() {
+				var testMap = new illa.Map<{}, string>();
+				var key1 = {id: 1};
+				var key2 = {id: 2};
+				testMap.set(key1, 'key 1');
+				testMap.set(null, 'null');
+				testMap.set(undefined, 'undefined');
+				testMap.set(key2, 'key 2');
+				
+				u.assert(testMap.getLength() === 4, 'Map 17');
+				u.assert(testMap.get(key1) === 'key 1', 'Map 18');
+				u.assert(illa.isUndefined(testMap.get({id: 1})), 'Map 19');
+				u.assert(testMap.get(key2) === 'key 2', 'Map 20');
+				u.assert(testMap.get(null) === 'null', 'Map 21');
+				u.assert(testMap.get(undefined) === 'undefined', 'Map 22');
 			})();
 
 			(function() {

@@ -252,6 +252,64 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var Map = (function () {
+        function Map(keys, values) {
+            if (typeof keys === "undefined") { keys = []; }
+            if (typeof values === "undefined") { values = []; }
+            this.keys = keys;
+            this.values = values;
+        }
+        Map.prototype.set = function (key, value) {
+            var index = illa.ArrayUtil.indexOf(this.keys, key);
+            if (index == -1) {
+                index = this.keys.push(key) - 1;
+            }
+            this.values[index] = value;
+        };
+
+        Map.prototype.get = function (key) {
+            var index = illa.ArrayUtil.indexOf(this.keys, key);
+            return this.values[index];
+        };
+
+        Map.prototype.remove = function (key) {
+            var index = illa.ArrayUtil.indexOf(this.keys, key);
+            if (index != -1) {
+                this.keys.splice(index, 1);
+                this.values.splice(index, 1);
+            }
+        };
+
+        Map.prototype.removeAll = function () {
+            this.keys = [];
+            this.values = [];
+        };
+
+        Map.prototype.setAll = function (map) {
+            var newKeys = map.getKeys();
+            var newValues = map.getValues();
+            for (var i = 0, n = newKeys.length; i < n; i++) {
+                var newKey = newKeys[i];
+                var newValue = newValues[i];
+                this.set(newKey, newValue);
+            }
+        };
+
+        Map.prototype.getLength = function () {
+            return this.keys.length;
+        };
+        Map.prototype.getKeys = function () {
+            return this.keys;
+        };
+        Map.prototype.getValues = function () {
+            return this.values;
+        };
+        return Map;
+    })();
+    illa.Map = Map;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var ObjectUtil = (function () {
         function ObjectUtil() {
         }
@@ -765,6 +823,61 @@ var test1;
                 u.assert(testArr[0] === 'bar', 'ArrayUtil.removeAll 2');
                 u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
                 u.assert(removed, 'ArrayUtil.removeAll 4');
+            })();
+
+            (function () {
+                var testMap = new illa.Map();
+                testMap.set(0, 'zero');
+                testMap.set(7.5, 'seven and a half');
+                testMap.set(undefined, 'not a number');
+                testMap.set(Infinity, 'infinity');
+                testMap.set(-Infinity, 'negative infinity');
+
+                u.assert(testMap.getLength() === 5, 'Map 1');
+                u.assert(testMap.get(0) === 'zero', 'Map 2');
+                u.assert(testMap.get(7.5) === 'seven and a half', 'Map 3');
+                u.assert(testMap.get(undefined) === 'not a number', 'Map 4');
+                u.assert(testMap.get(Infinity) === 'infinity', 'Map 5');
+                u.assert(testMap.get(-Infinity) === 'negative infinity', 'Map 6');
+
+                testMap.set(0, 'nothing');
+
+                u.assert(testMap.getLength() === 5, 'Map 7');
+                u.assert(testMap.get(0) === 'nothing', 'Map 8');
+
+                testMap.remove(7.5);
+
+                u.assert(testMap.getLength() === 4, 'Map 9');
+                u.assert(illa.isUndefined(testMap.get(7.5)), 'Map 10');
+                u.assert(testMap.get(undefined) === 'not a number', 'Map 11');
+
+                testMap.setAll(new illa.Map([1, 2, 3], ['one', 'two', 'three']));
+
+                u.assert(testMap.getLength() === 7, 'Map 12');
+                u.assert(testMap.get(1) === 'one', 'Map 13');
+                u.assert(testMap.get(2) === 'two', 'Map 14');
+                u.assert(testMap.get(3) === 'three', 'Map 15');
+
+                testMap.removeAll();
+
+                u.assert(testMap.getLength() === 0, 'Map 16');
+            })();
+
+            (function () {
+                var testMap = new illa.Map();
+                var key1 = { id: 1 };
+                var key2 = { id: 2 };
+                testMap.set(key1, 'key 1');
+                testMap.set(null, 'null');
+                testMap.set(undefined, 'undefined');
+                testMap.set(key2, 'key 2');
+
+                u.assert(testMap.getLength() === 4, 'Map 17');
+                u.assert(testMap.get(key1) === 'key 1', 'Map 18');
+                u.assert(illa.isUndefined(testMap.get({ id: 1 })), 'Map 19');
+                u.assert(testMap.get(key2) === 'key 2', 'Map 20');
+                u.assert(testMap.get(null) === 'null', 'Map 21');
+                u.assert(testMap.get(undefined) === 'undefined', 'Map 22');
             })();
 
             (function () {
