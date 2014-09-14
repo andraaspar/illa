@@ -322,6 +322,25 @@ var illa;
             }
             return result;
         };
+
+        ObjectUtil.getKeyOfValue = function (obj, value) {
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key) && obj[key] === value) {
+                    return key;
+                }
+            }
+            return '';
+        };
+
+        ObjectUtil.getKeysOfValue = function (obj, value) {
+            var result = [];
+            for (var key in obj) {
+                if (obj.hasOwnProperty(key) && obj[key] === value) {
+                    result.push(key);
+                }
+            }
+            return result;
+        };
         return ObjectUtil;
     })();
     illa.ObjectUtil = ObjectUtil;
@@ -893,6 +912,29 @@ var test1;
                 u.assert(keys[6] === 'g', 'ObjectUtil.getKeys 8');
                 u.assert(keys[7] === 'h', 'ObjectUtil.getKeys 9');
                 u.assert(keys[8] === 'i', 'ObjectUtil.getKeys 10');
+
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, {}) === '', 'ObjectUtil.getKeyOfValue 1');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, undefined) === 'a', 'ObjectUtil.getKeyOfValue 2');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, null) === 'b', 'ObjectUtil.getKeyOfValue 3');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, '') === 'c', 'ObjectUtil.getKeyOfValue 4');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, 0) === 'd', 'ObjectUtil.getKeyOfValue 5');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, Infinity) === 'e', 'ObjectUtil.getKeyOfValue 6');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, NaN) === '', 'ObjectUtil.getKeyOfValue 7');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, false) === 'g', 'ObjectUtil.getKeyOfValue 8');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, testObj['h']) === 'h', 'ObjectUtil.getKeyOfValue 9');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, testObj['i']) === 'i', 'ObjectUtil.getKeyOfValue 10');
+                u.assert(illa.ObjectUtil.getKeyOfValue(testObj, []) === '', 'ObjectUtil.getKeyOfValue 11');
+
+                testObj['j'] = testObj['i'];
+                var keysOfIArray = illa.ObjectUtil.getKeysOfValue(testObj, testObj['i']);
+                u.assert(keysOfIArray.length === 2, 'ObjectUtil.getKeysOfValue 1');
+                u.assert(keysOfIArray[0] === 'i', 'ObjectUtil.getKeysOfValue 2');
+                u.assert(keysOfIArray[1] === 'j', 'ObjectUtil.getKeysOfValue 3');
+                var keysOfNaN = illa.ObjectUtil.getKeysOfValue(testObj, NaN);
+                u.assert(keysOfNaN.length === 0, 'ObjectUtil.getKeysOfValue 4');
+                var keysOfFalse = illa.ObjectUtil.getKeysOfValue(testObj, false);
+                u.assert(keysOfFalse.length === 1, 'ObjectUtil.getKeysOfValue 5');
+                u.assert(keysOfFalse[0] === 'g', 'ObjectUtil.getKeysOfValue 6');
             })();
 
             this.ticker = new illa.Ticker();
