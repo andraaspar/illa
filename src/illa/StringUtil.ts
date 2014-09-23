@@ -21,5 +21,9 @@ module illa {
 		static trim(str: string): string {
 			return str.replace(/^\s+|\s+$/g, '');
 		}
+		
+		static escapeRegExp(str: string): string {
+			return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+		}
 	}
 }

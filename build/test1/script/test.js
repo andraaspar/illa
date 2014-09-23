@@ -481,6 +481,10 @@ var illa;
         StringUtil.trim = function (str) {
             return str.replace(/^\s+|\s+$/g, '');
         };
+
+        StringUtil.escapeRegExp = function (str) {
+            return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
         StringUtil.CHAR_TO_HTML = {
             '&': '&amp;',
             '<': '&lt;',
@@ -824,6 +828,8 @@ var test1;
             u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 
             u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
+
+            u.assert(illa.StringUtil.escapeRegExp('^[a-z]*?[0-9]{1,3}\\d$') === '\\^\\[a\\-z\\]\\*\\?\\[0\\-9\\]\\{1,3\\}\\\\d\\$', 'StringUtil.escapeRegExp 1');
 
             u.assert(illa.StringUtil.castNicely(undefined) === '', 'StringUtil.castNicely 1');
             u.assert(illa.StringUtil.castNicely(null) === '', 'StringUtil.castNicely 2');
