@@ -90,8 +90,21 @@ var illa;
     }
     illa.bind = bind;
 
+    function partial(fn, obj) {
+        var args = [];
+        for (var _i = 0; _i < (arguments.length - 2); _i++) {
+            args[_i] = arguments[_i + 2];
+        }
+        if (!fn)
+            throw 'No function.';
+        return function () {
+            return fn.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+        };
+    }
+    illa.partial = partial;
+
     if (Function.prototype.bind) {
-        illa.bind = function (fn, obj) {
+        illa.bind = illa.partial = function (fn, obj) {
             return fn.call.apply(fn.bind, arguments);
         };
     }
@@ -786,14 +799,27 @@ var test1;
             var ivent = new illa.Event('test', null);
             u.assert(illa.as(illa.Event, ivent) === ivent, 'as 3');
 
-            var fun = illa.bind(function (suffix) {
-                return this.prefix + suffix;
-            }, { prefix: 'foo' });
-            u.assert(fun('bar') === 'foobar', 'bind 1');
+            (function () {
+                var fun = illa.bind(function (suffix) {
+                    return this.prefix + suffix;
+                }, { prefix: 'foo' });
+                u.assert(fun('bar') === 'foobar', 'bind 1');
+            })();
 
             u.assertThrowsError(function () {
                 illa.bind(null, {});
             }, 'bind 2');
+
+            (function () {
+                var fun = illa.partial(function (a, b) {
+                    return a + b + this.c;
+                }, { c: 'baz' }, 'foo');
+                u.assert(fun('bar') === 'foobarbaz', 'partial 1');
+            })();
+
+            u.assertThrowsError(function () {
+                illa.partial(null, {});
+            }, 'partial 2');
 
             u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 

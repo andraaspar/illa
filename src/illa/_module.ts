@@ -117,8 +117,19 @@ module illa {
 		};
 	}
 
+	/**
+	 * Binds a function to a ‘this’ context, and also prepends the specified arguments
+	 * This is not type safe because of argument binding.
+	 */
+	export function partial(fn: Function, obj: Object, ...args: any[]): Function {
+		if (!fn) throw 'No function.';
+		return function() {
+			return fn.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+		}
+	}
+
 	if (Function.prototype.bind) {
-		illa.bind = function(fn, obj) {
+		illa.bind = illa.partial = function(fn, obj) {
 			return fn.call.apply(fn.bind, arguments);
 		};
 	}

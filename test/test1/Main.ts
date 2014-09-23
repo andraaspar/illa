@@ -76,14 +76,27 @@ module test1 {
 			var ivent = new illa.Event('test', null);
 			u.assert(illa.as(illa.Event, ivent) === ivent, 'as 3');
 
-			var fun = illa.bind(function(suffix: string): string {
-				return this.prefix + suffix;
-			}, { prefix: 'foo' });
-			u.assert(fun('bar') === 'foobar', 'bind 1');
+			(function() {
+				var fun = illa.bind(function(suffix: string): string {
+					return this.prefix + suffix;
+				}, { prefix: 'foo' });
+				u.assert(fun('bar') === 'foobar', 'bind 1');
+			})();
 
 			u.assertThrowsError(function() {
 				illa.bind(null, {});
 			}, 'bind 2');
+			
+			(function() {
+				var fun = illa.partial(function(a, b) {
+					return a + b + this.c;
+				}, {c: 'baz'}, 'foo');
+				u.assert(fun('bar') === 'foobarbaz', 'partial 1');
+			})();
+
+			u.assertThrowsError(function() {
+				illa.partial(null, {});
+			}, 'partial 2');
 
 			u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 
