@@ -1,7 +1,9 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
+/// <reference path='../../src/illa/Arrkup.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
 /// <reference path='../../src/illa/Map.ts'/>
+/// <reference path='../../src/illa/NumberUtil.ts'/>
 /// <reference path='../../src/illa/ObjectUtil.ts'/>
 /// <reference path='../../src/illa/Rectangle.ts'/>
 /// <reference path='../../src/illa/StringUtil.ts'/>
@@ -86,11 +88,11 @@ module test1 {
 			u.assertThrowsError(function() {
 				illa.bind(null, {});
 			}, 'bind 2');
-			
+
 			(function() {
 				var fun = illa.partial(function(a, b) {
 					return a + b + this.c;
-				}, {c: 'baz'}, 'foo');
+				}, { c: 'baz' }, 'foo');
 				u.assert(fun('bar') === 'foobarbaz', 'partial 1');
 			})();
 
@@ -103,7 +105,7 @@ module test1 {
 
 
 			u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
-			
+
 			u.assert(illa.StringUtil.escapeRegExp('^[a-z]*?[0-9]{1,3}\\d$') === '\\^\\[a\\-z\\]\\*\\?\\[0\\-9\\]\\{1,3\\}\\\\d\\$', 'StringUtil.escapeRegExp 1');
 
 			u.assert(illa.StringUtil.castNicely(undefined) === '', 'StringUtil.castNicely 1');
@@ -113,6 +115,16 @@ module test1 {
 
 			u.assert(illa.StringUtil.trim('  foo   ') === 'foo', 'StringUtil.trim 1');
 			u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
+
+
+			u.assert(illa.NumberUtil.toStringNoLetters(0) === '0', 'NumberUtil.toStringNoLetters 1');
+			u.assert(illa.NumberUtil.toStringNoLetters(NaN) === '', 'NumberUtil.toStringNoLetters 2');
+			u.assert(illa.NumberUtil.toStringNoLetters(Infinity) === '', 'NumberUtil.toStringNoLetters 3');
+			u.assert(illa.NumberUtil.toStringNoLetters(-Infinity) === '', 'NumberUtil.toStringNoLetters 4');
+			u.assert(illa.NumberUtil.toStringNoLetters(1234.5678) === '1234.5678', 'NumberUtil.toStringNoLetters 5');
+			u.assert(illa.NumberUtil.toStringNoLetters(-1234.5678) === '-1234.5678', 'NumberUtil.toStringNoLetters 6');
+			u.assert(illa.NumberUtil.toStringNoLetters(1e21) === '1000000000000000000000', 'NumberUtil.toStringNoLetters 7');
+			u.assert(illa.NumberUtil.toStringNoLetters(1e-7) === '0.00000009999999999999999', 'NumberUtil.toStringNoLetters 8');
 
 
 			u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'foo') === 0, 'ArrayUtil.indexOf 1');
@@ -149,7 +161,7 @@ module test1 {
 				u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
 				u.assert(removed, 'ArrayUtil.removeAll 4');
 			})();
-			
+
 			(function() {
 				var testMap = new illa.Map<number, string>();
 				testMap.set(0, 'zero');
@@ -157,56 +169,56 @@ module test1 {
 				testMap.set(undefined, 'not a number');
 				testMap.set(Infinity, 'infinity');
 				testMap.set(-Infinity, 'negative infinity');
-				
+
 				u.assert(testMap.getLength() === 5, 'Map 1');
 				u.assert(testMap.get(0) === 'zero', 'Map 2');
 				u.assert(testMap.get(7.5) === 'seven and a half', 'Map 3');
 				u.assert(testMap.get(undefined) === 'not a number', 'Map 4');
 				u.assert(testMap.get(Infinity) === 'infinity', 'Map 5');
 				u.assert(testMap.get(-Infinity) === 'negative infinity', 'Map 6');
-				
+
 				testMap.set(0, 'nothing');
-				
+
 				u.assert(testMap.getLength() === 5, 'Map 7');
 				u.assert(testMap.get(0) === 'nothing', 'Map 8');
-				
+
 				testMap.remove(7.5);
-				
+
 				u.assert(testMap.getLength() === 4, 'Map 9');
 				u.assert(illa.isUndefined(testMap.get(7.5)), 'Map 10');
 				u.assert(testMap.get(undefined) === 'not a number', 'Map 11');
-				
+
 				testMap.setAll(new illa.Map([1, 2, 3], ['one', 'two', 'three']));
-				
+
 				u.assert(testMap.getLength() === 7, 'Map 12');
 				u.assert(testMap.get(1) === 'one', 'Map 13');
 				u.assert(testMap.get(2) === 'two', 'Map 14');
 				u.assert(testMap.get(3) === 'three', 'Map 15');
-				
+
 				testMap.removeAll();
-				
+
 				u.assert(testMap.getLength() === 0, 'Map 16');
 			})();
-			
+
 			(function() {
 				var testMap = new illa.Map<{}, string>();
-				var key1 = {id: 1};
-				var key2 = {id: 2};
+				var key1 = { id: 1 };
+				var key2 = { id: 2 };
 				testMap.set(key1, 'key 1');
 				testMap.set(null, 'null');
 				testMap.set(undefined, 'undefined');
 				testMap.set(key2, 'key 2');
-				
+
 				u.assert(testMap.getLength() === 4, 'Map 17');
 				u.assert(testMap.get(key1) === 'key 1', 'Map 18');
-				u.assert(illa.isUndefined(testMap.get({id: 1})), 'Map 19');
+				u.assert(illa.isUndefined(testMap.get({ id: 1 })), 'Map 19');
 				u.assert(testMap.get(key2) === 'key 2', 'Map 20');
 				u.assert(testMap.get(null) === 'null', 'Map 21');
 				u.assert(testMap.get(undefined) === 'undefined', 'Map 22');
 			})();
 
 			(function() {
-				var testObj = {'a': undefined, 'b': null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': []};
+				var testObj = { 'a': undefined, 'b': null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': [] };
 				var keys = illa.ObjectUtil.getKeys(testObj);
 				u.assert(keys.length === 9, 'ObjectUtil.getKeys 1');
 				u.assert(keys[0] === 'a', 'ObjectUtil.getKeys 2');
@@ -218,7 +230,7 @@ module test1 {
 				u.assert(keys[6] === 'g', 'ObjectUtil.getKeys 8');
 				u.assert(keys[7] === 'h', 'ObjectUtil.getKeys 9');
 				u.assert(keys[8] === 'i', 'ObjectUtil.getKeys 10');
-				
+
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, {}) === '', 'ObjectUtil.getKeyOfValue 1');
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, undefined) === 'a', 'ObjectUtil.getKeyOfValue 2');
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, null) === 'b', 'ObjectUtil.getKeyOfValue 3');
@@ -230,7 +242,7 @@ module test1 {
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, testObj['h']) === 'h', 'ObjectUtil.getKeyOfValue 9');
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, testObj['i']) === 'i', 'ObjectUtil.getKeyOfValue 10');
 				u.assert(illa.ObjectUtil.getKeyOfValue(testObj, []) === '', 'ObjectUtil.getKeyOfValue 11');
-				
+
 				testObj['j'] = testObj['i'];
 				var keysOfIArray = illa.ObjectUtil.getKeysOfValue(testObj, testObj['i']);
 				u.assert(keysOfIArray.length === 2, 'ObjectUtil.getKeysOfValue 1');
@@ -241,6 +253,58 @@ module test1 {
 				var keysOfFalse = illa.ObjectUtil.getKeysOfValue(testObj, false);
 				u.assert(keysOfFalse.length === 1, 'ObjectUtil.getKeysOfValue 5');
 				u.assert(keysOfFalse[0] === 'g', 'ObjectUtil.getKeysOfValue 6');
+			})();
+
+
+			(function() {
+				var arrkup = [
+					[null, '<!DOCTYPE html>'],
+					['html',
+						['head',
+							['meta/', { charset: 'UTF-8' }],
+							['title', 'Arrkup - get a <tag>']
+						],
+						['body',
+							['h1', { 'class': 'my-h1 the-title' }, 'Arrkup & fun'],
+							['input/', { name: 'zero', value: 0 }],
+							['input/', { name: 'eight-point-three', value: 8.3 }],
+							['input/', { name: '1e21', value: 1e21 }],
+							['input/', { name: '1e-7', value: 1e-7 }],
+							['input/', { name: 'nan', value: NaN }],
+							['input/', { name: 'infinity', value: Infinity }],
+							['input/', { name: 'negative-infinity', value: -Infinity }],
+							['input/', { name: 'true', value: true }],
+							['input/', { name: 'false', value: false }],
+							['input/', { name: 'empty-string', value: '' }],
+							[null, '<!-- Content START -->'],
+							['a', { href: 'http://example.com?foo=bar&baz=quux', title: 'I say, "Click me"' }, 'It\'s clicking time']
+						]
+					]
+				];
+				var markup = '<!DOCTYPE html>' +
+					'<html>' +
+					'<head>' +
+					'<meta charset="UTF-8"/>' +
+					'<title>Arrkup - get a &lt;tag&gt;</title>' +
+					'</head>' +
+					'<body>' +
+					'<h1 class="my-h1 the-title">Arrkup &amp; fun</h1>' +
+					'<input name="zero" value="0"/>' +
+					'<input name="eight-point-three" value="8.3"/>' +
+					'<input name="1e21" value="1000000000000000000000"/>' +
+					'<input name="1e-7" value="0.00000009999999999999999"/>' +
+					'<input name="nan" value=""/>' +
+					'<input name="infinity" value=""/>' +
+					'<input name="negative-infinity" value=""/>' +
+					'<input name="true" value/>' +
+					'<input name="false"/>' +
+					'<input name="empty-string" value=""/>' +
+					'<!-- Content START -->' +
+					'<a href="http://example.com?foo=bar&amp;baz=quux" title="I say, &quot;Click me&quot;">It&#39;s clicking time</a>' +
+					'</body>' +
+					'</html>';
+				//illa.Log.log(illa.Arrkup.createString(arrkup));
+				u.assert(illa.Arrkup.createString(arrkup) === markup, 'Arrkup 1');
 			})();
 
 

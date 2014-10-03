@@ -31,6 +31,15 @@ module illa {
 			}
 			return this.assert(errorThrown, desc);
 		}
+		
+		assertEquals(received, expected, desc = ''): boolean {
+			var result = this.assert(received === expected, desc);
+			if (!result) {
+				this.info('Received:', received);
+				this.info('Expected:', expected);
+			}
+			return result;
+		}
 
 		printStats(): void {
 			this.info(this.testCount + ' tests completed: ' +

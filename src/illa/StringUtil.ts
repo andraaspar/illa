@@ -5,7 +5,7 @@ module illa {
 			'<': '&lt;',
 			'>': '&gt;',
 			'"': '&quot;',
-			"'": '&#39;'
+			"'": '&#39;' // IE8 does not support &apos;
 		};
 
 		static escapeHTML(str: string): string {

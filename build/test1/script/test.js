@@ -158,6 +158,215 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
+    var NumberUtil = (function () {
+        function NumberUtil() {
+        }
+        NumberUtil.toStringNoLetters = function (num) {
+            var result = '';
+
+            if (!isNaN(num) && isFinite(num)) {
+                if (Math.abs(num) < 1.0) {
+                    var e = parseInt(num.toString().split('e-')[1]);
+                    if (e) {
+                        num *= Math.pow(10, e - 1);
+                        result = '0.' + (new Array(e)).join('0') + num.toString().substring(2);
+                    } else {
+                        result = num + '';
+                    }
+                } else {
+                    var e = parseInt(num.toString().split('+')[1]);
+                    if (e > 20) {
+                        e -= 20;
+                        num /= Math.pow(10, e);
+                        result = num + (new Array(e + 1)).join('0');
+                    } else {
+                        result = num + '';
+                    }
+                }
+            }
+
+            return result;
+        };
+        return NumberUtil;
+    })();
+    illa.NumberUtil = NumberUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var StringUtil = (function () {
+        function StringUtil() {
+        }
+        StringUtil.escapeHTML = function (str) {
+            return str.replace(/[&<>"']/g, function (s) {
+                return StringUtil.CHAR_TO_HTML[s];
+            });
+        };
+
+        StringUtil.castNicely = function (str) {
+            return str == null ? '' : String(str);
+        };
+
+        StringUtil.trim = function (str) {
+            return str.replace(/^\s+|\s+$/g, '');
+        };
+
+        StringUtil.escapeRegExp = function (str) {
+            return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        };
+        StringUtil.CHAR_TO_HTML = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        };
+        return StringUtil;
+    })();
+    illa.StringUtil = StringUtil;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
+    var Arrkup = (function () {
+        function Arrkup(source, allowRaw) {
+            if (typeof allowRaw === "undefined") { allowRaw = true; }
+            this.source = source;
+            this.allowRaw = allowRaw;
+        }
+        Arrkup.prototype.createString = function () {
+            return this.processArrkup(this.getSource());
+        };
+
+        Arrkup.prototype.processArrkup = function (source) {
+            var result = '';
+
+            if (illa.isArray(source)) {
+                var sourceArr = source;
+                if (illa.isString(sourceArr[0])) {
+                    result = this.processTag(sourceArr);
+                } else if (illa.isArray(sourceArr[0])) {
+                    result = this.processGroup(sourceArr);
+                } else if (illa.isNull(sourceArr[0])) {
+                    if (this.getAllowRaw()) {
+                        result = this.processRaw(sourceArr);
+                    }
+                }
+            } else {
+                result = this.processNonArrkup(source);
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.processTag = function (source) {
+            var tagName = source[0];
+            var isSelfClosing = tagName.charAt(tagName.length - 1) == '/';
+            if (isSelfClosing)
+                tagName = tagName.slice(0, -1);
+
+            var result = '<' + tagName;
+
+            var hasAttributes = illa.isObjectNotNull(source[1]) && !illa.isArray(source[1]);
+            if (hasAttributes)
+                result += this.processAttributes(source[1]);
+            var contentIndex = hasAttributes ? 2 : 1;
+
+            if (isSelfClosing) {
+                result += '/>';
+            } else {
+                result += '>';
+
+                result += this.processChildren(source, contentIndex);
+
+                result += '</' + tagName + '>';
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.processGroup = function (source) {
+            return this.processChildren(source, 0);
+        };
+
+        Arrkup.prototype.processRaw = function (source) {
+            var result = '';
+
+            for (var i = 1, n = source.length; i < n; i++) {
+                result += source[i] + '';
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.processNonArrkup = function (source) {
+            return illa.StringUtil.escapeHTML(source + '');
+        };
+
+        Arrkup.prototype.processAttributes = function (rawProps) {
+            var result = '';
+
+            for (var prop in rawProps) {
+                if (rawProps.hasOwnProperty(prop)) {
+                    result += this.processAttribute(prop, rawProps[prop]);
+                }
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.processAttribute = function (key, value) {
+            var result = '';
+
+            if (key) {
+                if (illa.isNumber(value)) {
+                    value = illa.NumberUtil.toStringNoLetters(value);
+                }
+
+                if (illa.isString(value)) {
+                    result = ' ' + key + '="' + illa.StringUtil.escapeHTML(value) + '"';
+                } else if (illa.isBoolean(value)) {
+                    if (value) {
+                        result += ' ' + key;
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.processChildren = function (rawChildren, startIndex) {
+            var result = '';
+
+            for (var i = startIndex, n = rawChildren.length; i < n; i++) {
+                result += this.processArrkup(rawChildren[i]);
+            }
+
+            return result;
+        };
+
+        Arrkup.prototype.getSource = function () {
+            return this.source;
+        };
+        Arrkup.prototype.setSource = function (value) {
+            this.source = value;
+        };
+
+        Arrkup.prototype.getAllowRaw = function () {
+            return this.allowRaw;
+        };
+        Arrkup.prototype.setAllowRaw = function (flag) {
+            this.allowRaw = flag;
+        };
+
+        Arrkup.createString = function (source, allowRaw) {
+            if (typeof allowRaw === "undefined") { allowRaw = true; }
+            return new Arrkup(source, allowRaw).createString();
+        };
+        return Arrkup;
+    })();
+    illa.Arrkup = Arrkup;
+})(illa || (illa = {}));
+var illa;
+(function (illa) {
     var Log = (function () {
         function Log() {
         }
@@ -465,39 +674,6 @@ var illa;
 })(illa || (illa = {}));
 var illa;
 (function (illa) {
-    var StringUtil = (function () {
-        function StringUtil() {
-        }
-        StringUtil.escapeHTML = function (str) {
-            return str.replace(/[&<>"']/g, function (s) {
-                return StringUtil.CHAR_TO_HTML[s];
-            });
-        };
-
-        StringUtil.castNicely = function (str) {
-            return str == null ? '' : String(str);
-        };
-
-        StringUtil.trim = function (str) {
-            return str.replace(/^\s+|\s+$/g, '');
-        };
-
-        StringUtil.escapeRegExp = function (str) {
-            return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        };
-        StringUtil.CHAR_TO_HTML = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        };
-        return StringUtil;
-    })();
-    illa.StringUtil = StringUtil;
-})(illa || (illa = {}));
-var illa;
-(function (illa) {
     var EventCallbackReg = (function () {
         function EventCallbackReg(callback, thisObj) {
             this.callback = callback;
@@ -714,6 +890,16 @@ var illa;
             return this.assert(errorThrown, desc);
         };
 
+        UnitTest.prototype.assertEquals = function (received, expected, desc) {
+            if (typeof desc === "undefined") { desc = ''; }
+            var result = this.assert(received === expected, desc);
+            if (!result) {
+                this.info('Received:', received);
+                this.info('Expected:', expected);
+            }
+            return result;
+        };
+
         UnitTest.prototype.printStats = function () {
             this.info(this.testCount + ' tests completed: ' + this.successCount + ' succeeded, ' + this.failCount + ' failed.');
         };
@@ -841,6 +1027,15 @@ var test1;
             u.assert(illa.StringUtil.trim('  foo   ') === 'foo', 'StringUtil.trim 1');
             u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
 
+            u.assert(illa.NumberUtil.toStringNoLetters(0) === '0', 'NumberUtil.toStringNoLetters 1');
+            u.assert(illa.NumberUtil.toStringNoLetters(NaN) === '', 'NumberUtil.toStringNoLetters 2');
+            u.assert(illa.NumberUtil.toStringNoLetters(Infinity) === '', 'NumberUtil.toStringNoLetters 3');
+            u.assert(illa.NumberUtil.toStringNoLetters(-Infinity) === '', 'NumberUtil.toStringNoLetters 4');
+            u.assert(illa.NumberUtil.toStringNoLetters(1234.5678) === '1234.5678', 'NumberUtil.toStringNoLetters 5');
+            u.assert(illa.NumberUtil.toStringNoLetters(-1234.5678) === '-1234.5678', 'NumberUtil.toStringNoLetters 6');
+            u.assert(illa.NumberUtil.toStringNoLetters(1e21) === '1000000000000000000000', 'NumberUtil.toStringNoLetters 7');
+            u.assert(illa.NumberUtil.toStringNoLetters(1e-7) === '0.00000009999999999999999', 'NumberUtil.toStringNoLetters 8');
+
             u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'foo') === 0, 'ArrayUtil.indexOf 1');
             u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], 'quux') === -1, 'ArrayUtil.indexOf 2');
             u.assert(illa.ArrayUtil.indexOf(['foo', 'bar', 'baz', 'foo'], undefined) === -1, 'ArrayUtil.indexOf 3');
@@ -967,6 +1162,39 @@ var test1;
                 var keysOfFalse = illa.ObjectUtil.getKeysOfValue(testObj, false);
                 u.assert(keysOfFalse.length === 1, 'ObjectUtil.getKeysOfValue 5');
                 u.assert(keysOfFalse[0] === 'g', 'ObjectUtil.getKeysOfValue 6');
+            })();
+
+            (function () {
+                var arrkup = [
+                    [null, '<!DOCTYPE html>'],
+                    [
+                        'html',
+                        [
+                            'head',
+                            ['meta/', { charset: 'UTF-8' }],
+                            ['title', 'Arrkup - get a <tag>']
+                        ],
+                        [
+                            'body',
+                            ['h1', { 'class': 'my-h1 the-title' }, 'Arrkup & fun'],
+                            ['input/', { name: 'zero', value: 0 }],
+                            ['input/', { name: 'eight-point-three', value: 8.3 }],
+                            ['input/', { name: '1e21', value: 1e21 }],
+                            ['input/', { name: '1e-7', value: 1e-7 }],
+                            ['input/', { name: 'nan', value: NaN }],
+                            ['input/', { name: 'infinity', value: Infinity }],
+                            ['input/', { name: 'negative-infinity', value: -Infinity }],
+                            ['input/', { name: 'true', value: true }],
+                            ['input/', { name: 'false', value: false }],
+                            ['input/', { name: 'empty-string', value: '' }],
+                            [null, '<!-- Content START -->'],
+                            ['a', { href: 'http://example.com?foo=bar&baz=quux', title: 'I say, "Click me"' }, 'It\'s clicking time']
+                        ]
+                    ]
+                ];
+                var markup = '<!DOCTYPE html>' + '<html>' + '<head>' + '<meta charset="UTF-8"/>' + '<title>Arrkup - get a &lt;tag&gt;</title>' + '</head>' + '<body>' + '<h1 class="my-h1 the-title">Arrkup &amp; fun</h1>' + '<input name="zero" value="0"/>' + '<input name="eight-point-three" value="8.3"/>' + '<input name="1e21" value="1000000000000000000000"/>' + '<input name="1e-7" value="0.00000009999999999999999"/>' + '<input name="nan" value=""/>' + '<input name="infinity" value=""/>' + '<input name="negative-infinity" value=""/>' + '<input name="true" value/>' + '<input name="false"/>' + '<input name="empty-string" value=""/>' + '<!-- Content START -->' + '<a href="http://example.com?foo=bar&amp;baz=quux" title="I say, &quot;Click me&quot;">It&#39;s clicking time</a>' + '</body>' + '</html>';
+
+                u.assert(illa.Arrkup.createString(arrkup) === markup, 'Arrkup 1');
             })();
 
             this.ticker = new illa.Ticker();
