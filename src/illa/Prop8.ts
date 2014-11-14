@@ -16,5 +16,9 @@ module illa {
 			this.values[realIndex] = value;
 			if (this.onChangedCallback) this.onChangedCallback.call(this.callbackThis, index, index2, index3, oldValue, value);
 		}
+		
+		toString(): string {
+			return '[Prop8 ' + this.values.join(', ') + ']';
+		}
 	}
 }

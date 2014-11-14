@@ -14,5 +14,9 @@ module illa {
 			this.value = value;
 			if (this.onChangedCallback) this.onChangedCallback.call(this.callbackThis, oldValue, value);
 		}
+		
+		toString(): string {
+			return '[Prop ' + this.value + ']';
+		}
 	}
 }
