@@ -90,15 +90,15 @@ module test1 {
 			}, 'bind 2');
 
 			(function() {
-				var fun = illa.partial(function(a, b) {
+				var fun = illa.bind(function(a, b) {
 					return a + b + this.c;
 				}, { c: 'baz' }, 'foo');
-				u.assert(fun('bar') === 'foobarbaz', 'partial 1');
+				u.assert(fun('bar') === 'foobarbaz', 'bind 2');
 			})();
 
 			u.assertThrowsError(function() {
-				illa.partial(null, {});
-			}, 'partial 2');
+				illa.bind(null, {});
+			}, 'bind 3');
 
 			u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
 

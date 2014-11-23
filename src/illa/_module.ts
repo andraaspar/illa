@@ -107,29 +107,75 @@ module illa {
 	}
 
 	/**
-	 * Binds a function to a ‘this’ context.
-	 * No argument binding allows us to keep function type safety.
+	 * Binds a function to a ‘this’ context, and optionally prepends the specified arguments.
+	 * When prepending arguments:
+	 * a) This is type safe for functions taking up to 9 arguments;
+	 * b) To achieve the best type safety, specify types explicitly - otherwise it may default to {};
+	 * c) For functions taking more than 9 arguments, use illa.bindUnsafe.
 	 */
-	export function bind<T extends Function>(fn: T, obj: Object): T {
-		if (!fn) throw 'No function.';
-		return <any>function() {
-			return fn.apply(obj, arguments);
-		};
-	}
-
-	/**
-	 * Binds a function to a ‘this’ context, and also prepends the specified arguments
-	 * This is not type safe because of argument binding.
-	 */
-	export function partial(fn: Function, obj: Object, ...args: any[]): Function {
+	export function bind<P1, R>(fn: (p1: P1) => R, obj: {}, p1: P1): () => R;
+	export function bind<P1, P2, R>(fn: (p1: P1, p2: P2) => R, obj: {}, p1: P1): (p2: P2) => R;
+	export function bind<P1, P2, P3, R>(fn: (p1: P1, p2: P2, p3: P3) => R, obj: {}, p1: P1): (p2: P2, p3: P3) => R;
+	export function bind<P1, P2, P3, P4, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4) => R;
+	export function bind<P1, P2, P3, P4, P5, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4, p5: P5) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1): (p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, R>(fn: (p1: P1, p2: P2) => R, obj: {}, p1: P1, p2: P2): () => R;
+	export function bind<P1, P2, P3, R>(fn: (p1: P1, p2: P2, p3: P3) => R, obj: {}, p1: P1, p2: P2): (p3: P3) => R;
+	export function bind<P1, P2, P3, P4, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4) => R;
+	export function bind<P1, P2, P3, P4, P5, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4, p5: P5) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4, p5: P5, p6: P6) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2): (p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, R>(fn: (p1: P1, p2: P2, p3: P3) => R, obj: {}, p1: P1, p2: P2, p3: P3): () => R;
+	export function bind<P1, P2, P3, P4, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4) => R;
+	export function bind<P1, P2, P3, P4, P5, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4, p5: P5) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4, p5: P5, p6: P6) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4, p5: P5, p6: P6, p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3): (p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, P4, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): () => R;
+	export function bind<P1, P2, P3, P4, P5, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): (p5: P5) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): (p5: P5, p6: P6) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): (p5: P5, p6: P6, p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): (p5: P5, p6: P6, p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4): (p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, P4, P5, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): () => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): (p6: P6) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): (p6: P6, p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): (p6: P6, p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5): (p6: P6, p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6): () => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6): (p7: P7) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6): (p7: P7, p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6): (p7: P7, p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7): () => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7): (p8: P8) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7): (p8: P8, p9: P9) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8): () => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8): (p9: P9) => R;
+	export function bind<P1, P2, P3, P4, P5, P6, P7, P8, P9, R>(fn: (p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9) => R, obj: {}, p1: P1, p2: P2, p3: P3, p4: P4, p5: P5, p6: P6, p7: P7, p8: P8, p9: P9): () => R;
+	export function bind<T extends Function>(fn: T, obj: {}): T;
+	export function bind(fn: Function, obj: Object, ...args: any[]): () => any {
 		if (!fn) throw 'No function.';
 		return function() {
 			return fn.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
 		}
 	}
+	
+	/**
+	 * Binds a function to a ‘this’ context, and also prepends the specified arguments.
+	 * This is not type safe.
+	 */
+	export function bindUnsafe(fn: Function, obj: Object, ...args: any[]): () => any {
+		return illa.bind.call(this, arguments);
+	}
 
 	if (Function.prototype.bind) {
-		illa.bind = illa.partial = function(fn, obj) {
+		illa.bind = illa.bindUnsafe = function(fn) {
 			return fn.call.apply(fn.bind, arguments);
 		};
 	}
