@@ -91,7 +91,7 @@ module test1 {
 
 			(function() {
 				var fun = illa.bind(function(a, b) {
-					return a + b + this.c;
+					return <any>a + b + this.c;
 				}, { c: 'baz' }, 'foo');
 				u.assert(fun('bar') === 'foobarbaz', 'bind 2');
 			})();
@@ -115,6 +115,8 @@ module test1 {
 
 			u.assert(illa.StringUtil.trim('  foo   ') === 'foo', 'StringUtil.trim 1');
 			u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
+			
+			u.assert(illa.StringUtil.hash('a8a4b21f-2051-3cbe-44e4-ffb21749c298') != illa.StringUtil.hash('a8a4b21f-2051-3cbe-44e4-ffb21749c299'), 'StringUtil.hash 1');
 
 
 			u.assert(illa.NumberUtil.toStringNoLetters(0) === '0', 'NumberUtil.toStringNoLetters 1');
