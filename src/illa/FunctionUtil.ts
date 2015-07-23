@@ -6,6 +6,7 @@ module illa {
 		/**
 		 * Restricts the number of calls to the passed in function to one per ‘delay’ milliseconds.
 		 */
+		static throttle(thisArg: {}, fn: () => any, delay: number): { (): void; cancel(): void };
 		static throttle<P1>(thisArg: {}, fn: (P1) => any, delay: number): { (P1): void; cancel(): void };
 		static throttle<P1, P2>(thisArg: {}, fn: (P1, P2) => any, delay: number): { (P1, P2): void; cancel(): void };
 		static throttle<P1, P2, P3>(thisArg: {}, fn: (P1, P2, P3) => any, delay: number): { (P1, P2, P3): void; cancel(): void };
