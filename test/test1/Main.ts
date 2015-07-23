@@ -1,6 +1,7 @@
 /// <reference path='../../src/illa/_module.ts'/>
 /// <reference path='../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../src/illa/Arrkup.ts'/>
+/// <reference path='../../src/illa/FunctionUtil.ts'/>
 /// <reference path='../../src/illa/Log.ts'/>
 /// <reference path='../../src/illa/Map.ts'/>
 /// <reference path='../../src/illa/NumberUtil.ts'/>
@@ -12,8 +13,13 @@
 
 module test1 {
 	export class Main {
+		
+		static instance: Main;
+		
 		unitTest: illa.UnitTest;
 		ticker: illa.Ticker;
+		throttled: {(string, number, boolean): void; cancel: () => void};
+		throttledResult: [number, string, boolean];
 
 		constructor() {
 			var u = this.unitTest = new illa.UnitTest();
@@ -308,6 +314,18 @@ module test1 {
 				//illa.Log.log(illa.Arrkup.createString(arrkup));
 				u.assert(illa.Arrkup.createString(arrkup) === markup, 'Arrkup 1');
 			})();
+			
+			
+			
+			var throttleTest = function(a: number, b: string, c: boolean): void {
+				this.throttledResult = [a, b, c];
+			};
+			this.throttled = illa.FunctionUtil.throttle(this, throttleTest, 30);
+			this.throttled(1, 'a', true);
+			u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'FunctionUtil.throttle 1');
+			this.throttled(2, 'b', false);
+			this.throttled(3, 'c', true);
+			u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'FunctionUtil.throttle 2');
 
 
 
@@ -347,9 +365,21 @@ module test1 {
 
 		onTickerFinished(): void {
 			this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 6');
+			
+			this.unitTest.assert(this.throttledResult[0] === 3 && this.throttledResult[1] === 'c' && this.throttledResult[2] === true, 'FunctionUtil.throttle 3');
+			this.throttled(4, 'd', false);
+			this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'FunctionUtil.throttle 4');
+			this.throttled(5, 'e', true);
+			this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'FunctionUtil.throttle 5');
+			this.throttled.cancel();
+			
+			setTimeout(illa.bind(this.onThrottleFinished, this), 100);
+		}
+		
+		onThrottleFinished(): void {
+			this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'FunctionUtil.throttle 6');
 			this.unitTest.printStats();
 		}
 	}
 }
-
-var test1Main = new test1.Main();
+test1.Main.instance = new test1.Main();
