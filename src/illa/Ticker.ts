@@ -27,13 +27,13 @@ module illa {
 			
 			if (flag) {
 				if (this.supportsAnimationFrame) {
-					this.intervalID = requestAnimationFrame(this.onTickBound);
+					this.intervalID = illa.GLOBAL.requestAnimationFrame(this.onTickBound);
 				} else {
 					this.intervalID = setInterval(this.onTickBound, 1000/60);
 				}
 			} else {
 				if (this.supportsAnimationFrame) {
-					cancelAnimationFrame(this.intervalID);
+					illa.GLOBAL.cancelAnimationFrame(this.intervalID);
 				} else {
 					clearInterval(this.intervalID);
 				}
@@ -49,7 +49,7 @@ module illa {
 			new Event(Ticker.EVENT_BEFORE_TICK, this).dispatch();
 			this.tickCount++;
 			if (this.supportsAnimationFrame) {
-				this.intervalID = requestAnimationFrame(this.onTickBound);
+				this.intervalID = illa.GLOBAL.requestAnimationFrame(this.onTickBound);
 			}
 			new Event(Ticker.EVENT_TICK, this).dispatch();
 			new Event(Ticker.EVENT_AFTER_TICK, this).dispatch();

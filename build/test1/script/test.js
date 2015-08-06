@@ -860,7 +860,7 @@ var illa;
                 return;
             if (flag) {
                 if (this.supportsAnimationFrame) {
-                    this.intervalID = requestAnimationFrame(this.onTickBound);
+                    this.intervalID = illa.GLOBAL.requestAnimationFrame(this.onTickBound);
                 }
                 else {
                     this.intervalID = setInterval(this.onTickBound, 1000 / 60);
@@ -868,7 +868,7 @@ var illa;
             }
             else {
                 if (this.supportsAnimationFrame) {
-                    cancelAnimationFrame(this.intervalID);
+                    illa.GLOBAL.cancelAnimationFrame(this.intervalID);
                 }
                 else {
                     clearInterval(this.intervalID);
@@ -883,7 +883,7 @@ var illa;
             new illa.Event(Ticker.EVENT_BEFORE_TICK, this).dispatch();
             this.tickCount++;
             if (this.supportsAnimationFrame) {
-                this.intervalID = requestAnimationFrame(this.onTickBound);
+                this.intervalID = illa.GLOBAL.requestAnimationFrame(this.onTickBound);
             }
             new illa.Event(Ticker.EVENT_TICK, this).dispatch();
             new illa.Event(Ticker.EVENT_AFTER_TICK, this).dispatch();

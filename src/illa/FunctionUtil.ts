@@ -17,7 +17,7 @@ module illa {
 		static throttle<P1, P2, P3, P4, P5, P6, P7, P8>(thisArg: {}, fn: (P1, P2, P3, P4, P5, P6, P7, P8) => any, delay: number): { (P1, P2, P3, P4, P5, P6, P7, P8): void; cancel(): void };
 		static throttle<P1, P2, P3, P4, P5, P6, P7, P8, P9>(thisArg: {}, fn: (P1, P2, P3, P4, P5, P6, P7, P8, P9) => any, delay: number): { (P1, P2, P3, P4, P5, P6, P7, P8, P9): void; cancel(): void };
 		static throttle(thisArg: {}, fn: (...args) => any, delay: number): { (...args): void; cancel(): void } {
-			var timeoutRef: number;
+			var timeoutRef;
 			var lastCalled: number = -Infinity;
 			var callNow = function(...args): void {
 				lastCalled = new Date().getTime();
