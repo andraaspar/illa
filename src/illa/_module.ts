@@ -19,28 +19,28 @@ module illa {
 	/**
 	 * Returns true if the value is a string primitive.
 	 */
-	export function isString(v): boolean {
+	export function isString(v): v is string {
 		return typeof v == 'string';
 	}
 
 	/**
 	 * Returns true if the value is a boolean primitive.
 	 */
-	export function isBoolean(v): boolean {
+	export function isBoolean(v): v is boolean {
 		return typeof v == 'boolean';
 	}
 
 	/**
 	 * Returns true if the value is a number primitive.
 	 */
-	export function isNumber(v): boolean {
+	export function isNumber(v): v is number {
 		return typeof v == 'number';
 	}
 
 	/**
 	 * Returns true if the value is a function.
 	 */
-	export function isFunction(v): boolean {
+	export function isFunction(v): v is Function {
 		return typeof v == 'function';
 	}
 
@@ -48,7 +48,7 @@ module illa {
 	 * Returns true if the value is an array.
 	 * Array subclasses are not recognized as arrays.
 	 */
-	export function isArray(v): boolean {
+	export function isArray(v): v is any[] {
 		return illa.getType(v) == 'array';
 	}
 
@@ -78,7 +78,7 @@ module illa {
 	/**
 	 * Returns true if the value is an object and not null. Includes functions.
 	 */
-	export function isObjectNotNull(v): boolean {
+	export function isObjectNotNull(v): v is {} {
 		var t = typeof v;
 		return t == 'object' && v !== null || t == 'function';
 	}

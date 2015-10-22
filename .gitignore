@@ -2,3 +2,5 @@
 /.project
 /.settings
 /lib
+/bower_components/
+/build/

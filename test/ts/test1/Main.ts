@@ -1,15 +1,18 @@
-/// <reference path='../../src/illa/_module.ts'/>
-/// <reference path='../../src/illa/ArrayUtil.ts'/>
-/// <reference path='../../src/illa/Arrkup.ts'/>
-/// <reference path='../../src/illa/FunctionUtil.ts'/>
-/// <reference path='../../src/illa/Log.ts'/>
-/// <reference path='../../src/illa/Map.ts'/>
-/// <reference path='../../src/illa/NumberUtil.ts'/>
-/// <reference path='../../src/illa/ObjectUtil.ts'/>
-/// <reference path='../../src/illa/Rectangle.ts'/>
-/// <reference path='../../src/illa/StringUtil.ts'/>
-/// <reference path='../../src/illa/Ticker.ts'/>
-/// <reference path='../../src/illa/UnitTest.ts'/>
+/// <reference path='../../../lib/lib.core.es6.d.ts'/>
+/// <reference path='../../../lib/node.d.ts'/>
+
+/// <reference path='../../../src/illa/_module.ts'/>
+/// <reference path='../../../src/illa/ArrayUtil.ts'/>
+/// <reference path='../../../src/illa/Arrkup.ts'/>
+/// <reference path='../../../src/illa/FunctionUtil.ts'/>
+/// <reference path='../../../src/illa/Log.ts'/>
+/// <reference path='../../../src/illa/Map.ts'/>
+/// <reference path='../../../src/illa/NumberUtil.ts'/>
+/// <reference path='../../../src/illa/ObjectUtil.ts'/>
+/// <reference path='../../../src/illa/Rectangle.ts'/>
+/// <reference path='../../../src/illa/StringUtil.ts'/>
+/// <reference path='../../../src/illa/Ticker.ts'/>
+/// <reference path='../../../src/illa/UnitTest.ts'/>
 
 module test1 {
 	export class Main {
