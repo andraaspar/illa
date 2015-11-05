@@ -23,6 +23,8 @@ module test1 {
 		ticker: illa.Ticker;
 		throttled: {(string, number, boolean): void; cancel: () => void};
 		throttledResult: [number, string, boolean];
+		debounced: {(string, number, boolean): void; cancel: () => void};
+		debouncedResult: [number, string, boolean];
 
 		constructor() {
 			var u = this.unitTest = new illa.UnitTest();
@@ -323,12 +325,22 @@ module test1 {
 			var throttleTest = function(a: number, b: string, c: boolean): void {
 				this.throttledResult = [a, b, c];
 			};
-			this.throttled = illa.FunctionUtil.throttle(this, throttleTest, 30);
+			this.throttled = illa.FunctionUtil.throttle(throttleTest, this, 30);
 			this.throttled(1, 'a', true);
 			u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'FunctionUtil.throttle 1');
 			this.throttled(2, 'b', false);
 			this.throttled(3, 'c', true);
 			u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'FunctionUtil.throttle 2');
+			
+			
+			
+			var debounceTest = function(a: number, b: string, c: boolean): void {
+				this.debouncedResult = [a, b, c];
+			};
+			this.debounced = illa.FunctionUtil.debounce(debounceTest, this, 30);
+			this.debouncedResult = [1, 'a', true];
+			this.debounced(2, 'b', false);
+			u.assert(this.debouncedResult[0] === 1 && this.debouncedResult[1] === 'a' && this.debouncedResult[2] === true, 'FunctionUtil.debounce 1');
 
 
 
@@ -381,6 +393,7 @@ module test1 {
 		
 		onThrottleFinished(): void {
 			this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'FunctionUtil.throttle 6');
+			this.unitTest.assert(this.debouncedResult[0] === 2 && this.debouncedResult[1] === 'b' && this.debouncedResult[2] === false, 'FunctionUtil.debounce 2');
 			this.unitTest.printStats();
 		}
 	}
