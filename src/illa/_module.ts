@@ -179,4 +179,33 @@ module illa {
 			return fn.call.apply(fn.bind, arguments);
 		};
 	}
+	
+	/**
+	 * Generates a UUID.
+	 * Based on: http://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+	 */
+	export function uuid(): string {
+		var base: string = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+		var result: string = base.replace(/[xy]/g, function(char) {
+			var random = cryptoRandom16();
+			var result = char == 'x' ? random : (random & 0x3 | 0x8);
+			return result.toString(16);
+		});
+		return result;
+	}
+	
+	function cryptoRandom16(): number {
+		var result: number;
+		if (illa.GLOBAL.crypto) {
+			if (illa.GLOBAL.crypto.getRandomValues) {
+				result = illa.GLOBAL.crypto.getRandomValues(new Uint8Array(1))[0] % 16;
+			} else if (illa.GLOBAL.crypto.randomBytes) {
+				result = illa.GLOBAL.crypto.randomBytes(1)[0] % 16;
+			}
+		}
+		if (isNaN(result)) {
+			result = Math.random() * 16;
+		}
+		return Math.floor(result);
+	}
 }

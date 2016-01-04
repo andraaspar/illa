@@ -112,6 +112,8 @@ module test1 {
 			}, 'bind 3');
 
 			u.assert(illa.isFunction(illa.GLOBAL.isNaN), 'GLOBAL 1');
+			
+			u.assert(illa.isString(illa.uuid()), 'uuid 1');
 
 
 
