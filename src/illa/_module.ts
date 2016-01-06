@@ -208,4 +208,14 @@ module illa {
 		}
 		return Math.floor(result);
 	}
+	
+	/**
+	 * Adds dynamic properties to an object.
+	 */
+	export function addProps<T extends {}>(obj: T, ...rest: any[]): T {
+		for (var i = 0, n = rest.length; i < n; i++) {
+			obj[rest[i]] = rest[++i];
+		}
+		return obj;
+	}
 }

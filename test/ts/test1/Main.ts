@@ -115,6 +115,14 @@ module test1 {
 			
 			u.assert(illa.isString(illa.uuid()), 'uuid 1');
 
+			(function() {
+				var obj = illa.addProps({foo: 1}, 'bar', 2, 'baz');
+				u.assert(obj.foo === 1, 'addProps 1');
+				u.assert(obj['bar'] === 2, 'addProps 2');
+				u.assert('baz' in obj, 'addProps 3');
+				u.assert(illa.isUndefined(obj['baz']), 'addProps 4');
+			})();
+
 
 
 			u.assert(illa.StringUtil.escapeHTML('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'StringUtil.escapeHTML 1');
@@ -130,6 +138,14 @@ module test1 {
 			u.assert(illa.StringUtil.trim('\t\r\nfoo\r\n\t') === 'foo', 'StringUtil.trim 2');
 			
 			u.assert(illa.StringUtil.hash('a8a4b21f-2051-3cbe-44e4-ffb21749c298') != illa.StringUtil.hash('a8a4b21f-2051-3cbe-44e4-ffb21749c299'), 'StringUtil.hash 1');
+			
+			(function() {
+				var obj = illa.StringUtil.parseQuery('foo=1&bar=2+2&baz=&quux');
+				u.assert(obj['foo'] === '1', 'StringUtil.parseQuery 1');
+				u.assert(obj['bar'] === '2 2', 'StringUtil.parseQuery 2');
+				u.assert(obj['baz'] === '', 'StringUtil.parseQuery 3');
+				u.assert(obj['quux'] === '', 'StringUtil.parseQuery 4');
+			})();
 
 
 			u.assert(illa.NumberUtil.toStringNoLetters(0) === '0', 'NumberUtil.toStringNoLetters 1');

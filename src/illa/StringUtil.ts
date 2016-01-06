@@ -1,12 +1,15 @@
 module illa {
 	export class StringUtil {
-		static CHAR_TO_HTML: { [s: string]: string } = {
+		private static CHAR_TO_HTML: { [s: string]: string } = {
 			'&': '&amp;',
 			'<': '&lt;',
 			'>': '&gt;',
 			'"': '&quot;',
 			"'": '&#39;' // IE8 does not support &apos;
 		};
+		
+		private static QUERY_RE = /([^&=]+)=?([^&]*)/g;
+		private static PLUS_RE = /\+/g;
 
 		static escapeHTML(str: string): string {
 			return str.replace(/[&<>"']/g, function(s) {
@@ -34,6 +37,19 @@ module illa {
 				result |= 0; // Convert to 32bit integer
 			}
 			return result;
+		}
+		
+		static parseQuery(query: string): {} {
+			var result = {};
+			var match;
+			while (match = this.QUERY_RE.exec(query)) {
+				result[this.decode(match[1])] = this.decode(match[2]);
+			}
+			return result;
+		}
+
+		private static decode(s: string): string {
+			return decodeURIComponent(s.replace(this.PLUS_RE, ' '));
 		}
 	}
 }
