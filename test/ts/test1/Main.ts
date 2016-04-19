@@ -146,6 +146,15 @@ module test1 {
 				u.assert(obj['baz'] === '', 'StringUtil.parseQuery 3');
 				u.assert(obj['quux'] === '', 'StringUtil.parseQuery 4');
 			})();
+			
+			(function() {
+				var obj = illa.StringUtil.parseQuery('foo=1&foo=2&foo=3', true);
+				u.assert(illa.isArray(obj['foo']), 'StringUtil.parseQuery 5');
+				u.assert(obj['foo'].length === 3, 'StringUtil.parseQuery 6');
+				u.assert(obj['foo'][0] === '1', 'StringUtil.parseQuery 7');
+				u.assert(obj['foo'][1] === '2', 'StringUtil.parseQuery 8');
+				u.assert(obj['foo'][2] === '3', 'StringUtil.parseQuery 9');
+			})();
 
 
 			u.assert(illa.NumberUtil.toStringNoLetters(0) === '0', 'NumberUtil.toStringNoLetters 1');

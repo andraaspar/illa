@@ -39,11 +39,21 @@ module illa {
 			return result;
 		}
 		
-		static parseQuery(query: string): {} {
+		static parseQuery(query: string, multipleKeysAsArray?: boolean): {} {
 			var result = {};
 			var match;
 			while (match = this.QUERY_RE.exec(query)) {
-				result[this.decode(match[1])] = this.decode(match[2]);
+				var key = this.decode(match[1]);
+				var value = this.decode(match[2]);
+				if (multipleKeysAsArray && key in result) {
+					if (illa.isString(result[key])) {
+						result[key] = [result[key], value];
+					} else {
+						result[key].push(value);
+					}
+				} else {
+					result[key] = value;
+				}
 			}
 			return result;
 		}
