@@ -1,3 +1,5 @@
+/// <reference path='IArrayDiffResult.ts'/>
+
 module illa {
 	export class ArrayUtil {
 		static indexOf<T>(a: T[], v: T, fromIndex?: number): number {
@@ -37,6 +39,29 @@ module illa {
 				}
 			}
 			return removed;
+		}
+		
+		static diff<T>(oldArr: T[], newArr: T[]): IArrayDiffResult<T>[] {
+			var result: IArrayDiffResult<T>[] = [];
+			for (var i = 0, n = oldArr.length; i < n; i++) {
+				var oldItem = oldArr[i];
+				if (this.indexOf(newArr, oldItem) < 0) {
+					result.push({
+						item: oldItem,
+						added: false
+					});
+				}
+			}
+			for (var i = 0, n = newArr.length; i < n; i++) {
+				var newItem = newArr[i];
+				if (this.indexOf(oldArr, newItem) < 0) {
+					result.push({
+						item: newItem,
+						added: true
+					});
+				}
+			}
+			return result;
 		}
 	}
 }

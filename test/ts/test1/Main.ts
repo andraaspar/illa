@@ -201,6 +201,17 @@ module test1 {
 				u.assert(testArr[1] === 'baz', 'ArrayUtil.removeAll 3');
 				u.assert(removed, 'ArrayUtil.removeAll 4');
 			})();
+			
+			(function() {
+				var oldArr = [1, 2, 3];
+				var newArr = [1, 3, 4];
+				var result = illa.ArrayUtil.diff(oldArr, newArr);
+				u.assert(result.length === 2, 'ArrayUtil.diff 1');
+				u.assert(result[0].item === 2, 'ArrayUtil.diff 2');
+				u.assert(result[0].added === false, 'ArrayUtil.diff 3');
+				u.assert(result[1].item === 4, 'ArrayUtil.diff 4');
+				u.assert(result[1].added === true, 'ArrayUtil.diff 5');
+			})();
 
 			(function() {
 				var testMap = new illa.Map<number, string>();
