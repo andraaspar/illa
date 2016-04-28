@@ -5,6 +5,10 @@
 /// <reference path='../../../src/illa/ArrayUtil.ts'/>
 /// <reference path='../../../src/illa/Arrkup.ts'/>
 /// <reference path='../../../src/illa/FunctionUtil.ts'/>
+/// <reference path='../../../src/illa/Lipsum.ts'/>
+/// <reference path='../../../src/illa/LipsumPresetLabel.ts'/>
+/// <reference path='../../../src/illa/LipsumPresetName.ts'/>
+/// <reference path='../../../src/illa/LipsumPresetTitle.ts'/>
 /// <reference path='../../../src/illa/Log.ts'/>
 /// <reference path='../../../src/illa/Map.ts'/>
 /// <reference path='../../../src/illa/NumberUtil.ts'/>
@@ -357,6 +361,12 @@ module test1 {
 				//illa.Log.log(illa.Arrkup.createString(arrkup));
 				u.assert(illa.Arrkup.createString(arrkup) === markup, 'Arrkup 1');
 			})();
+			
+			u.assert(illa.isString(illa.Lipsum.generate()), 'Lipsum 1');
+			u.assert(illa.isString(illa.Lipsum.generate(new illa.LipsumPresetDefault().setHighlight(.05, '<span>', '</span>'))), 'Lipsum 2');
+			u.assert(illa.isString(illa.Lipsum.generate(new illa.LipsumPresetLabel())), 'Lipsum 3');
+			u.assert(illa.isString(illa.Lipsum.generate(new illa.LipsumPresetName())), 'Lipsum 4');
+			u.assert(illa.isString(illa.Lipsum.generate(new illa.LipsumPresetTitle())), 'Lipsum 5');
 			
 			
 			
