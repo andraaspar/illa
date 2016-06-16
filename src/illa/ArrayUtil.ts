@@ -48,7 +48,9 @@ module illa {
 				if (this.indexOf(newArr, oldItem) < 0) {
 					result.push({
 						item: oldItem,
-						added: false
+						added: false,
+						oldIndex: i,
+						newIndex: -1
 					});
 				}
 			}
@@ -57,7 +59,9 @@ module illa {
 				if (this.indexOf(oldArr, newItem) < 0) {
 					result.push({
 						item: newItem,
-						added: true
+						added: true,
+						oldIndex: -1,
+						newIndex: i
 					});
 				}
 			}

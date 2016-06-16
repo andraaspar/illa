@@ -213,8 +213,12 @@ module test1 {
 				u.assert(result.length === 2, 'ArrayUtil.diff 1');
 				u.assert(result[0].item === 2, 'ArrayUtil.diff 2');
 				u.assert(result[0].added === false, 'ArrayUtil.diff 3');
-				u.assert(result[1].item === 4, 'ArrayUtil.diff 4');
-				u.assert(result[1].added === true, 'ArrayUtil.diff 5');
+				u.assert(result[0].oldIndex === 1, 'ArrayUtil.diff 4');
+				u.assert(result[0].newIndex === -1, 'ArrayUtil.diff 5');
+				u.assert(result[1].item === 4, 'ArrayUtil.diff 6');
+				u.assert(result[1].added === true, 'ArrayUtil.diff 7');
+				u.assert(result[1].oldIndex === -1, 'ArrayUtil.diff 8');
+				u.assert(result[1].newIndex === 2, 'ArrayUtil.diff 9');
 			})();
 
 			(function() {
