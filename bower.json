@@ -1,6 +1,6 @@
 {
 	"name": "illa",
-	"version": "2.5.7",
+	"version": "3.0.0",
 	"homepage": "https://github.com/andraaspar/illa",
 	"authors": [
 		"András Parditka"
@@ -19,8 +19,5 @@
 		"test",
 		"Gruntfile.js",
 		"package.json"
-	],
-	"devDependencies": {
-		"node-d-ts": "andraaspar/node-d-ts#v2"
-	}
+	]
 }

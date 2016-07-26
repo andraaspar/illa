@@ -1,0 +1,16 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"rootDir": "src",
+		"newLine": "LF",
+		"module": "commonjs",
+		"target": "es5",
+		"outDir": "./build",
+		"declaration": true
+	},
+	"exclude": [
+		"bower_components",
+		"node_modules",
+		"test"
+	]
+}
