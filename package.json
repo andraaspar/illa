@@ -1,11 +1,19 @@
 {
   "name": "@andraaspar/illa",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": {
     "name": "András Parditka"
   },
   "main": "build/index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andraaspar/illa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andraaspar/illa/issues"
+  },
+  "homepage": "https://github.com/andraaspar/illa",
   "devDependencies": {
     "rimraf": "^2.5.4",
     "typescript": "^2.0.0"
