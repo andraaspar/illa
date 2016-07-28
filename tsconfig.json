@@ -1,7 +1,6 @@
 {
 	"compilerOptions": {
 		"baseUrl": ".",
-		"rootDir": "src",
 		"newLine": "LF",
 		"module": "commonjs",
 		"target": "es5",
@@ -10,7 +9,6 @@
 	},
 	"exclude": [
 		"bower_components",
-		"node_modules",
-		"test"
+		"node_modules"
 	]
 }

@@ -20,8 +20,6 @@ import {
 	UnitTest,
 } from './index';
 
-import jQuery from 'jquery';
-
 module test1 {
 	export class Main {
 		
