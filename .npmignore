@@ -1,4 +1,4 @@
-/node_modules
-/.project
-/.settings
 /.vscode
+/*.ts
+/bower.json
+/node_modules

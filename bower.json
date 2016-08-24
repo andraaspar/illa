@@ -1,11 +1,11 @@
 {
 	"name": "illa",
-	"version": "4.0.0",
+	"version": "4.0.1",
 	"homepage": "https://github.com/andraaspar/illa",
 	"authors": [
 		"András Parditka"
 	],
-	"description": "Common TypeScript classes.",
+	"description": "TypeScript helper classes.",
 	"keywords": [
 		"TypeScript",
 		"common"
@@ -13,11 +13,11 @@
 	"license": "MIT",
 	"ignore": [
 		"**/.*",
-		"build",
 		"bower_components",
-		"node_modules",
-		"test",
+		"build",
 		"Gruntfile.js",
-		"package.json"
+		"node_modules",
+		"package.json",
+		"test"
 	]
 }
