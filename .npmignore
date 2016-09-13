@@ -3,3 +3,5 @@
 /*.ts
 /bower.json
 /node_modules
+
+!/*.d.ts
