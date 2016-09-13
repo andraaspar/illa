@@ -5,7 +5,7 @@
   "author": {
     "name": "András Parditka"
   },
-  "main": "build/index.js",
+  "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
