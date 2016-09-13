@@ -4,7 +4,6 @@
 		"newLine": "LF",
 		"module": "commonjs",
 		"target": "es5",
-		"outDir": "./build",
 		"declaration": true
 	},
 	"exclude": [

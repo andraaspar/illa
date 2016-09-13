@@ -1,2 +1,3 @@
-illa
-====
+# illa
+
+> TypeScript helper classes.

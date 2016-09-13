@@ -1,10 +1,11 @@
 {
-  "name": "@andraaspar/illa",
-  "version": "4.0.0",
+  "name": "illa",
+  "version": "4.0.1",
+  "description": "TypeScript helper classes.",
   "author": {
     "name": "András Parditka"
   },
-  "main": "build/index.js",
+  "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -13,13 +14,13 @@
   "bugs": {
     "url": "https://github.com/andraaspar/illa/issues"
   },
-  "homepage": "https://github.com/andraaspar/illa",
+  "homepage": "https://github.com/andraaspar/illa#readme",
   "devDependencies": {
     "rimraf": "^2.5.4",
     "typescript": "^2.0.0"
   },
   "scripts": {
-    "build": "rimraf build && tsc",
-    "test": "npm run build && node build/tests.js"
+    "build": "rimraf *.js *.d.ts && tsc",
+    "test": "npm run build && node tests.js"
   }
 }
