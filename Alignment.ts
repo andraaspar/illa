@@ -1,5 +1,5 @@
 export enum Alignment {
-	START, CENTER, END
+	START,
+	CENTER,
+	END,
 }
-
-export default Alignment;

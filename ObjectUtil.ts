@@ -1,36 +1,18 @@
-
-
-export function getKeys(obj: Object): string[] {
-	var result: string[] = [];
-	for (var key in obj) {
-		if (obj.hasOwnProperty(key)) {
-			result.push(key);
-		}
-	}
-	return result;
-}
-
-export function getKeyOfValue(obj: Object, value: any): string {
+export function getKeyOfValue(obj: { [key: string]: any }, value: any): string {
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key) && obj[key] === value) {
-			return key;
+			return key
 		}
 	}
-	return '';
+	return ''
 }
 
-export function getKeysOfValue(obj: Object, value: any): string[] {
-	var result: string[] = [];
+export function getKeysOfValue(obj: { [key: string]: any }, value: any): string[] {
+	var result: string[] = []
 	for (var key in obj) {
 		if (obj.hasOwnProperty(key) && obj[key] === value) {
-			result.push(key);
+			result.push(key)
 		}
 	}
-	return result;
+	return result
 }
-
-export default {
-	getKeys,
-	getKeyOfValue,
-	getKeysOfValue
-};

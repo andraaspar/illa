@@ -1,21 +1,21 @@
-import LipsumPreset from './LipsumPreset';
+import { LipsumPreset } from './LipsumPreset'
 
 export class LipsumPresetDefault extends LipsumPreset {
-	
+
 	constructor() {
-		super();
-		
-		this.setWordCount(3, 100);
-		this.setCapitalStart(true);
-		this.setFullStopAtEnd(true);
-		this.setFullStopAfter(3, 25);
-		this.setCommaAfter(2, 25);
-		this.setSemicolonChance(.05);
-		this.setColonChance(.05);
-		this.setHyphenAfter(5, 50);
-		this.setCapitalStartAfter(5, 50);
-		this.setEnDashAfter(5, 50);
-		this.setHighlight(0, '<mark>', '</mark>');
+		super()
+
+		this.setWordCount(3, 100)
+		this.setCapitalStart(true)
+		this.setFullStopAtEnd(true)
+		this.setFullStopAfter(3, 25)
+		this.setCommaAfter(2, 25)
+		this.setSemicolonChance(.05)
+		this.setColonChance(.05)
+		this.setHyphenAfter(5, 50)
+		this.setCapitalStartAfter(5, 50)
+		this.setEnDashAfter(5, 50)
+		this.setHighlight(0, '<mark>', '</mark>')
 		this.setWords([
 			'a',
 			'ac',
@@ -148,8 +148,6 @@ export class LipsumPresetDefault extends LipsumPreset {
 			'viverra',
 			'volutpat',
 			'vulputate'
-		]);
+		])
 	}
 }
-
-export default LipsumPresetDefault;

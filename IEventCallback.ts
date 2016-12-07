@@ -1,7 +1,5 @@
-import Event from './Event';
+import { IllaEvent } from './IllaEvent'
 
 export interface IEventCallback {
-	(e: Event): void;
+	(e: IllaEvent): void
 }
-
-export default IEventCallback;

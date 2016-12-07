@@ -1,7 +1,3 @@
-import {
-	indexOf
-} from './ArrayUtil';
-
 export class Map<K, V> {
 
 	constructor(
@@ -10,38 +6,38 @@ export class Map<K, V> {
 	) { }
 
 	set(key: K, value: V): void {
-		var index = indexOf(this.keys, key);
+		var index = this.keys.indexOf(key)
 		if (index == -1) {
-			index = this.keys.push(key) - 1;
+			index = this.keys.push(key) - 1
 		}
-		this.values[index] = value;
+		this.values[index] = value
 	}
 
 	get(key: K): V {
-		var index = indexOf(this.keys, key);
-		return this.values[index];
+		var index = this.keys.indexOf(key)
+		return this.values[index]
 	}
 
 	remove(key: K): void {
-		var index = indexOf(this.keys, key);
+		var index = this.keys.indexOf(key)
 		if (index != -1) {
-			this.keys.splice(index, 1);
-			this.values.splice(index, 1);
+			this.keys.splice(index, 1)
+			this.values.splice(index, 1)
 		}
 	}
 
 	removeAll(): void {
-		this.keys = [];
-		this.values = [];
+		this.keys = []
+		this.values = []
 	}
 
 	setAll(map: Map<K, V>): void {
-		var newKeys = map.getKeys();
-		var newValues = map.getValues();
+		var newKeys = map.getKeys()
+		var newValues = map.getValues()
 		for (var i = 0, n = newKeys.length; i < n; i++) {
-			var newKey = newKeys[i];
-			var newValue = newValues[i];
-			this.set(newKey, newValue);
+			var newKey = newKeys[i]
+			var newValue = newValues[i]
+			this.set(newKey, newValue)
 		}
 	}
 
@@ -49,5 +45,3 @@ export class Map<K, V> {
 	getKeys() { return this.keys }
 	getValues() { return this.values }
 }
-
-export default Map;

@@ -1,6 +1,6 @@
 {
   "name": "illa",
-  "version": "4.0.2",
+  "version": "5.0.0",
   "description": "TypeScript helper classes.",
   "author": {
     "name": "András Parditka"
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/andraaspar/illa#readme",
   "devDependencies": {
     "rimraf": "^2.5.4",
-    "typescript": "^2.0.0"
+    "typescript": "^2.0.10"
   },
   "scripts": {
     "build": "rimraf *.js *.d.ts && tsc",

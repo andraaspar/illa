@@ -1,6 +1,6 @@
-import GLOBAL from './GLOBAL';
+import { GLOBAL } from './GLOBAL'
 
-export function log(...args) {
+export function log(...args: any[]) {
 	var console = GLOBAL.console;
 	if (console && console.log) {
 		if (console.log.apply) {
@@ -10,7 +10,7 @@ export function log(...args) {
 		}
 	}
 }
-export function info(...args) {
+export function info(...args: any[]) {
 	var console = GLOBAL.console;
 	if (console && console.info) {
 		if (console.info.apply) {
@@ -19,10 +19,10 @@ export function info(...args) {
 			console.info(args.join(' '));
 		}
 	} else {
-		log.apply(this, args);
+		log.apply(undefined, args);
 	}
 }
-export function warn(...args) {
+export function warn(...args: any[]) {
 	var console = GLOBAL.console;
 	if (console && console.warn) {
 		if (console.warn.apply) {
@@ -31,10 +31,10 @@ export function warn(...args) {
 			console.warn(args.join(' '));
 		}
 	} else {
-		log.apply(this, args);
+		log.apply(undefined, args);
 	}
 }
-export function error(...args) {
+export function error(...args: any[]) {
 	var console = GLOBAL.console;
 	if (console && console.error) {
 		if (console.error.apply) {
@@ -43,37 +43,6 @@ export function error(...args) {
 			console.error(args.join(' '));
 		}
 	} else {
-		log.apply(this, args);
+		log.apply(undefined, args);
 	}
 }
-export function logIf(test, ...args) {
-	if (test) {
-		log.apply(this, [test].concat(args));
-	}
-}
-export function infoIf(test, ...args) {
-	if (test) {
-		info.apply(this, [test].concat(args));
-	}
-}
-export function warnIf(test, ...args) {
-	if (test) {
-		warn.apply(this, [test].concat(args));
-	}
-}
-export function errorIf(test, ...args) {
-	if (test) {
-		error.apply(this, [test].concat(args));
-	}
-}
-
-export default {
-	log,
-	info,
-	warn,
-	error,
-	logIf,
-	infoIf,
-	warnIf,
-	errorIf
-};
