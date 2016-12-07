@@ -1,131 +1,122 @@
-import {
-	isArray,
-	isBoolean,
-	isNull,
-	isNumber,
-	isObjectNotNull,
-	isString,
-	escapeHTML,
-} from './index';
+import { isArray, isBoolean, isNull, isNumber, isObjectNotNull, isString } from './Type'
 
-import {
-	toStringNoLetters
-} from './NumberUtil';
+import { escapeHtml } from './StringUtil'
+import { numberToStringNoLetters } from './NumberUtil'
 
 export class Arrkup {
 
 	constructor(
 		private source: any,
 		private allowRaw = true
-	) {}
+	) { }
 
 	createString(): string {
-		return this.processArrkup(this.getSource());
+		return this.processArrkup(this.getSource())
 	}
 
 	processArrkup(source: any): string {
-		var result = '';
+		var result = ''
 
 		if (isArray(source)) {
-			var sourceArr = <any[]>source;
+			var sourceArr = <any[]>source
 			if (isString(sourceArr[0])) {
-				result = this.processTag(sourceArr);
+				result = this.processTag(sourceArr)
 			} else if (isArray(sourceArr[0])) {
-				result = this.processGroup(sourceArr);
+				result = this.processGroup(sourceArr)
 			} else if (isNull(sourceArr[0])) {
 				if (this.getAllowRaw()) {
-					result = this.processRaw(sourceArr);
+					result = this.processRaw(sourceArr)
 				}
 			}
 		} else {
-			result = this.processNonArrkup(source);
+			result = this.processNonArrkup(source)
 		}
 
-		return result;
+		return result
 	}
 
 	processTag(source: any[]): string {
-		var tagName = <string>source[0];
-		var isSelfClosing = tagName.charAt(tagName.length - 1) == '/';
-		if (isSelfClosing) tagName = tagName.slice(0, -1);
+		var tagName = <string>source[0]
+		var isSelfClosing = tagName.charAt(tagName.length - 1) == '/'
+		if (isSelfClosing) tagName = tagName.slice(0, -1)
 
-		var result = '<' + tagName;
+		var result = '<' + tagName
 
-		var hasAttributes = isObjectNotNull(source[1]) && !isArray(source[1]);
-		if (hasAttributes) result += this.processAttributes(source[1]);
-		var contentIndex = hasAttributes ? 2 : 1;
+		var hasAttributes = isObjectNotNull(source[1]) && !isArray(source[1])
+		if (hasAttributes) result += this.processAttributes(source[1])
+		var contentIndex = hasAttributes ? 2 : 1
 
 		if (isSelfClosing) {
-			result += '/>';
+			result += '/>'
 		} else {
-			result += '>';
+			result += '>'
 
-			result += this.processChildren(source, contentIndex);
+			result += this.processChildren(source, contentIndex)
 
-			result += '</' + tagName + '>';
+			result += '</' + tagName + '>'
 		}
 
-		return result;
+		return result
 	}
 
 	processGroup(source: any[]): string {
-		return this.processChildren(source, 0);
+		return this.processChildren(source, 0)
 	}
 
 	processRaw(source: any[]): string {
-		var result = '';
+		var result = ''
 
 		for (var i = 1, n = source.length; i < n; i++) {
-			result += source[i] + '';
+			result += source[i] + ''
 		}
 
-		return result;
+		return result
 	}
 
 	processNonArrkup(source: any): string {
-		return escapeHTML(source + '');
+		return escapeHtml(source + '')
 	}
 
-	processAttributes(rawProps: {}): string {
-		var result = '';
+	processAttributes(rawProps: { [key: string]: any }): string {
+		var result = ''
 
 		for (var prop in rawProps) {
 			if (rawProps.hasOwnProperty(prop)) {
-				result += this.processAttribute(prop, rawProps[prop]);
+				result += this.processAttribute(prop, rawProps[prop])
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	processAttribute(key: string, value: any): string {
-		var result = '';
+		var result = ''
 
 		if (key) {
 			if (isNumber(value)) {
-				value = toStringNoLetters(value);
+				value = numberToStringNoLetters(value)
 			}
 
 			if (isString(value)) {
-				result = ' ' + key + '="' + escapeHTML(value) + '"';
+				result = ' ' + key + '="' + escapeHtml(value) + '"'
 			} else if (isBoolean(value)) {
 				if (value) {
-					result += ' ' + key;
+					result += ' ' + key
 				}
 			}
 		}
 
-		return result;
+		return result
 	}
 
 	processChildren(rawChildren: any[], startIndex: number): string {
-		var result = '';
+		var result = ''
 
 		for (var i = startIndex, n = rawChildren.length; i < n; i++) {
-			result += this.processArrkup(rawChildren[i]);
+			result += this.processArrkup(rawChildren[i])
 		}
 
-		return result;
+		return result
 	}
 
 	getSource() { return this.source }
@@ -133,12 +124,10 @@ export class Arrkup {
 
 	getAllowRaw() { return this.allowRaw }
 	setAllowRaw(flag: boolean): void { this.allowRaw = flag }
-	
-	static createString = createString;
+
+	static createString = arrkup
 }
 
-export function createString(source: any[], allowRaw = true): string {
-	return new Arrkup(source, allowRaw).createString();
+export function arrkup(source: any[], allowRaw = true): string {
+	return new Arrkup(source, allowRaw).createString()
 }
-
-export default Arrkup;

@@ -1,5 +1,4 @@
 export enum End {
-	MIN, MAX
+	MIN,
+	MAX,
 }
-
-export default End;

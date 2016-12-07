@@ -4,7 +4,10 @@
 		"newLine": "LF",
 		"module": "commonjs",
 		"target": "es5",
-		"declaration": true
+		"declaration": true,
+		"noImplicitThis": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true
 	},
 	"exclude": [
 		"bower_components",

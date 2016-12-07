@@ -1,57 +1,47 @@
-import Log from './Log';
+import { info, warn } from './Log'
 
 export class UnitTest {
-	testCount = 0;
-	successCount = 0;
-	failCount = 0;
+	testCount = 0
+	successCount = 0
+	failCount = 0
 
 	assert(test: boolean, desc = ''): boolean {
-		this.testCount++;
+		this.testCount++
 		if (test === true) {
-			this.successCount++;
+			this.successCount++
 		} else {
-			this.failCount++;
+			this.failCount++
 			if (desc) {
-				this.warn('Test failed: ' + desc);
+				warn('Test failed: ' + desc)
 			} else {
-				throw 'Test failed.';
+				throw 'Test failed.'
 			}
 		}
-		return test;
+		return test
 	}
-	
+
 	assertThrowsError(fn: Function, desc = ''): boolean {
-		var errorThrown = false;
+		var errorThrown = false
 		try {
-			fn();
+			fn()
 		} catch (e) {
-			errorThrown = true;
+			errorThrown = true
 		}
-		return this.assert(errorThrown, desc);
+		return this.assert(errorThrown, desc)
 	}
-	
-	assertEquals(received, expected, desc = ''): boolean {
-		var result = this.assert(received === expected, desc);
+
+	assertEquals<T>(received: T, expected: T, desc = ''): boolean {
+		var result = this.assert(received === expected, desc)
 		if (!result) {
-			this.info('Received:', received);
-			this.info('Expected:', expected);
+			info('Received:', received)
+			info('Expected:', expected)
 		}
-		return result;
+		return result
 	}
 
 	printStats(): void {
-		this.info(this.testCount + ' tests completed: ' +
+		info(this.testCount + ' tests completed: ' +
 			this.successCount + ' succeeded, ' +
-			this.failCount + ' failed.');
-	}
-
-	info(...r): void {
-		Log.info.apply(Log, r);
-	}
-
-	warn(...r): void {
-		Log.warn.apply(Log, r);
+			this.failCount + ' failed.')
 	}
 }
-
-export default UnitTest;
