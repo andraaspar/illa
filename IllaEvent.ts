@@ -4,6 +4,7 @@ export class IllaEvent {
 	private isPropagationStopped = false
 	private isImmediatePropagationStopped = false
 	private currentTarget: IEventHandler
+	private isDefaultPrevented = false
 
 	constructor(private type: string, private target: IEventHandler) {
 
@@ -53,5 +54,13 @@ export class IllaEvent {
 
 	getIsImmediatePropagationStopped(): boolean {
 		return this.isImmediatePropagationStopped
+	}
+
+	setIsDefaultPrevented(flag: boolean): void {
+		this.isDefaultPrevented = flag
+	}
+
+	getIsDefaultPrevented(): boolean {
+		return this.isDefaultPrevented
 	}
 }
