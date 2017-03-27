@@ -1,4 +1,5 @@
 import { IEventHandler } from './IEventHandler'
+import { error } from './Log'
 
 export class IllaEvent {
 	private isPropagationStopped = false
@@ -10,21 +11,24 @@ export class IllaEvent {
 
 	}
 
-	dispatch(): void {
-		this.processHandler(this.target)
+	dispatch() {
+		return this.processHandler(this.target)
 	}
 
-	processHandler(handler: IEventHandler): void {
+	async processHandler(handler: IEventHandler) {
 		this.currentTarget = handler
-		var callbackRegs = handler.getCallbackRegsByType(this.type).slice(0)
-		for (var i = 0, n = callbackRegs.length; i < n; i++) {
-			var callbackReg = callbackRegs[i]
-			callbackReg.callback.call(callbackReg.thisObj, this)
+		let callbackRegs = handler.getCallbackRegsByType(this.type).slice(0)
+		for (let callbackReg of callbackRegs) {
+			try {
+				await callbackReg.callback.call(callbackReg.thisObj, this)
+			} catch (e) {
+				error(e)
+			}
 			if (this.isImmediatePropagationStopped) break
 		}
 		if (!this.isPropagationStopped) {
 			var parentHandler = handler.getEventParent()
-			if (parentHandler) this.processHandler(parentHandler)
+			if (parentHandler) await this.processHandler(parentHandler)
 		}
 	}
 
