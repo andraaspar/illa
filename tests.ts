@@ -368,34 +368,39 @@ class Main {
 		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick1, this)
 	}
 
-	onTick1(e: IllaEvent): void {
+	onTick1(e: IllaEvent) {
 		this.unitTest.assert(this.ticker.getTickCount() === 1, 'Ticker 1')
 		this.ticker.removeEventCallback(Ticker.EVENT_TICK, this.onTick1, this)
 		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick2, this)
 		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick3, this)
+		return Promise.resolve()
 	}
 
-	onTick2(e: IllaEvent): void {
+	onTick2(e: IllaEvent) {
 		this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 2')
+		return Promise.resolve()
 	}
 
-	onTick3(e: IllaEvent): void {
+	onTick3(e: IllaEvent) {
 		this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 3')
 		this.ticker.removeAllEventCallbacks()
 		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick4, this)
 		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick5, this)
+		return Promise.resolve()
 	}
 
-	onTick4(e: IllaEvent): void {
+	onTick4(e: IllaEvent) {
 		this.unitTest.assert(this.ticker.getTickCount() === 3, 'Ticker 4')
 		e.setStopImmediatePropagation(true)
 		this.ticker.removeEventCallback(Ticker.EVENT_TICK, this.onTick4, this)
+		return Promise.resolve()
 	}
 
-	onTick5(e: IllaEvent): void {
+	onTick5(e: IllaEvent) {
 		this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5')
 		this.ticker.setIsStarted(false)
 		setTimeout(bind(this.onTickerFinished, this), 500)
+		return Promise.resolve()
 	}
 
 	onTickerFinished(): void {
