@@ -5,7 +5,6 @@
   "author": {
     "name": "András Parditka"
   },
-  "main": "index.js",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -16,8 +15,8 @@
   },
   "homepage": "https://github.com/andraaspar/illa#readme",
   "devDependencies": {
-    "rimraf": "^2.5.4",
-    "typescript": "^2.0.10"
+    "rimraf": "^2.6.1",
+    "typescript": "^2.2.1"
   },
   "scripts": {
     "build": "rimraf *.js *.d.ts && tsc",
