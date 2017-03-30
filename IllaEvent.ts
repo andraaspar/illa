@@ -12,15 +12,15 @@ export class IllaEvent {
 	}
 
 	dispatch() {
-		return this.processHandler(this.target)
+		this.processHandler(this.target)
 	}
 
-	async processHandler(handler: IEventHandler) {
+	processHandler(handler: IEventHandler) {
 		this.currentTarget = handler
 		let callbackRegs = handler.getCallbackRegsByType(this.type).slice(0)
 		for (let callbackReg of callbackRegs) {
 			try {
-				await callbackReg.callback.call(callbackReg.thisObj, this)
+				callbackReg.callback.call(callbackReg.thisObj, this)
 			} catch (e) {
 				error(e)
 			}
@@ -28,7 +28,7 @@ export class IllaEvent {
 		}
 		if (!this.isPropagationStopped) {
 			var parentHandler = handler.getEventParent()
-			if (parentHandler) await this.processHandler(parentHandler)
+			if (parentHandler) this.processHandler(parentHandler)
 		}
 	}
 
