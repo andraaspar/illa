@@ -133,7 +133,7 @@ class Main {
 		u.assert(hash('a8a4b21f-2051-3cbe-44e4-ffb21749c298') != hash('a8a4b21f-2051-3cbe-44e4-ffb21749c299'), 'hash 1')
 
 			; (function() {
-				let obj: { [key: string]: string } = parseQuery('foo=1&bar=2+2&baz=&quux')
+				let obj = parseQuery('foo=1&bar=2+2&baz=&quux')
 				u.assert(obj['foo'] === '1', 'parseQuery 1')
 				u.assert(obj['bar'] === '2 2', 'parseQuery 2')
 				u.assert(obj['baz'] === '', 'parseQuery 3')
@@ -141,7 +141,7 @@ class Main {
 			})()
 
 			; (function() {
-				let obj: { [key: string]: string } = parseQuery('foo=1&foo=2&foo=3', true)
+				let obj = parseQuery('foo=1&foo=2&foo=3', true)
 				u.assert(isArray(obj['foo']), 'parseQuery 5')
 				u.assert(obj['foo'].length === 3, 'parseQuery 6')
 				u.assert(obj['foo'][0] === '1', 'parseQuery 7')

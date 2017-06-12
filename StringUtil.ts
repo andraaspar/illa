@@ -40,17 +40,19 @@ export function hash(src: string): number {
 	return result
 }
 
-export function parseQuery(query: string, multipleKeysAsArray?: boolean): {} {
-	var result: { [key: string]: any } = {}
+export function parseQuery(query: string, multipleKeysAsArray?: false): { [key: string]: string }
+export function parseQuery(query: string, multipleKeysAsArray?: true): { [key: string]: string | string[] }
+export function parseQuery(query: string, multipleKeysAsArray?: boolean) {
+	var result: { [key: string]: string | string[] } = {}
 	var match: RegExpMatchArray
 	while (match = QUERY_RE.exec(query)) {
 		var key = decode(match[1])
 		var value = decode(match[2])
 		if (multipleKeysAsArray && key in result) {
 			if (isString(result[key])) {
-				result[key] = [result[key], value]
+				result[key] = [<string>result[key], value]
 			} else {
-				result[key].push(value)
+				(<string[]>result[key]).push(value)
 			}
 		} else {
 			result[key] = value
