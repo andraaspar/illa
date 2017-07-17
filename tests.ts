@@ -1,5 +1,6 @@
 import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 import { bind, debounce, get, throttle } from './FunctionUtil'
+import { classes, extendAttrs } from './MithrilUtil'
 import { diff, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
 import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
@@ -276,7 +277,7 @@ describe(`FunctionUtil`, () => {
 	})
 	describe('get', () => {
 		it(`Gets a value.`, () => {
-			let o = {a: {b: undefined as {c: boolean}, d: true}}
+			let o = { a: { b: undefined as { c: boolean }, d: true } }
 			expect(get(() => o.a.b.c)).toBe(undefined)
 			expect(get(() => o.a.b.c, true)).toBe(true)
 			expect(get(() => o.a.d)).toBe(true)
@@ -626,6 +627,38 @@ describe('JsonUtil', () => {
 	describe('jsonFromUri', () => {
 		it('Works.', () => {
 			expect(jsonFromUri(`('a'~''_'b'~0_'c'~('d'~true)_'e'~!0_''_true*)`)).toEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] })
+		})
+	})
+})
+describe('MithrilUtil', () => {
+	describe('extendAttrs', () => {
+		it('Works.', () => {
+			expect(extendAttrs(
+				{
+					foo: '',
+					bar: true,
+					_baz: 5,
+					class: 'extended',
+				},
+				{
+					bar: false,
+					class: 'base',
+				},
+			)).toEqual({
+				foo: '',
+				bar: false,
+				class: 'base extended',
+			})
+		})
+	})
+	describe('classes', () => {
+		it('Works.', () => {
+			expect(classes(
+				'foo',
+				true && 'bar',
+				false && 'baz',
+				undefined && 'quux',
+			)).toEqual('foo bar')
 		})
 	})
 })
