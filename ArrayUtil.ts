@@ -1,4 +1,5 @@
 import { IArrayDiffResult } from './IArrayDiffResult'
+import { isUndefined } from './Type'
 
 export function removeFirst<T>(a: T[], v: T): boolean {
 	var i = a.indexOf(v)
@@ -43,6 +44,18 @@ export function diff<T>(oldArr: T[], newArr: T[]): IArrayDiffResult<T>[] {
 				newIndex: i
 			})
 		}
+	}
+	return result
+}
+
+export function range(start: number, end?: number): number[] {
+	let result: number[] = []
+	let firstValue = isUndefined(end) ? 0 : start
+	let direction = isUndefined(end) ? (start < 0 ? -1 : 1) : (end < start ? -1 : 1)
+	let n = isUndefined(end) ? Math.abs(start) : Math.max(start, end) - Math.min(start, end)
+	if (!isFinite(n)) throw '[ot8upk] Invalid count.'
+	for (let i = 0; i < n; i++) {
+		result.push(firstValue + direction * i)
 	}
 	return result
 }

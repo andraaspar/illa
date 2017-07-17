@@ -21,7 +21,7 @@ export function jsonObjectsEqual(a: any, b: any): boolean {
 		for (let key in a) c[key] = true
 		for (let key in b) c[key] = true
 		for (let key in c) {
-			if (!jsonObjectsEqual(a[key], b[key])) return false
+			if (!jsonObjectsEqual((<any>a)[key], (<any>b)[key])) return false
 		}
 	} else if (isNumber(a) && isNaN(a)) {
 		// NaN does not equal itself so we can't allow it in the primitive test below

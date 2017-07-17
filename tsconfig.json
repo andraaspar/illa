@@ -11,7 +11,9 @@
 		"declaration": true,
 		"noImplicitThis": true,
 		"noImplicitAny": true,
-		"noImplicitReturns": true
+		"noImplicitReturns": true,
+		"forceConsistentCasingInFileNames": true,
+		"strictNullChecks": true
 	},
 	"exclude": [
 		"bower_components",
