@@ -12,11 +12,11 @@ export class EventHandler implements IEventHandler {
 		return result
 	}
 
-	getEventParent(): IEventHandler {
+	getEventParent(): IEventHandler | null {
 		return null
 	}
 
-	addEventCallback(type: string, cb: IEventCallback, thisObj: Object = null): void {
+	addEventCallback(type: string, cb: IEventCallback, thisObj: Object | null = null): void {
 		var reg = new EventCallbackReg(cb, thisObj)
 		if (isArray(this.callbacksByType[type])) {
 			this.removeEventCallback(type, cb, thisObj)
@@ -27,7 +27,7 @@ export class EventHandler implements IEventHandler {
 
 	}
 
-	removeEventCallback(type: string, cb: IEventCallback, thisObj: Object = null): void {
+	removeEventCallback(type: string, cb: IEventCallback, thisObj: Object | null = null): void {
 		var callbacks = this.callbacksByType[type]
 		if (isArray(callbacks)) {
 			for (var i = 0, n = callbacks.length; i < n; i++) {

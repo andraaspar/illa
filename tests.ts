@@ -197,7 +197,7 @@ describe(`Type`, () => {
 			expect(ifInstanceOf(Child, new Parent())).toBe(null)
 		})
 		it(`Throws on null as class.`, () => {
-			expect(() => ifInstanceOf(null, new Parent())).toThrow()
+			expect(() => ifInstanceOf(null!, new Parent())).toThrow()
 		})
 		it(`Tolerates null as instance.`, () => {
 			expect(ifInstanceOf(Parent, null)).toBe(null)
@@ -221,7 +221,7 @@ describe(`FunctionUtil`, () => {
 			expect(fun('bar')).toBe('foobarbaz')
 		})
 		it(`Throws on missing function.`, () => {
-			expect(() => bind(null, {})).toThrow()
+			expect(() => bind(null!, {})).toThrow()
 		})
 	})
 	describe(`throttle`, () => {
@@ -278,8 +278,8 @@ describe(`FunctionUtil`, () => {
 	})
 	describe('get', () => {
 		it(`Gets a value.`, () => {
-			let o = { a: { b: undefined as { c: boolean }, d: true } }
-			expect(get(() => o.a.b.c)).toBe(undefined)
+			let o = { a: { b: undefined! as { c: boolean }, d: true } }
+			expect(get(() => o.a.b.c)).toBe(undefined!)
 			expect(get(() => o.a.b.c, true)).toBe(true)
 			expect(get(() => o.a.d)).toBe(true)
 		})
@@ -408,7 +408,7 @@ describe(`ArrayUtil`, () => {
 })
 describe(`Map`, () => {
 	it(`Works.`, () => {
-		let testMap = new Map<number, string>()
+		let testMap = new Map<number | undefined, string>()
 		testMap.set(0, 'zero')
 		testMap.set(7.5, 'seven and a half')
 		testMap.set(undefined, 'not a number')
@@ -445,7 +445,7 @@ describe(`Map`, () => {
 		expect(testMap.getLength()).toBe(0)
 	})
 	it(`Accepts objects as keys.`, () => {
-		let testMap = new Map<{}, string>()
+		let testMap = new Map<{} | undefined | null, string>()
 		let key1 = { id: 1 }
 		let key2 = { id: 2 }
 		testMap.set(key1, 'key 1')
@@ -481,7 +481,7 @@ describe('ObjectUtil', () => {
 	})
 	describe('getKeysOfValue', () => {
 		it('Works.', () => {
-			let testObj = { 'a': <any>undefined, 'b': <any>null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': <any[]>[], 'j': <any[]>undefined }
+			let testObj = { 'a': <any>undefined, 'b': <any>null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': <any[]>[], 'j': <any[]>undefined! }
 			testObj['j'] = testObj['i']
 
 			let keysOfIArray = getKeysOfValue(testObj, testObj['i'])

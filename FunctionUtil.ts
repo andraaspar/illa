@@ -18,7 +18,7 @@ export var bind = <IBind>function(fn: () => any, obj: Object, ...args: any[]): (
  */
 export var bindUnsafe: (fn: () => any, obj: Object, ...args: any[]) => () => any = bind
 
-function throttleInternal(fn: (...args: any[]) => any, thisArg: {}, delay: number, isDebounce: boolean): { (...args: any[]): void; cancel(): void } {
+function throttleInternal(fn: (...args: any[]) => any, thisArg: {} | null, delay: number, isDebounce: boolean): { (...args: any[]): void; cancel(): void } {
 	var timeoutRef: any
 	var lastCalled: number = -Infinity
 	var callNow = function(...args: any[]): void {
@@ -52,34 +52,34 @@ function throttleInternal(fn: (...args: any[]) => any, thisArg: {}, delay: numbe
 /**
  * Restricts the number of calls to the passed in function to one per ‘delay’ milliseconds.
  */
-export function throttle(fn: () => any, thisArg: {}, delay: number): { (): void; cancel(): void }
-export function throttle<P1>(fn: (a: P1) => any, thisArg: {}, delay: number): { (a: P1): void; cancel(): void }
-export function throttle<P1, P2>(fn: (a: P1, b: P2) => any, thisArg: {}, delay: number): { (a: P1, b: P2): void; cancel(): void }
-export function throttle<P1, P2, P3>(fn: (a: P1, b: P2, c: P3) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3): void; cancel(): void }
-export function throttle<P1, P2, P3, P4>(fn: (a: P1, b: P2, c: P3, d: P4) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4): void; cancel(): void }
-export function throttle<P1, P2, P3, P4, P5>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5): void; cancel(): void }
-export function throttle<P1, P2, P3, P4, P5, P6>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6): void; cancel(): void }
-export function throttle<P1, P2, P3, P4, P5, P6, P7>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7): void; cancel(): void }
-export function throttle<P1, P2, P3, P4, P5, P6, P7, P8>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8): void; cancel(): void }
-export function throttle<P1, P2, P3, P4, P5, P6, P7, P8, P9>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9): void; cancel(): void }
-export function throttle(fn: (...args: any[]) => any, thisArg: {}, delay: number): { (...args: any[]): void; cancel(): void } {
+export function throttle(fn: () => any, thisArg: {} | null, delay: number): { (): void; cancel(): void }
+export function throttle<P1>(fn: (a: P1) => any, thisArg: {} | null, delay: number): { (a: P1): void; cancel(): void }
+export function throttle<P1, P2>(fn: (a: P1, b: P2) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2): void; cancel(): void }
+export function throttle<P1, P2, P3>(fn: (a: P1, b: P2, c: P3) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3): void; cancel(): void }
+export function throttle<P1, P2, P3, P4>(fn: (a: P1, b: P2, c: P3, d: P4) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4): void; cancel(): void }
+export function throttle<P1, P2, P3, P4, P5>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5): void; cancel(): void }
+export function throttle<P1, P2, P3, P4, P5, P6>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6): void; cancel(): void }
+export function throttle<P1, P2, P3, P4, P5, P6, P7>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7): void; cancel(): void }
+export function throttle<P1, P2, P3, P4, P5, P6, P7, P8>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8): void; cancel(): void }
+export function throttle<P1, P2, P3, P4, P5, P6, P7, P8, P9>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9): void; cancel(): void }
+export function throttle(fn: (...args: any[]) => any, thisArg: {} | null, delay: number): { (...args: any[]): void; cancel(): void } {
 	return throttleInternal(fn, thisArg, delay, false)
 }
 
 /**
  * The passed in function will be called only after ‘delay’ milliseconds elapsed after the last call.
  */
-export function debounce(fn: () => any, thisArg: {}, delay: number): { (): void; cancel(): void }
-export function debounce<P1>(fn: (a: P1) => any, thisArg: {}, delay: number): { (a: P1): void; cancel(): void }
-export function debounce<P1, P2>(fn: (a: P1, b: P2) => any, thisArg: {}, delay: number): { (a: P1, b: P2): void; cancel(): void }
-export function debounce<P1, P2, P3>(fn: (a: P1, b: P2, c: P3) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3): void; cancel(): void }
-export function debounce<P1, P2, P3, P4>(fn: (a: P1, b: P2, c: P3, d: P4) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4): void; cancel(): void }
-export function debounce<P1, P2, P3, P4, P5>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5): void; cancel(): void }
-export function debounce<P1, P2, P3, P4, P5, P6>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6): void; cancel(): void }
-export function debounce<P1, P2, P3, P4, P5, P6, P7>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7): void; cancel(): void }
-export function debounce<P1, P2, P3, P4, P5, P6, P7, P8>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8): void; cancel(): void }
-export function debounce<P1, P2, P3, P4, P5, P6, P7, P8, P9>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9): void; cancel(): void }
-export function debounce(fn: (...args: any[]) => any, thisArg: {}, delay: number): { (...args: any[]): void; cancel(): void } {
+export function debounce(fn: () => any, thisArg: {} | null, delay: number): { (): void; cancel(): void }
+export function debounce<P1>(fn: (a: P1) => any, thisArg: {} | null, delay: number): { (a: P1): void; cancel(): void }
+export function debounce<P1, P2>(fn: (a: P1, b: P2) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2): void; cancel(): void }
+export function debounce<P1, P2, P3>(fn: (a: P1, b: P2, c: P3) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3): void; cancel(): void }
+export function debounce<P1, P2, P3, P4>(fn: (a: P1, b: P2, c: P3, d: P4) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4): void; cancel(): void }
+export function debounce<P1, P2, P3, P4, P5>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5): void; cancel(): void }
+export function debounce<P1, P2, P3, P4, P5, P6>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6): void; cancel(): void }
+export function debounce<P1, P2, P3, P4, P5, P6, P7>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7): void; cancel(): void }
+export function debounce<P1, P2, P3, P4, P5, P6, P7, P8>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8): void; cancel(): void }
+export function debounce<P1, P2, P3, P4, P5, P6, P7, P8, P9>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9) => any, thisArg: {} | null, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9): void; cancel(): void }
+export function debounce(fn: (...args: any[]) => any, thisArg: {} | null, delay: number): { (...args: any[]): void; cancel(): void } {
 	return throttleInternal(fn, thisArg, delay, true)
 }
 

@@ -65,7 +65,7 @@ export function isObjectNotNull(v: any): v is TSet<any> {
 /**
  * Returns the value if ‘instanceof’ is true for the given constructor.
  */
-export function ifInstanceOf<T>(c: new (...r: any[]) => T, v: any): T {
+export function ifInstanceOf<T>(c: new (...r: any[]) => T, v: any): T | null {
 	return v instanceof c ? v : null
 }
 

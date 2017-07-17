@@ -44,7 +44,7 @@ export function parseQuery(query: string, multipleKeysAsArray?: false): { [key: 
 export function parseQuery(query: string, multipleKeysAsArray?: true): { [key: string]: string | string[] }
 export function parseQuery(query: string, multipleKeysAsArray?: boolean) {
 	var result: { [key: string]: string | string[] } = {}
-	var match: RegExpMatchArray
+	var match: RegExpMatchArray | null
 	while (match = QUERY_RE.exec(query)) {
 		var key = decode(match[1])
 		var value = decode(match[2])
@@ -80,7 +80,7 @@ export function uuid(): string {
 }
 
 function cryptoRandom16(): number {
-	var result: number
+	var result: number = NaN
 	if (GLOBAL.crypto) {
 		if (GLOBAL.crypto.getRandomValues) {
 			result = GLOBAL.crypto.getRandomValues(new Uint8Array(1))[0] % 16
