@@ -7,7 +7,7 @@ import { IBind } from './IBind'
  * b) To achieve the best type safety, specify types explicitly - otherwise it may default to {}
  * c) For functions taking more than 9 arguments, use illa.bindUnsafe.
  */
-export var bind: IBind = function(fn: () => any, obj: Object, ...args: any[]): () => any {
+export var bind = <IBind>function(fn: () => any, obj: Object, ...args: any[]): () => any {
 	return fn.call.apply(fn.bind, arguments)
 }
 
