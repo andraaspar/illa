@@ -68,3 +68,10 @@ export function isObjectNotNull(v: any): v is TSet<any> {
 export function ifInstanceOf<T>(c: new (...r: any[]) => T, v: any): T {
 	return v instanceof c ? v : null
 }
+
+/**
+ * Makes sure an object satisfies the given interface.
+ */
+export function withInterface<T>(a: T): T {
+	return a
+}
