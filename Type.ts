@@ -63,6 +63,6 @@ export function isObjectNotNull(v: any): v is {[key: string]: any} {
 /**
  * Returns the value if ‘instanceof’ is true for the given constructor.
  */
-export function as<T>(c: new (...r: any[]) => T, v: any): T {
+export function ifInstanceOf<T>(c: new (...r: any[]) => T, v: any): T {
 	return v instanceof c ? v : null
 }

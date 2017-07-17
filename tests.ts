@@ -1,8 +1,8 @@
-import { as, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
 import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 import { bind, debounce, throttle } from './FunctionUtil'
 import { diff, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
+import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
 
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
@@ -181,23 +181,23 @@ describe(`Type`, () => {
 			expect(isObjectNotNull(true)).toBe(false)
 		})
 	})
-	describe(`as`, () => {
+	describe(`ifInstanceOf`, () => {
 		it(`Works with the same class.`, () => {
 			let o = new Child()
-			expect(as(Child, o)).toBe(o)
+			expect(ifInstanceOf(Child, o)).toBe(o)
 		})
 		it(`Works with the parent class.`, () => {
 			let o = new Child()
-			expect(as(Parent, o)).toBe(o)
+			expect(ifInstanceOf(Parent, o)).toBe(o)
 		})
 		it(`Returns null for unrelated class.`, () => {
-			expect(as(Child, new Parent())).toBe(null)
+			expect(ifInstanceOf(Child, new Parent())).toBe(null)
 		})
 		it(`Throws on null as class.`, () => {
-			expect(() => as(null, new Parent())).toThrow()
+			expect(() => ifInstanceOf(null, new Parent())).toThrow()
 		})
 		it(`Tolerates null as instance.`, () => {
-			expect(as(Parent, null)).toBe(null)
+			expect(ifInstanceOf(Parent, null)).toBe(null)
 		})
 	})
 })
