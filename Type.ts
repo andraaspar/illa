@@ -36,7 +36,7 @@ export var isArray = Array.isArray
 /**
  * Returns true if the value is undefined.
  */
-export function isUndefined(v: any): boolean {
+export function isUndefined(v: any): v is undefined {
 	return typeof v == 'undefined'
 }
 
@@ -50,14 +50,14 @@ export function isNull(v: any): boolean {
 /**
  * Returns true if the value is undefined or null.
  */
-export function isUndefinedOrNull(v: any): boolean {
+export function isUndefinedOrNull(v: any): v is (undefined | null) {
 	return typeof v == 'undefined' || v === null
 }
 
 /**
  * Returns true if the value is an object and not null. Includes functions.
  */
-export function isObjectNotNull(v: any): v is TSet<any> {
+export function isObjectNotNull(v: any): v is object {
 	var t = typeof v
 	return t == 'object' && v !== null || t == 'function'
 }
