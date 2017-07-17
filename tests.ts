@@ -3,6 +3,7 @@ import { bind, debounce, throttle } from './FunctionUtil'
 import { diff, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
 import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
+import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil'
 
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
@@ -490,7 +491,7 @@ describe('ObjectUtil', () => {
 			let b = { bar: 0 }
 			let c = { baz: true }
 			let result = assign(a, b, c)
-			
+
 			expect(result.foo).toBe('')
 			expect(result.bar).toBe(0)
 			expect(result.baz).toBe(true)
@@ -589,6 +590,34 @@ describe('Ticker & EventHandler', () => {
 					}, 500)
 				})
 			})
+		})
+	})
+})
+describe('JsonUtil', () => {
+	describe('jsonObjectsEqual', () => {
+		it('Compares objects.', () => {
+			expect(jsonObjectsEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] }, { a: '', b: 0, c: { d: true }, e: [0, '', true] })).toBe(true)
+		})
+		it('Compares objects deeply.', () => {
+			expect(jsonObjectsEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] }, { a: '', b: 0, c: { d: true }, e: [0, '', false] })).toBe(false)
+			expect(jsonObjectsEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] }, { a: '', b: 0, c: { d: false }, e: [0, '', true] })).toBe(false)
+		})
+		it('Handles NaN.', () => {
+			expect(jsonObjectsEqual({ a: NaN }, { a: NaN })).toBe(true)
+		})
+		it('Handles undefined & null.', () => {
+			expect(jsonObjectsEqual({ a: undefined }, { a: undefined })).toBe(true)
+			expect(jsonObjectsEqual({ a: null }, { a: null })).toBe(true)
+		})
+	})
+	describe('jsonToUri', () => {
+		it('Works.', () => {
+			expect(jsonToUri({ a: '', b: 0, c: { d: true }, e: [0, '', true] })).toBe(`('a'~''_'b'~0_'c'~('d'~true)_'e'~!0_''_true*)`)
+		})
+	})
+	describe('jsonFromUri', () => {
+		it('Works.', () => {
+			expect(jsonFromUri(`('a'~''_'b'~0_'c'~('d'~true)_'e'~!0_''_true*)`)).toEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] })
 		})
 	})
 })
