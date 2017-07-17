@@ -1,8 +1,8 @@
 import { as, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
+import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 import { bind, debounce, throttle } from './FunctionUtil'
 import { diff, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
-import { getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
@@ -482,6 +482,18 @@ describe('ObjectUtil', () => {
 			let keysOfFalse = getKeysOfValue(testObj, false)
 			expect(keysOfFalse.length).toBe(1)
 			expect(keysOfFalse[0]).toBe('g')
+		})
+	})
+	describe('assign', () => {
+		it('Works.', () => {
+			let a = { foo: '' }
+			let b = { bar: 0 }
+			let c = { baz: true }
+			let result = assign(a, b, c)
+			
+			expect(result.foo).toBe('')
+			expect(result.bar).toBe(0)
+			expect(result.baz).toBe(true)
 		})
 	})
 })
