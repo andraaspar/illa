@@ -1,5 +1,5 @@
 import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
-import { bind, debounce, throttle } from './FunctionUtil'
+import { bind, debounce, get, throttle } from './FunctionUtil'
 import { diff, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
 import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
@@ -272,6 +272,14 @@ describe(`FunctionUtil`, () => {
 				expect(callCount).toBe(0)
 				done()
 			}, 200)
+		})
+	})
+	describe('get', () => {
+		it(`Gets a value.`, () => {
+			let o = {a: {b: undefined as {c: boolean}, d: true}}
+			expect(get(() => o.a.b.c)).toBe(undefined)
+			expect(get(() => o.a.b.c, true)).toBe(true)
+			expect(get(() => o.a.d)).toBe(true)
 		})
 	})
 })

@@ -1,4 +1,5 @@
 import { IBind } from './IBind'
+import { isFunction } from './Type'
 
 /**
  * Binds a function to a ‘this’ context, and optionally prepends the specified arguments.
@@ -80,4 +81,23 @@ export function debounce<P1, P2, P3, P4, P5, P6, P7, P8>(fn: (a: P1, b: P2, c: P
 export function debounce<P1, P2, P3, P4, P5, P6, P7, P8, P9>(fn: (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9) => any, thisArg: {}, delay: number): { (a: P1, b: P2, c: P3, d: P4, e: P5, f: P6, g: P7, h: P8, i: P9): void; cancel(): void }
 export function debounce(fn: (...args: any[]) => any, thisArg: {}, delay: number): { (...args: any[]): void; cancel(): void } {
 	return throttleInternal(fn, thisArg, delay, true)
+}
+
+/**
+ * Executes code and catches errors. Falls back to provided functions or values.
+ */
+export function get<T>(fn: T | (() => T), ...rest: (T | (() => T))[]): T {
+	if (isFunction(fn)) {
+		try {
+			return fn()
+		} catch (e) {
+			return rest.length ? get.apply(null, rest) : undefined
+		}
+	} else {
+		return fn
+	}
+}
+
+export function cancelGet(): never {
+	throw 'cancelGet'
 }
