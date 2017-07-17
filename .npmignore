@@ -3,5 +3,8 @@
 /*.ts
 /bower.json
 /node_modules
+/tests.js
 
 !/*.d.ts
+
+/tests.d.ts

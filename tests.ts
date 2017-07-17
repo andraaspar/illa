@@ -5,6 +5,7 @@ import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid 
 import { getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 
 import { GLOBAL } from './GLOBAL'
+import { IEventCallback } from './IEventCallback'
 import { IllaEvent } from './IllaEvent'
 import { LipsumPresetDefault } from './LipsumPresetDefault'
 import { LipsumPresetLabel } from './LipsumPresetLabel'
@@ -12,413 +13,570 @@ import { LipsumPresetName } from './LipsumPresetName'
 import { LipsumPresetTitle } from './LipsumPresetTitle'
 import { Map } from './Map'
 import { Ticker } from './Ticker'
-import { UnitTest } from './UnitTest'
 import { arrkup } from './Arrkup'
-import { info } from './Log'
 import { lipsum } from './Lipsum'
 import { numberToStringNoLetters } from './NumberUtil'
 
-class Main {
+class Parent { }
+class Child extends Parent { }
+class ArrayChild extends Array { }
 
-	static instance = new Main()
+describe(`Type`, () => {
+	describe(`isString`, () => {
+		it(`Recognizes string primitives.`, () => {
+			expect(isString(``)).toBe(true)
+		})
+		it(`Recognizes non string primitives.`, () => {
+			expect(isString(new String())).toBe(false)
+			expect(isString(true)).toBe(false)
+			expect(isString(0)).toBe(false)
+			expect(isString(NaN)).toBe(false)
+			expect(isString(Infinity)).toBe(false)
+			expect(isString(-Infinity)).toBe(false)
+			expect(isString(undefined)).toBe(false)
+			expect(isString(null)).toBe(false)
+			expect(isString([])).toBe(false)
+			expect(isString({})).toBe(false)
+			expect(isString(() => { })).toBe(false)
+		})
+	})
+	describe(`isBoolean`, () => {
+		it(`Recognizes boolean primitives.`, () => {
+			expect(isBoolean(true)).toBe(true)
+			expect(isBoolean(false)).toBe(true)
+		})
+		it(`Recognizes non boolean primitives.`, () => {
+			expect(isBoolean(new Boolean())).toBe(false)
+			expect(isBoolean('')).toBe(false)
+			expect(isBoolean(0)).toBe(false)
+			expect(isBoolean(NaN)).toBe(false)
+			expect(isBoolean(Infinity)).toBe(false)
+			expect(isBoolean(-Infinity)).toBe(false)
+			expect(isBoolean(undefined)).toBe(false)
+			expect(isBoolean(null)).toBe(false)
+			expect(isBoolean([])).toBe(false)
+			expect(isBoolean({})).toBe(false)
+			expect(isBoolean(() => { })).toBe(false)
+		})
+	})
+	describe(`isNumber`, () => {
+		it(`Recognizes number primitives.`, () => {
+			expect(isNumber(0)).toBe(true)
+			expect(isNumber(NaN)).toBe(true)
+			expect(isNumber(Infinity)).toBe(true)
+			expect(isNumber(-Infinity)).toBe(true)
+		})
+		it(`Recognizes non number primitives.`, () => {
+			expect(isNumber(new Number())).toBe(false)
+			expect(isNumber('')).toBe(false)
+			expect(isNumber(true)).toBe(false)
+			expect(isNumber(undefined)).toBe(false)
+			expect(isNumber(null)).toBe(false)
+			expect(isNumber([])).toBe(false)
+			expect(isNumber({})).toBe(false)
+			expect(isNumber(() => { })).toBe(false)
+		})
+	})
+	describe(`isArray`, () => {
+		it(`Recognizes arrays.`, () => {
+			expect(isArray([])).toBe(true)
+			expect(isArray(new Array())).toBe(true)
+			expect(isArray(new ArrayChild())).toBe(true)
+		})
+		it(`Recognizes non arrays.`, () => {
+			expect(isArray('')).toBe(false)
+			expect(isArray(0)).toBe(false)
+			expect(isArray(NaN)).toBe(false)
+			expect(isArray(Infinity)).toBe(false)
+			expect(isArray(-Infinity)).toBe(false)
+			expect(isArray(true)).toBe(false)
+			expect(isArray(undefined)).toBe(false)
+			expect(isArray(null)).toBe(false)
+			expect(isArray({})).toBe(false)
+			expect(isArray(() => { })).toBe(false)
+		})
+	})
+	describe(`isFunction`, () => {
+		it(`Recognizes functions.`, () => {
+			expect(isFunction(() => { })).toBe(true)
+		})
+		it(`Recognizes non functions.`, () => {
+			expect(isFunction('')).toBe(false)
+			expect(isFunction(0)).toBe(false)
+			expect(isFunction(NaN)).toBe(false)
+			expect(isFunction(Infinity)).toBe(false)
+			expect(isFunction(-Infinity)).toBe(false)
+			expect(isFunction(true)).toBe(false)
+			expect(isFunction(undefined)).toBe(false)
+			expect(isFunction(null)).toBe(false)
+			expect(isFunction([])).toBe(false)
+			expect(isFunction({})).toBe(false)
+		})
+	})
+	describe(`isNull`, () => {
+		it(`Recognizes null.`, () => {
+			expect(isNull(null)).toBe(true)
+		})
+		it(`Recognizes non null.`, () => {
+			expect(isNull('')).toBe(false)
+			expect(isNull(0)).toBe(false)
+			expect(isNull(NaN)).toBe(false)
+			expect(isNull(Infinity)).toBe(false)
+			expect(isNull(-Infinity)).toBe(false)
+			expect(isNull(true)).toBe(false)
+			expect(isNull(undefined)).toBe(false)
+			expect(isNull([])).toBe(false)
+			expect(isNull({})).toBe(false)
+			expect(isNull(() => { })).toBe(false)
+		})
+	})
+	describe(`isUndefined`, () => {
+		it(`Recognizes undefined.`, () => {
+			expect(isUndefined(undefined)).toBe(true)
+		})
+		it(`Recognizes non undefined.`, () => {
+			expect(isUndefined('')).toBe(false)
+			expect(isUndefined(0)).toBe(false)
+			expect(isUndefined(NaN)).toBe(false)
+			expect(isUndefined(Infinity)).toBe(false)
+			expect(isUndefined(-Infinity)).toBe(false)
+			expect(isUndefined(true)).toBe(false)
+			expect(isUndefined(null)).toBe(false)
+			expect(isUndefined([])).toBe(false)
+			expect(isUndefined({})).toBe(false)
+			expect(isUndefined(() => { })).toBe(false)
+		})
+	})
+	describe(`isUndefinedOrNull`, () => {
+		it(`Recognizes undefined and null.`, () => {
+			expect(isUndefinedOrNull(undefined)).toBe(true)
+			expect(isUndefinedOrNull(null)).toBe(true)
+		})
+		it(`Recognizes non undefined or null.`, () => {
+			expect(isUndefinedOrNull('')).toBe(false)
+			expect(isUndefinedOrNull(0)).toBe(false)
+			expect(isUndefinedOrNull(NaN)).toBe(false)
+			expect(isUndefinedOrNull(Infinity)).toBe(false)
+			expect(isUndefinedOrNull(-Infinity)).toBe(false)
+			expect(isUndefinedOrNull(true)).toBe(false)
+			expect(isUndefinedOrNull([])).toBe(false)
+			expect(isUndefinedOrNull({})).toBe(false)
+			expect(isUndefinedOrNull(() => { })).toBe(false)
+		})
+	})
+	describe(`isObjectNotNull`, () => {
+		it(`Recognizes objects & functions.`, () => {
+			expect(isObjectNotNull({})).toBe(true)
+			expect(isObjectNotNull([])).toBe(true)
+			expect(isObjectNotNull(() => { })).toBe(true)
+		})
+		it(`Recognizes non objects & null.`, () => {
+			expect(isObjectNotNull('')).toBe(false)
+			expect(isObjectNotNull(0)).toBe(false)
+			expect(isObjectNotNull(NaN)).toBe(false)
+			expect(isObjectNotNull(Infinity)).toBe(false)
+			expect(isObjectNotNull(-Infinity)).toBe(false)
+			expect(isObjectNotNull(undefined)).toBe(false)
+			expect(isObjectNotNull(null)).toBe(false)
+			expect(isObjectNotNull(true)).toBe(false)
+		})
+	})
+	describe(`as`, () => {
+		it(`Works with the same class.`, () => {
+			let o = new Child()
+			expect(as(Child, o)).toBe(o)
+		})
+		it(`Works with the parent class.`, () => {
+			let o = new Child()
+			expect(as(Parent, o)).toBe(o)
+		})
+		it(`Returns null for unrelated class.`, () => {
+			expect(as(Child, new Parent())).toBe(null)
+		})
+		it(`Throws on null as class.`, () => {
+			expect(() => as(null, new Parent())).toThrow()
+		})
+		it(`Tolerates null as instance.`, () => {
+			expect(as(Parent, null)).toBe(null)
+		})
+	})
+})
+describe(`FunctionUtil`, () => {
+	describe(`bind`, () => {
+		it(`Binds this.`, () => {
+			let f = function(this: { prefix: string }, suffix: string): string {
+				return this.prefix + suffix
+			}
+			let fun = bind(f, { prefix: 'foo' })
+			expect(fun('bar')).toBe('foobar')
+		})
+		it(`Binds params.`, () => {
+			let f = function(this: { c: string }, a: string, b: string) {
+				return a + b + this.c
+			}
+			let fun = bind(f, { c: 'baz' }, 'foo')
+			expect(fun('bar')).toBe('foobarbaz')
+		})
+		it(`Throws on missing function.`, () => {
+			expect(() => bind(null, {})).toThrow()
+		})
+	})
+	describe(`throttle`, () => {
+		it(`Throttles.`, (done) => {
+			let callCount = 0
+			let f = () => { callCount++ }
+			let fun = throttle(f, null, 100)
+			fun()
+			setTimeout(fun, 10)
+			setTimeout(fun, 20)
+			setTimeout(fun, 30)
+			setTimeout(fun, 40)
+			setTimeout(fun, 50)
+			setTimeout(() => {
+				expect(callCount).toBe(2)
+				done()
+			}, 200)
+		})
+	})
+	describe(`debounce`, () => {
+		it(`Debounces.`, (done) => {
+			let callCount = 0
+			let f = () => { callCount++ }
+			let fun = debounce(f, null, 100)
+			fun()
+			setTimeout(fun, 10)
+			setTimeout(fun, 20)
+			setTimeout(fun, 30)
+			setTimeout(fun, 40)
+			setTimeout(fun, 50)
+			setTimeout(() => {
+				expect(callCount).toBe(1)
+				done()
+			}, 200)
+		})
+		it(`Can be cancelled.`, (done) => {
+			let callCount = 0
+			let f = () => { callCount++ }
+			let fun = debounce(f, null, 100)
+			fun()
+			setTimeout(fun, 10)
+			setTimeout(fun, 20)
+			setTimeout(fun, 30)
+			setTimeout(fun, 40)
+			setTimeout(fun, 50)
+			setTimeout(() => {
+				fun.cancel()
+			}, 60)
+			setTimeout(() => {
+				expect(callCount).toBe(0)
+				done()
+			}, 200)
+		})
+	})
+})
+describe(`GLOBAL`, () => {
+	it(`Is the global object.`, () => {
+		expect(isFunction(GLOBAL.isNaN)).toBe(true)
+	})
+})
+describe(`StringUtil`, () => {
+	describe(`uuid`, () => {
+		it(`Is a UUID.`, () => {
+			expect(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/.test(uuid())).toBe(true)
+		})
+	})
+	describe(`escapeHtml`, () => {
+		it(`Escapes HTML.`, () => {
+			expect(escapeHtml('<h1>"T&amp;C\'s"</h1>')).toBe('&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;')
+		})
+	})
+	describe(`escapeRegExp`, () => {
+		it(`Escapes RegExp.`, () => {
+			expect(escapeRegExp('^[a-z]*?[0-9]{1,3}\\d$')).toBe('\\^\\[a\\-z\\]\\*\\?\\[0\\-9\\]\\{1,3\\}\\\\d\\$')
+		})
+	})
+	describe(`optionalString`, () => {
+		it(`Returns a string for strings.`, () => {
+			expect(optionalString('foo')).toBe('foo')
+			expect(optionalString({ toString: function() { return 'Nice.' } })).toBe('Nice.')
+		})
+		it(`Returns an empty string for undefined or null.`, () => {
+			expect(optionalString(undefined)).toBe('')
+			expect(optionalString(null)).toBe('')
+		})
+	})
+	describe(`trim`, () => {
+		it(`Trims whitespace.`, () => {
+			expect(trim('  foo   ')).toBe('foo')
+			expect(trim('\t\r\nfoo\r\n\t')).toBe('foo')
+		})
+	})
+	describe(`hash`, () => {
+		it(`Generates unique hashes for strings.`, () => {
+			expect(hash('a8a4b21f-2051-3cbe-44e4-ffb21749c298')).not.toBe(hash('a8a4b21f-2051-3cbe-44e4-ffb21749c299'))
+		})
+	})
+	describe(`parseQuery`, () => {
+		it(`Parses query strings to object.`, () => {
+			let obj = parseQuery('foo=1&bar=2+2&baz=&quux')
+			expect(obj.foo).toBe('1')
+			expect(obj.bar).toBe('2 2')
+			expect(obj.baz).toBe('')
+			expect(obj.quux).toBe('')
+		})
+		it(`Can convert multiple keys into arrays.`, () => {
+			let obj = parseQuery('foo=1&foo=2&foo=3', true)
+			expect(obj.foo.length).toBe(3)
+			expect(obj.foo[0]).toBe('1')
+			expect(obj.foo[1]).toBe('2')
+			expect(obj.foo[2]).toBe('3')
+		})
+	})
+})
+describe(`NumberUtil`, () => {
+	describe(`numberToStringNoLetters`, () => {
+		it(`Converts regular numbers as expected.`, () => {
+			expect(numberToStringNoLetters(0)).toBe('0')
+			expect(numberToStringNoLetters(1234.5678)).toBe('1234.5678')
+			expect(numberToStringNoLetters(-1234.5678)).toBe('-1234.5678')
+		})
+		it(`Converts special numbers to empty string.`, () => {
+			expect(numberToStringNoLetters(NaN)).toBe('')
+			expect(numberToStringNoLetters(Infinity)).toBe('')
+			expect(numberToStringNoLetters(-Infinity)).toBe('')
+		})
+		it(`Converts huge numbers as expected.`, () => {
+			expect(numberToStringNoLetters(1e21)).toBe('1000000000000000000000')
+		})
+		it(`Converts tiny numbers as expected.`, () => {
+			expect(numberToStringNoLetters(1e-7)).toBe('0.00000009999999999999999')
+		})
+	})
+})
+describe(`ArrayUtil`, () => {
+	describe(`removeFirst`, () => {
+		it(`Removes the first instance.`, () => {
+			let testArr = ['foo', 'bar', 'baz', 'foo']
+			expect(removeFirst(testArr, 'foo')).toBe(true)
+			expect(testArr.length).toBe(3)
+			expect(testArr[0]).toBe('bar')
+			expect(testArr[1]).toBe('baz')
+			expect(testArr[2]).toBe('foo')
+		})
+		it(`Does not remove when not present.`, () => {
+			let testArr = ['foo', 'bar', 'baz', 'foo']
+			expect(removeFirst(testArr, 'quux')).toBe(false)
+			expect(testArr.length).toBe(4)
+		})
+	})
+	describe(`removeFirst`, () => {
+		it(`Removes all instances.`, () => {
+			let testArr = ['foo', 'bar', 'baz', 'foo']
+			expect(removeAll(testArr, 'foo')).toBe(true)
+			expect(testArr.length).toBe(2)
+			expect(testArr[0]).toBe('bar')
+			expect(testArr[1]).toBe('baz')
+		})
+	})
+	describe(`diff`, () => {
+		it(`Diffs arrays.`, () => {
+			let oldArr = [1, 2, 3]
+			let newArr = [1, 3, 4]
+			let result = diff(oldArr, newArr)
+			expect(result.length).toBe(2)
+			expect(result[0].item).toBe(2)
+			expect(result[0].added).toBe(false)
+			expect(result[0].oldIndex).toBe(1)
+			expect(result[0].newIndex).toBe(-1)
+			expect(result[1].item).toBe(4)
+			expect(result[1].added).toBe(true)
+			expect(result[1].oldIndex).toBe(-1)
+			expect(result[1].newIndex).toBe(2)
+		})
+	})
+})
+describe(`Map`, () => {
+	it(`Works.`, () => {
+		let testMap = new Map<number, string>()
+		testMap.set(0, 'zero')
+		testMap.set(7.5, 'seven and a half')
+		testMap.set(undefined, 'not a number')
+		testMap.set(Infinity, 'infinity')
+		testMap.set(-Infinity, 'negative infinity')
 
-	unitTest: UnitTest
-	ticker: Ticker
-	throttled: { (a: number, b: string, c: boolean): void; cancel: () => void }
-	throttledResult: [number, string, boolean]
-	debounced: { (a: number, b: string, c: boolean): void; cancel: () => void }
-	debouncedResult: [number, string, boolean]
+		expect(testMap.getLength()).toBe(5)
+		expect(testMap.get(0)).toBe('zero')
+		expect(testMap.get(7.5)).toBe('seven and a half')
+		expect(testMap.get(undefined)).toBe('not a number')
+		expect(testMap.get(Infinity)).toBe('infinity')
+		expect(testMap.get(-Infinity)).toBe('negative infinity')
 
-	constructor() {
-		let u = this.unitTest = new UnitTest()
-		info('Testing...')
+		testMap.set(0, 'nothing')
 
+		expect(testMap.getLength()).toBe(5)
+		expect(testMap.get(0)).toBe('nothing')
 
+		testMap.remove(7.5)
 
-		u.assert(isString('undefined'), 'isString 1')
-		u.assert(isString(true) === false, 'isString 2')
+		expect(testMap.getLength()).toBe(4)
+		expect(isUndefined(testMap.get(7.5))).toBe(true)
+		expect(testMap.get(undefined)).toBe('not a number')
 
-		u.assert(isBoolean(true), 'isBoolean 1')
-		u.assert(isBoolean(false), 'isBoolean 2')
-		u.assert(isBoolean('true') === false, 'isBoolean 3')
-		u.assert(isBoolean(1) === false, 'isBoolean 4')
+		testMap.setAll(new Map([1, 2, 3], ['one', 'two', 'three']))
 
-		u.assert(isNumber(0), 'isNumber 1')
-		u.assert(isNumber(NaN), 'isNumber 2')
-		u.assert(isNumber(Infinity), 'isNumber 3')
-		u.assert(isNumber('1') === false, 'isNumber 4')
+		expect(testMap.getLength()).toBe(7)
+		expect(testMap.get(1)).toBe('one')
+		expect(testMap.get(2)).toBe('two')
+		expect(testMap.get(3)).toBe('three')
 
-		u.assert(isArray([]), 'isArray 1')
-		u.assert(isArray(new Array()), 'isArray 2')
-		u.assert(isArray({ '0': 0, length: 1 }) === false, 'isArray 3')
+		testMap.removeAll()
 
-		let arraySub = function(this: any) {
-			Array.call(this)
-		}
-		arraySub.prototype = new Array()
-		arraySub.constructor = Array
+		expect(testMap.getLength()).toBe(0)
+	})
+	it(`Accepts objects as keys.`, () => {
+		let testMap = new Map<{}, string>()
+		let key1 = { id: 1 }
+		let key2 = { id: 2 }
+		testMap.set(key1, 'key 1')
+		testMap.set(null, 'null')
+		testMap.set(undefined, 'undefined')
+		testMap.set(key2, 'key 2')
 
-		u.assert(isArray(new (<any>arraySub)()) === false, 'isArray 4')
+		expect(testMap.getLength()).toBe(4)
+		expect(testMap.get(key1)).toBe('key 1')
+		expect(isUndefined(testMap.get({ id: 1 }))).toBe(true)
+		expect(testMap.get(key2)).toBe('key 2')
+		expect(testMap.get(null)).toBe('null')
+		expect(testMap.get(undefined)).toBe('undefined')
+	})
+})
+describe('ObjectUtil', () => {
+	describe('getKeyOfValue', () => {
+		it('Works.', () => {
+			let testObj = { 'a': <any>undefined, 'b': <any>null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': <any[]>[] }
 
-		u.assert(isFunction(function() { }), 'isFunction 1')
-		u.assert(isFunction(Main), 'isFunction 2')
-		u.assert(isFunction(Function), 'isFunction 3')
-		u.assert(isFunction(new Function()), 'isFunction 4')
-		u.assert(isFunction({}) === false, 'isFunction 5')
+			expect(getKeyOfValue(testObj, {})).toBe('')
+			expect(getKeyOfValue(testObj, undefined)).toBe('a')
+			expect(getKeyOfValue(testObj, null)).toBe('b')
+			expect(getKeyOfValue(testObj, '')).toBe('c')
+			expect(getKeyOfValue(testObj, 0)).toBe('d')
+			expect(getKeyOfValue(testObj, Infinity)).toBe('e')
+			expect(getKeyOfValue(testObj, NaN)).toBe('')
+			expect(getKeyOfValue(testObj, false)).toBe('g')
+			expect(getKeyOfValue(testObj, testObj['h'])).toBe('h')
+			expect(getKeyOfValue(testObj, testObj['i'])).toBe('i')
+			expect(getKeyOfValue(testObj, [])).toBe('');
+		})
+	})
+	describe('getKeysOfValue', () => {
+		it('Works.', () => {
+			let testObj = { 'a': <any>undefined, 'b': <any>null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': <any[]>[], 'j': <any[]>undefined }
+			testObj['j'] = testObj['i']
 
-		u.assert(isNull(null), 'isNull 1')
-		u.assert(isNull(undefined) === false, 'isNull 2')
-		u.assert(isNull({}) === false, 'isNull 3')
-
-		u.assert(isUndefined(undefined), 'isUndefined 1')
-		u.assert(isUndefined(null) === false, 'isUndefined 2')
-		u.assert(isUndefined('undefined') === false, 'isUndefined 3')
-
-		u.assert(isUndefinedOrNull(undefined), 'isUndefinedOrNull 1')
-		u.assert(isUndefinedOrNull(null), 'isUndefinedOrNull 2')
-		u.assert(isUndefinedOrNull('undefined') === false, 'isUndefinedOrNull 3')
-		u.assert(isUndefinedOrNull('null') === false, 'isUndefinedOrNull 4')
-
-		u.assert(isObjectNotNull({}), 'isObjectNotNull 1')
-		u.assert(isObjectNotNull([]), 'isObjectNotNull 2')
-		u.assert(isObjectNotNull(function() { }), 'isObjectNotNull 3')
-		u.assert(isObjectNotNull(null) === false, 'isObjectNotNull 4')
-		u.assert(isObjectNotNull(undefined) === false, 'isObjectNotNull 5')
-		u.assert(isObjectNotNull(NaN) === false, 'isObjectNotNull 6')
-		u.assert(isObjectNotNull('foo') === false, 'isObjectNotNull 7')
-
-		u.assert(as(Main, this) === this, 'as 1')
-		u.assert(as(IllaEvent, this) === null, 'as 2')
-		let illaEvent = new IllaEvent('test', null)
-		u.assert(as(IllaEvent, illaEvent) === illaEvent, 'as 3')
-
-			; (function() {
-				let f = function(this: { prefix: string }, suffix: string): string {
-					return this.prefix + suffix
-				}
-				let fun = bind(f, { prefix: 'foo' })
-				u.assert(fun('bar') === 'foobar', 'bind 1')
-			})()
-
-			; (function() {
-				let f = function(this: { c: string }, a: string, b: string) {
-					return <any>a + b + this.c
-				}
-				let fun = bind(f, { c: 'baz' }, 'foo')
-				u.assert(fun('bar') === 'foobarbaz', 'bind 2')
-			})()
-
-		u.assertThrowsError(function() {
-			bind(null, {})
-		}, 'bind 3')
-
-		u.assert(isFunction(GLOBAL.isNaN), 'GLOBAL 1')
-
-		u.assert(isString(uuid()), 'uuid 1')
-
-
-
-		u.assert(escapeHtml('<h1>"T&amp;C\'s"</h1>') === '&lt;h1&gt;&quot;T&amp;amp;C&#39;s&quot;&lt;/h1&gt;', 'escapeHtml 1')
-
-		u.assert(escapeRegExp('^[a-z]*?[0-9]{1,3}\\d$') === '\\^\\[a\\-z\\]\\*\\?\\[0\\-9\\]\\{1,3\\}\\\\d\\$', 'escapeRegExp 1')
-
-		u.assert(optionalString(undefined) === '', 'optionalString 1')
-		u.assert(optionalString(null) === '', 'optionalString 2')
-		u.assert(optionalString({ toString: function() { return 'Nice.' } }) === 'Nice.', 'optionalString 3')
-		u.assert(optionalString('foo') === 'foo', 'optionalString 4')
-
-		u.assert(trim('  foo   ') === 'foo', 'trim 1')
-		u.assert(trim('\t\r\nfoo\r\n\t') === 'foo', 'trim 2')
-
-		u.assert(hash('a8a4b21f-2051-3cbe-44e4-ffb21749c298') != hash('a8a4b21f-2051-3cbe-44e4-ffb21749c299'), 'hash 1')
-
-			; (function() {
-				let obj = parseQuery('foo=1&bar=2+2&baz=&quux')
-				u.assert(obj['foo'] === '1', 'parseQuery 1')
-				u.assert(obj['bar'] === '2 2', 'parseQuery 2')
-				u.assert(obj['baz'] === '', 'parseQuery 3')
-				u.assert(obj['quux'] === '', 'parseQuery 4')
-			})()
-
-			; (function() {
-				let obj = parseQuery('foo=1&foo=2&foo=3', true)
-				u.assert(isArray(obj['foo']), 'parseQuery 5')
-				u.assert(obj['foo'].length === 3, 'parseQuery 6')
-				u.assert(obj['foo'][0] === '1', 'parseQuery 7')
-				u.assert(obj['foo'][1] === '2', 'parseQuery 8')
-				u.assert(obj['foo'][2] === '3', 'parseQuery 9')
-			})()
-
-
-		u.assert(numberToStringNoLetters(0) === '0', 'numberToStringNoLetters 1')
-		u.assert(numberToStringNoLetters(NaN) === '', 'numberToStringNoLetters 2')
-		u.assert(numberToStringNoLetters(Infinity) === '', 'numberToStringNoLetters 3')
-		u.assert(numberToStringNoLetters(-Infinity) === '', 'numberToStringNoLetters 4')
-		u.assert(numberToStringNoLetters(1234.5678) === '1234.5678', 'numberToStringNoLetters 5')
-		u.assert(numberToStringNoLetters(-1234.5678) === '-1234.5678', 'numberToStringNoLetters 6')
-		u.assert(numberToStringNoLetters(1e21) === '1000000000000000000000', 'numberToStringNoLetters 7')
-		u.assert(numberToStringNoLetters(1e-7) === '0.00000009999999999999999', 'numberToStringNoLetters 8')
-
-
-			; (function() {
-				let testArr = ['foo', 'bar', 'baz', 'foo']
-				let removed = removeFirst(testArr, 'foo')
-				u.assert(testArr.length === 3, 'removeFirst 1')
-				u.assert(testArr[0] === 'bar', 'removeFirst 2')
-				u.assert(testArr[2] === 'foo', 'removeFirst 3')
-				u.assert(removed, 'removeFirst 4')
-			})()
-
-			; (function() {
-				let testArr = ['foo', 'bar', 'baz', 'foo']
-				let removed = removeFirst(testArr, 'quux')
-				u.assert(testArr.length === 4, 'removeFirst 5')
-				u.assert(removed === false, 'removeFirst 6')
-			})()
-
-			; (function() {
-				let testArr = ['foo', 'bar', 'baz', 'foo']
-				let removed = removeAll(testArr, 'foo')
-				u.assert(testArr.length === 2, 'removeAll 1')
-				u.assert(testArr[0] === 'bar', 'removeAll 2')
-				u.assert(testArr[1] === 'baz', 'removeAll 3')
-				u.assert(removed, 'removeAll 4')
-			})()
-
-			; (function() {
-				let oldArr = [1, 2, 3]
-				let newArr = [1, 3, 4]
-				let result = diff(oldArr, newArr)
-				u.assert(result.length === 2, 'diff 1')
-				u.assert(result[0].item === 2, 'diff 2')
-				u.assert(result[0].added === false, 'diff 3')
-				u.assert(result[0].oldIndex === 1, 'diff 4')
-				u.assert(result[0].newIndex === -1, 'diff 5')
-				u.assert(result[1].item === 4, 'diff 6')
-				u.assert(result[1].added === true, 'diff 7')
-				u.assert(result[1].oldIndex === -1, 'diff 8')
-				u.assert(result[1].newIndex === 2, 'diff 9')
-			})()
-
-			; (function() {
-				let testMap = new Map<number, string>()
-				testMap.set(0, 'zero')
-				testMap.set(7.5, 'seven and a half')
-				testMap.set(undefined, 'not a number')
-				testMap.set(Infinity, 'infinity')
-				testMap.set(-Infinity, 'negative infinity')
-
-				u.assert(testMap.getLength() === 5, 'Map 1')
-				u.assert(testMap.get(0) === 'zero', 'Map 2')
-				u.assert(testMap.get(7.5) === 'seven and a half', 'Map 3')
-				u.assert(testMap.get(undefined) === 'not a number', 'Map 4')
-				u.assert(testMap.get(Infinity) === 'infinity', 'Map 5')
-				u.assert(testMap.get(-Infinity) === 'negative infinity', 'Map 6')
-
-				testMap.set(0, 'nothing')
-
-				u.assert(testMap.getLength() === 5, 'Map 7')
-				u.assert(testMap.get(0) === 'nothing', 'Map 8')
-
-				testMap.remove(7.5)
-
-				u.assert(testMap.getLength() === 4, 'Map 9')
-				u.assert(isUndefined(testMap.get(7.5)), 'Map 10')
-				u.assert(testMap.get(undefined) === 'not a number', 'Map 11')
-
-				testMap.setAll(new Map([1, 2, 3], ['one', 'two', 'three']))
-
-				u.assert(testMap.getLength() === 7, 'Map 12')
-				u.assert(testMap.get(1) === 'one', 'Map 13')
-				u.assert(testMap.get(2) === 'two', 'Map 14')
-				u.assert(testMap.get(3) === 'three', 'Map 15')
-
-				testMap.removeAll()
-
-				u.assert(testMap.getLength() === 0, 'Map 16')
-			})()
-
-			; (function() {
-				let testMap = new Map<{}, string>()
-				let key1 = { id: 1 }
-				let key2 = { id: 2 }
-				testMap.set(key1, 'key 1')
-				testMap.set(null, 'null')
-				testMap.set(undefined, 'undefined')
-				testMap.set(key2, 'key 2')
-
-				u.assert(testMap.getLength() === 4, 'Map 17')
-				u.assert(testMap.get(key1) === 'key 1', 'Map 18')
-				u.assert(isUndefined(testMap.get({ id: 1 })), 'Map 19')
-				u.assert(testMap.get(key2) === 'key 2', 'Map 20')
-				u.assert(testMap.get(null) === 'null', 'Map 21')
-				u.assert(testMap.get(undefined) === 'undefined', 'Map 22')
-			})()
-
-			; (function() {
-				let testObj = { 'a': <any>undefined, 'b': <any>null, 'c': '', 'd': 0, 'e': Infinity, 'f': NaN, 'g': false, 'h': {}, 'i': <any[]>[] }
-
-				u.assert(getKeyOfValue(testObj, {}) === '', 'getKeyOfValue 1')
-				u.assert(getKeyOfValue(testObj, undefined) === 'a', 'getKeyOfValue 2')
-				u.assert(getKeyOfValue(testObj, null) === 'b', 'getKeyOfValue 3')
-				u.assert(getKeyOfValue(testObj, '') === 'c', 'getKeyOfValue 4')
-				u.assert(getKeyOfValue(testObj, 0) === 'd', 'getKeyOfValue 5')
-				u.assert(getKeyOfValue(testObj, Infinity) === 'e', 'getKeyOfValue 6')
-				u.assert(getKeyOfValue(testObj, NaN) === '', 'getKeyOfValue 7')
-				u.assert(getKeyOfValue(testObj, false) === 'g', 'getKeyOfValue 8')
-				u.assert(getKeyOfValue(testObj, testObj['h']) === 'h', 'getKeyOfValue 9')
-				u.assert(getKeyOfValue(testObj, testObj['i']) === 'i', 'getKeyOfValue 10')
-				u.assert(getKeyOfValue(testObj, []) === '', 'getKeyOfValue 11')
-
-					; (<any>testObj)['j'] = testObj['i']
-				let keysOfIArray = getKeysOfValue(testObj, testObj['i'])
-				u.assert(keysOfIArray.length === 2, 'getKeysOfValue 1')
-				u.assert(keysOfIArray[0] === 'i', 'getKeysOfValue 2')
-				u.assert(keysOfIArray[1] === 'j', 'getKeysOfValue 3')
-				let keysOfNaN = getKeysOfValue(testObj, NaN)
-				u.assert(keysOfNaN.length === 0, 'getKeysOfValue 4')
-				let keysOfFalse = getKeysOfValue(testObj, false)
-				u.assert(keysOfFalse.length === 1, 'getKeysOfValue 5')
-				u.assert(keysOfFalse[0] === 'g', 'getKeysOfValue 6')
-			})()
-
-
-			; (function() {
-				let a = [
-					[null, '<!DOCTYPE html>'],
-					['html',
-						['head',
-							['meta/', { charset: 'UTF-8' }],
-							['title', 'Arrkup - get a <tag>']
-						],
-						['body',
-							['h1', { 'class': 'my-h1 the-title' }, 'Arrkup & fun'],
-							['input/', { name: 'zero', value: 0 }],
-							['input/', { name: 'eight-point-three', value: 8.3 }],
-							['input/', { name: '1e21', value: 1e21 }],
-							['input/', { name: '1e-7', value: 1e-7 }],
-							['input/', { name: 'nan', value: NaN }],
-							['input/', { name: 'infinity', value: Infinity }],
-							['input/', { name: 'negative-infinity', value: -Infinity }],
-							['input/', { name: 'true', value: true }],
-							['input/', { name: 'false', value: false }],
-							['input/', { name: 'empty-string', value: '' }],
-							[null, '<!-- Content START -->'],
-							['a', { href: 'http://example.com?foo=bar&baz=quux', title: 'I say, "Click me"' }, 'It\'s clicking time']
-						]
+			let keysOfIArray = getKeysOfValue(testObj, testObj['i'])
+			expect(keysOfIArray.length).toBe(2)
+			expect(keysOfIArray[0]).toBe('i')
+			expect(keysOfIArray[1]).toBe('j')
+			let keysOfNaN = getKeysOfValue(testObj, NaN)
+			expect(keysOfNaN.length).toBe(0)
+			let keysOfFalse = getKeysOfValue(testObj, false)
+			expect(keysOfFalse.length).toBe(1)
+			expect(keysOfFalse[0]).toBe('g')
+		})
+	})
+})
+describe('Arrkup', () => {
+	describe('arrkup', () => {
+		it('Works.', () => {
+			expect(arrkup([
+				[null, '<!DOCTYPE html>'],
+				['html',
+					['head',
+						['meta/', { charset: 'UTF-8' }],
+						['title', 'Arrkup - get a <tag>']
+					],
+					['body',
+						['h1', { 'class': 'my-h1 the-title' }, 'Arrkup & fun'],
+						['input/', { name: 'zero', value: 0 }],
+						['input/', { name: 'eight-point-three', value: 8.3 }],
+						['input/', { name: '1e21', value: 1e21 }],
+						['input/', { name: '1e-7', value: 1e-7 }],
+						['input/', { name: 'nan', value: NaN }],
+						['input/', { name: 'infinity', value: Infinity }],
+						['input/', { name: 'negative-infinity', value: -Infinity }],
+						['input/', { name: 'true', value: true }],
+						['input/', { name: 'false', value: false }],
+						['input/', { name: 'empty-string', value: '' }],
+						[null, '<!-- Content START -->'],
+						['a', { href: 'http://example.com?foo=bar&baz=quux', title: 'I say, "Click me"' }, 'It\'s clicking time']
 					]
 				]
-				let markup = '<!DOCTYPE html>' +
-					'<html>' +
-					'<head>' +
-					'<meta charset="UTF-8"/>' +
-					'<title>Arrkup - get a &lt;tag&gt;</title>' +
-					'</head>' +
-					'<body>' +
-					'<h1 class="my-h1 the-title">Arrkup &amp; fun</h1>' +
-					'<input name="zero" value="0"/>' +
-					'<input name="eight-point-three" value="8.3"/>' +
-					'<input name="1e21" value="1000000000000000000000"/>' +
-					'<input name="1e-7" value="0.00000009999999999999999"/>' +
-					'<input name="nan" value=""/>' +
-					'<input name="infinity" value=""/>' +
-					'<input name="negative-infinity" value=""/>' +
-					'<input name="true" value/>' +
-					'<input name="false"/>' +
-					'<input name="empty-string" value=""/>' +
-					'<!-- Content START -->' +
-					'<a href="http://example.com?foo=bar&amp;baz=quux" title="I say, &quot;Click me&quot;">It&#39;s clicking time</a>' +
-					'</body>' +
-					'</html>'
-				//Log.log(arrkup(a))
-				u.assert(arrkup(a) === markup, 'Arrkup 1')
-			})()
-
-		u.assert(isString(lipsum()), 'Lipsum 1')
-		u.assert(isString(lipsum(new LipsumPresetDefault().setHighlight(.05, '<span>', '</span>'))), 'Lipsum 2')
-		u.assert(isString(lipsum(new LipsumPresetLabel())), 'Lipsum 3')
-		u.assert(isString(lipsum(new LipsumPresetName())), 'Lipsum 4')
-		u.assert(isString(lipsum(new LipsumPresetTitle())), 'Lipsum 5')
-
-
-
-		let throttleTest = function(this: Main, a: number, b: string, c: boolean): void {
-			this.throttledResult = [a, b, c]
-		}
-		this.throttled = throttle(throttleTest, this, 30)
-		this.throttled(1, 'a', true)
-		u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'throttle 1')
-		this.throttled(2, 'b', false)
-		this.throttled(3, 'c', true)
-		u.assert(this.throttledResult[0] === 1 && this.throttledResult[1] === 'a' && this.throttledResult[2] === true, 'throttle 2')
-
-
-
-		let debounceTest = function(this: Main, a: number, b: string, c: boolean): void {
-			this.debouncedResult = [a, b, c]
-		}
-		this.debounced = debounce(debounceTest, this, 30)
-		this.debouncedResult = [1, 'a', true]
-		this.debounced(2, 'b', false)
-		u.assert(this.debouncedResult[0] === 1 && this.debouncedResult[1] === 'a' && this.debouncedResult[2] === true, 'debounce 1')
-
-
-
-		this.ticker = new Ticker()
-		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick1, this)
-	}
-
-	onTick1(e: IllaEvent) {
-		this.unitTest.assert(this.ticker.getTickCount() === 1, 'Ticker 1')
-		this.ticker.removeEventCallback(Ticker.EVENT_TICK, this.onTick1, this)
-		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick2, this)
-		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick3, this)
-		return Promise.resolve()
-	}
-
-	onTick2(e: IllaEvent) {
-		this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 2')
-		return Promise.resolve()
-	}
-
-	onTick3(e: IllaEvent) {
-		this.unitTest.assert(this.ticker.getTickCount() === 2, 'Ticker 3')
-		this.ticker.removeAllEventCallbacks()
-		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick4, this)
-		this.ticker.addEventCallback(Ticker.EVENT_TICK, this.onTick5, this)
-		return Promise.resolve()
-	}
-
-	onTick4(e: IllaEvent) {
-		this.unitTest.assert(this.ticker.getTickCount() === 3, 'Ticker 4')
-		e.setStopImmediatePropagation(true)
-		this.ticker.removeEventCallback(Ticker.EVENT_TICK, this.onTick4, this)
-		return Promise.resolve()
-	}
-
-	onTick5(e: IllaEvent) {
-		this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 5')
-		this.ticker.setIsStarted(false)
-		setTimeout(bind(this.onTickerFinished, this), 500)
-		return Promise.resolve()
-	}
-
-	onTickerFinished(): void {
-		this.unitTest.assert(this.ticker.getTickCount() === 4, 'Ticker 6')
-
-		this.unitTest.assert(this.throttledResult[0] === 3 && this.throttledResult[1] === 'c' && this.throttledResult[2] === true, 'throttle 3')
-		this.throttled(4, 'd', false)
-		this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'throttle 4')
-		this.throttled(5, 'e', true)
-		this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'throttle 5')
-		this.throttled.cancel()
-
-		setTimeout(bind(this.onThrottleFinished, this), 100)
-	}
-
-	onThrottleFinished(): void {
-		this.unitTest.assert(this.throttledResult[0] === 4 && this.throttledResult[1] === 'd' && this.throttledResult[2] === false, 'throttle 6')
-		this.unitTest.assert(this.debouncedResult[0] === 2 && this.debouncedResult[1] === 'b' && this.debouncedResult[2] === false, 'debounce 2')
-		this.unitTest.printStats()
-	}
-}
+			])).toBe(
+				'<!DOCTYPE html>' +
+				'<html>' +
+				'<head>' +
+				'<meta charset="UTF-8"/>' +
+				'<title>Arrkup - get a &lt;tag&gt;</title>' +
+				'</head>' +
+				'<body>' +
+				'<h1 class="my-h1 the-title">Arrkup &amp; fun</h1>' +
+				'<input name="zero" value="0"/>' +
+				'<input name="eight-point-three" value="8.3"/>' +
+				'<input name="1e21" value="1000000000000000000000"/>' +
+				'<input name="1e-7" value="0.00000009999999999999999"/>' +
+				'<input name="nan" value=""/>' +
+				'<input name="infinity" value=""/>' +
+				'<input name="negative-infinity" value=""/>' +
+				'<input name="true" value/>' +
+				'<input name="false"/>' +
+				'<input name="empty-string" value=""/>' +
+				'<!-- Content START -->' +
+				'<a href="http://example.com?foo=bar&amp;baz=quux" title="I say, &quot;Click me&quot;">It&#39;s clicking time</a>' +
+				'</body>' +
+				'</html>'
+				)
+		})
+	})
+})
+describe('Lipsum', () => {
+	describe('lipsum', () => {
+		it('Works.', () => {
+			expect(isString(lipsum())).toBe(true)
+			expect(isString(lipsum(new LipsumPresetDefault().setHighlight(.05, '<span>', '</span>')))).toBe(true)
+			expect(isString(lipsum(new LipsumPresetLabel()))).toBe(true)
+			expect(isString(lipsum(new LipsumPresetName()))).toBe(true)
+			expect(isString(lipsum(new LipsumPresetTitle()))).toBe(true)
+		})
+	})
+})
+describe('Ticker & EventHandler', () => {
+	it('Works.', (done) => {
+		let ticker = new Ticker()
+		let callback1: IEventCallback
+		let callback2: IEventCallback
+		ticker.addEventCallback(Ticker.EVENT_TICK, callback1 = () => {
+			expect(ticker.getTickCount()).toBe(1)
+			ticker.removeEventCallback(Ticker.EVENT_TICK, callback1)
+			ticker.addEventCallback(Ticker.EVENT_TICK, () => {
+				expect(ticker.getTickCount()).toBe(2)
+			})
+			ticker.addEventCallback(Ticker.EVENT_TICK, () => {
+				expect(ticker.getTickCount()).toBe(2)
+				ticker.removeAllEventCallbacks()
+				ticker.addEventCallback(Ticker.EVENT_TICK, callback2 = (e) => {
+					expect(ticker.getTickCount()).toBe(3)
+					e.setStopImmediatePropagation(true)
+					ticker.removeEventCallback(Ticker.EVENT_TICK, callback2)
+				})
+				ticker.addEventCallback(Ticker.EVENT_TICK, () => {
+					expect(ticker.getTickCount()).toBe(4)
+					ticker.setIsStarted(false)
+					setTimeout(() => {
+						expect(ticker.getTickCount()).toBe(4)
+						done()
+					}, 500)
+				})
+			})
+		})
+	})
+})
