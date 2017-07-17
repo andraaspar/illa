@@ -1,6 +1,10 @@
 /.gitignore
 /.vscode
-/*.d.ts
-/*.js
+/*.ts
 /bower.json
 /node_modules
+/tests.js
+
+!/*.d.ts
+
+/tests.d.ts

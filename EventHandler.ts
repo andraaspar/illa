@@ -16,7 +16,7 @@ export class EventHandler implements IEventHandler {
 		return null
 	}
 
-	addEventCallback(type: string, cb: IEventCallback, thisObj: Object): void {
+	addEventCallback(type: string, cb: IEventCallback, thisObj: Object = null): void {
 		var reg = new EventCallbackReg(cb, thisObj)
 		if (isArray(this.callbacksByType[type])) {
 			this.removeEventCallback(type, cb, thisObj)
@@ -27,7 +27,7 @@ export class EventHandler implements IEventHandler {
 
 	}
 
-	removeEventCallback(type: string, cb: IEventCallback, thisObj: Object): void {
+	removeEventCallback(type: string, cb: IEventCallback, thisObj: Object = null): void {
 		var callbacks = this.callbacksByType[type]
 		if (isArray(callbacks)) {
 			for (var i = 0, n = callbacks.length; i < n; i++) {

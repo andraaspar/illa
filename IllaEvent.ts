@@ -1,5 +1,4 @@
 import { IEventHandler } from './IEventHandler'
-import { error } from './Log'
 
 export class IllaEvent {
 	private isPropagationStopped = false
@@ -22,7 +21,7 @@ export class IllaEvent {
 			try {
 				callbackReg.callback.call(callbackReg.thisObj, this)
 			} catch (e) {
-				error(e)
+				console.error(e)
 			}
 			if (this.isImmediatePropagationStopped) break
 		}
