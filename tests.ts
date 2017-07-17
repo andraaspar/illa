@@ -16,6 +16,7 @@ import { LipsumPresetTitle } from './LipsumPresetTitle'
 import { Map } from './Map'
 import { Ticker } from './Ticker'
 import { arrkup } from './Arrkup'
+import { enumValues } from './EnumUtil'
 import { lipsum } from './Lipsum'
 import { numberToStringNoLetters } from './NumberUtil'
 
@@ -659,6 +660,26 @@ describe('MithrilUtil', () => {
 				false && 'baz',
 				undefined && 'quux',
 			)).toEqual('foo bar')
+		})
+	})
+})
+describe('EnumUtil', () => {
+	describe('enumValues', () => {
+		it('Works.', () => {
+			enum Foo {
+				A, B, C = 5,
+			}
+			enum Bar {
+				A = 'a', B = 'b', C = 'c',
+			}
+			expect(enumValues(Foo)).toEqual([0, 1, 5])
+			expect(enumValues(Bar)).toEqual(['a', 'b', 'c'])
+		})
+		it('Dedupes.', () => {
+			enum Bar {
+				A = 'a', B = 'b', C = 'c', A2 = 'a',
+			}
+			expect(enumValues(Bar)).toEqual(['a', 'b', 'c'])
 		})
 	})
 })
