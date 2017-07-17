@@ -1,7 +1,7 @@
 import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 import { bind, debounce, get, throttle } from './FunctionUtil'
 import { classes, extendAttrs } from './MithrilUtil'
-import { diff, removeAll, removeFirst } from './ArrayUtil'
+import { diff, range, removeAll, removeFirst } from './ArrayUtil'
 import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
 import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
 import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil'
@@ -403,6 +403,22 @@ describe(`ArrayUtil`, () => {
 			expect(result[1].added).toBe(true)
 			expect(result[1].oldIndex).toBe(-1)
 			expect(result[1].newIndex).toBe(2)
+		})
+	})
+	describe(`range`, () => {
+		it(`Works with single argument.`, () => {
+			expect(range(3)).toEqual([0, 1, 2])
+			expect(range(-3)).toEqual([0, -1, -2])
+		})
+		it(`Works with two arguments.`, () => {
+			expect(range(5, 7)).toEqual([5, 6])
+			expect(range(-1, 2)).toEqual([-1, 0, 1])
+			expect(range(10, 7)).toEqual([10, 9, 8])
+		})
+		it(`Throws with invalid arguments.`, () => {
+			expect(() => range(NaN)).toThrow()
+			expect(() => range(Infinity)).toThrow()
+			expect(() => range(3, Infinity)).toThrow()
 		})
 	})
 })
