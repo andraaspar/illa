@@ -1,3 +1,5 @@
+export type TSet<T> = {[_: string]: T}
+
 /**
  * Returns true if the value is a string primitive.
  */
@@ -55,7 +57,7 @@ export function isUndefinedOrNull(v: any): boolean {
 /**
  * Returns true if the value is an object and not null. Includes functions.
  */
-export function isObjectNotNull(v: any): v is {[key: string]: any} {
+export function isObjectNotNull(v: any): v is TSet<any> {
 	var t = typeof v
 	return t == 'object' && v !== null || t == 'function'
 }
