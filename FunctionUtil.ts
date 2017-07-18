@@ -99,5 +99,9 @@ export function get<T>(fn: T | (() => T), ...rest: (T | (() => T))[]): T | undef
 }
 
 export function cancelGet(): never {
-	throw 'cancelGet'
+	throw '[otabpn] cancelGet'
+}
+
+export function never(): never {
+	throw '[otabps] never'
 }
