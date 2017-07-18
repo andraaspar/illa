@@ -522,6 +522,12 @@ describe('ObjectUtil', () => {
 			expect(result.bar).toBe(0)
 			expect(result.baz).toBe(true)
 		})
+		it('Works with a single param.', () => {
+			let a = { foo: '' }
+			let result = assign(a, undefined)
+
+			expect(result.foo).toBe('')
+		})
 	})
 })
 describe('Arrkup', () => {
