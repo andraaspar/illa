@@ -86,7 +86,7 @@ export function debounce(fn: (...args: any[]) => any, thisArg: {} | null, delay:
 /**
  * Executes code and catches errors. Falls back to provided functions or values.
  */
-export function get<T>(fn: T | (() => T), ...rest: (T | (() => T))[]): T {
+export function get<T>(fn: T | (() => T), ...rest: (T | (() => T))[]): T | undefined {
 	if (isFunction(fn)) {
 		try {
 			return fn()
