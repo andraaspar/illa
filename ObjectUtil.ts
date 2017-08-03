@@ -1,3 +1,5 @@
+import { isArray, isObjectNotNull } from './Type'
+
 export function getKeyOfValue(obj: { [key: string]: any }, value: any): string {
 	for (let key in obj) {
 		if (obj.hasOwnProperty(key) && obj[key] === value) {
@@ -52,4 +54,87 @@ export var assign: IAssign = function(target: any, ...rest: any[]) {
 
 if ((<any>Object).assign) {
 	assign = (<any>Object).assign
+}
+
+export interface IFindObjectResult<T = any> {
+	match: T
+	parents: IFindObjectParent[]
+}
+
+export interface IFindObjectParent {
+	parent: any
+	key: string | number
+}
+
+/**
+ * Walks through an object hierarchy and returns all objects that fulfill the
+ * predicate.
+ */
+export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents: true }): IFindObjectResult[]
+export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents: false }): T[]
+export function findObject<T = any>(o: any, predicate: (_: any) => boolean): T[]
+export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents?: boolean } = {}) {
+	let matches: (T | IFindObjectResult<T>)[] = []
+	findObjectInternal(
+		o,
+		predicate,
+		matches,
+		[],
+		_.parents ? [] : undefined,
+	)
+	return matches
+}
+
+function findObjectInternal<T = any>(
+	o: any,
+	predicate: (_: any) => boolean,
+	matches: (T | IFindObjectResult<T>)[],
+	seen: any[],
+	parentChain: IFindObjectParent[] | undefined,
+) {
+	// console.log('Inspecting:', o)
+	if (isObjectNotNull(o)) {
+		if (seen.indexOf(o) >= 0) {
+			// console.log('Seen this one.')
+			return
+		}
+		seen.push(o)
+		if (predicate(o)) {
+			if (parentChain) {
+				matches.push({
+					match: <any>o,
+					parents: [...parentChain],
+				})
+			} else {
+				matches.push(<any>o)
+			}
+		}
+		if (isArray(o)) {
+			o.forEach((item, index) => {
+				// console.log('Array item:')
+				if (isObjectNotNull(item)) {
+					findObjectInternal(
+						item,
+						predicate,
+						matches,
+						seen,
+						parentChain ? [...parentChain, { key: index, parent: o }] : undefined,
+					)
+				}
+			})
+		} else {
+			for (let key of Object.keys(o)) {
+				// console.log('Key:', key)
+				if (isObjectNotNull((<any>o)[key])) {
+					findObjectInternal(
+						(<any>o)[key],
+						predicate,
+						matches,
+						seen,
+						parentChain ? [...parentChain, { key: key, parent: o }] : undefined,
+					)
+				}
+			}
+		}
+	}
 }
