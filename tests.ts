@@ -1,4 +1,4 @@
-import { assign, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
+import { assign, findObject, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
 import { bind, debounce, get, throttle } from './FunctionUtil'
 import { classes, extendAttrs } from './MithrilUtil'
 import { diff, range, removeAll, removeFirst } from './ArrayUtil'
@@ -527,6 +527,119 @@ describe('ObjectUtil', () => {
 			let result = assign(a, undefined)
 
 			expect(result.foo).toBe('')
+		})
+	})
+	describe('findInObject', () => {
+		it('Finds the object itself.', () => {
+			let o = { found: true }
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true)
+			expect(result).toEqual([
+				{ found: true },
+			])
+		})
+		it('Finds objects in an array.', () => {
+			let o: any[] = [
+				{ found: true },
+				undefined,
+				null,
+				NaN,
+				Infinity,
+				-Infinity,
+				false,
+				'',
+				0,
+				{ found: true },
+			]
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true)
+			expect(result).toEqual([
+				{ found: true },
+				{ found: true },
+			])
+		})
+		it('Finds nested objects.', () => {
+			let o = {
+				found: true,
+				k0: { found: true },
+				k1: undefined,
+				k2: null,
+				k3: NaN,
+				k4: Infinity,
+				k5: -Infinity,
+				k6: false,
+				k7: '',
+				k8: 0,
+				k9: {
+					found: true,
+					k0: { found: true },
+				},
+				ka: [
+					0,
+					{
+						found: true,
+						k0: { found: true },
+					},
+				],
+			}
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true)
+			// console.log(JSON.stringify(result, undefined, 2))
+			expect(result[0]).toBe(o)
+			expect(result[1]).toBe(o.k0)
+			expect(result[2]).toBe(o.k9)
+			expect(result[3]).toBe(o.k9.k0)
+			expect(result[4]).toBe(o.ka[1] as any)
+			expect(result[5]).toBe((o.ka[1] as any).k0)
+			expect(result.length).toBe(6)
+		})
+		it('Handles recursive references.', () => {
+			let o = {
+				k0: { found: true },
+				k1: undefined as any,
+			}
+			o.k1 = o
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true)
+			expect(result).toEqual([
+				{ found: true },
+			])
+		})
+		it('Finds parents.', () => {
+			let o = {
+				found: true,
+				k0: { found: true },
+				k1: undefined,
+				k2: null,
+				k3: NaN,
+				k4: Infinity,
+				k5: -Infinity,
+				k6: false,
+				k7: '',
+				k8: 0,
+				k9: {
+					found: true,
+					k0: { found: true },
+				},
+				ka: [
+					0,
+					{
+						found: true,
+						k0: { found: true },
+					},
+				],
+			}
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true, { parents: true })
+			// console.log(JSON.stringify(result, undefined, 2))
+			expect(result[0].match).toBe(o)
+			expect(result[0].parents).toEqual([])
+			expect(result[1].match).toBe(o.k0)
+			expect(result[1].parents).toEqual([{ parent: o, key: 'k0' }])
+			expect(result[2].match).toBe(o.k9)
+			expect(result[2].parents).toEqual([{ parent: o, key: 'k9' }])
+			expect(result[3].match).toBe(o.k9.k0)
+			expect(result[3].parents).toEqual([{ parent: o, key: 'k9' }, { parent: o.k9, key: 'k0' }])
+			expect(result[4].match).toBe(o.ka[1] as any)
+			expect(result[4].parents).toEqual([{ parent: o, key: 'ka' }, { parent: o.ka, key: 1 }])
+			expect(result[5].match).toBe((o.ka[1] as any).k0)
+			expect(result[5].parents).toEqual([{ parent: o, key: 'ka' }, { parent: o.ka, key: 1 }, { parent: o.ka[1], key: 'k0' }])
+			expect(result.length).toBe(6)
 		})
 	})
 })
