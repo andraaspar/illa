@@ -66,31 +66,41 @@ export interface IFindObjectParent {
 	key: string | number
 }
 
+export interface IFindObjectTest {
+	(_: any, parentChain: IFindObjectParent[]): boolean
+}
+export interface IFindObjectOptions {
+	parents?: boolean
+	stopOnMatch?: boolean
+	stopOn?: IFindObjectTest
+}
+
 /**
  * Walks through an object hierarchy and returns all objects that fulfill the
  * predicate.
  */
-export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents: true }): IFindObjectResult[]
-export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents: false }): T[]
-export function findObject<T = any>(o: any, predicate: (_: any) => boolean): T[]
-export function findObject<T = any>(o: any, predicate: (_: any) => boolean, _: { parents?: boolean } = {}) {
+export function findObject<T = any>(o: any, test: IFindObjectTest, _: IFindObjectOptions & { parents: true }): IFindObjectResult<T>[]
+export function findObject<T = any>(o: any, test: IFindObjectTest, _?: IFindObjectOptions): T[]
+export function findObject<T = any>(o: any, test: IFindObjectTest, _: IFindObjectOptions = {}) {
 	let matches: (T | IFindObjectResult<T>)[] = []
 	findObjectInternal(
 		o,
-		predicate,
+		test,
 		matches,
 		[],
 		_.parents ? [] : undefined,
+		_.stopOn ? _.stopOn : _.stopOnMatch ? test : undefined,
 	)
 	return matches
 }
 
 function findObjectInternal<T = any>(
 	o: any,
-	predicate: (_: any) => boolean,
+	test: IFindObjectTest,
 	matches: (T | IFindObjectResult<T>)[],
 	seen: any[],
 	parentChain: IFindObjectParent[] | undefined,
+	stopOn: IFindObjectTest | undefined,
 ) {
 	// console.log('Inspecting:', o)
 	if (isObjectNotNull(o)) {
@@ -99,7 +109,7 @@ function findObjectInternal<T = any>(
 			return
 		}
 		seen.push(o)
-		if (predicate(o)) {
+		if (test(o, parentChain || [])) {
 			if (parentChain) {
 				matches.push({
 					match: <any>o,
@@ -109,30 +119,34 @@ function findObjectInternal<T = any>(
 				matches.push(<any>o)
 			}
 		}
-		if (isArray(o)) {
-			o.forEach((item, index) => {
-				// console.log('Array item:')
-				if (isObjectNotNull(item)) {
-					findObjectInternal(
-						item,
-						predicate,
-						matches,
-						seen,
-						parentChain ? [...parentChain, { key: index, parent: o }] : undefined,
-					)
-				}
-			})
-		} else {
-			for (let key of Object.keys(o)) {
-				// console.log('Key:', key)
-				if (isObjectNotNull((<any>o)[key])) {
-					findObjectInternal(
-						(<any>o)[key],
-						predicate,
-						matches,
-						seen,
-						parentChain ? [...parentChain, { key: key, parent: o }] : undefined,
-					)
+		if (!stopOn || !stopOn(o, parentChain || [])) {
+			if (isArray(o)) {
+				o.forEach((item, index) => {
+					// console.log('Array item:')
+					if (isObjectNotNull(item)) {
+						findObjectInternal(
+							item,
+							test,
+							matches,
+							seen,
+							parentChain ? [{ key: index, parent: o }, ...parentChain] : undefined,
+							stopOn,
+						)
+					}
+				})
+			} else {
+				for (let key of Object.keys(o)) {
+					// console.log('Key:', key)
+					if (isObjectNotNull((<any>o)[key])) {
+						findObjectInternal(
+							(<any>o)[key],
+							test,
+							matches,
+							seen,
+							parentChain ? [{ key: key, parent: o }, ...parentChain] : undefined,
+							stopOn,
+						)
+					}
 				}
 			}
 		}
