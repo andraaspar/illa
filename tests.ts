@@ -634,12 +634,39 @@ describe('ObjectUtil', () => {
 			expect(result[2].match).toBe(o.k9)
 			expect(result[2].parents).toEqual([{ parent: o, key: 'k9' }])
 			expect(result[3].match).toBe(o.k9.k0)
-			expect(result[3].parents).toEqual([{ parent: o, key: 'k9' }, { parent: o.k9, key: 'k0' }])
+			expect(result[3].parents).toEqual([{ parent: o.k9, key: 'k0' }, { parent: o, key: 'k9' }])
 			expect(result[4].match).toBe(o.ka[1] as any)
-			expect(result[4].parents).toEqual([{ parent: o, key: 'ka' }, { parent: o.ka, key: 1 }])
+			expect(result[4].parents).toEqual([{ parent: o.ka, key: 1 }, { parent: o, key: 'ka' }])
 			expect(result[5].match).toBe((o.ka[1] as any).k0)
-			expect(result[5].parents).toEqual([{ parent: o, key: 'ka' }, { parent: o.ka, key: 1 }, { parent: o.ka[1], key: 'k0' }])
+			expect(result[5].parents).toEqual([{ parent: o.ka[1], key: 'k0' }, { parent: o.ka, key: 1 }, { parent: o, key: 'ka' }])
 			expect(result.length).toBe(6)
+		})
+		it('Can stop on match.', () => {
+			let o = {
+				k0: {
+					found: true,
+					k1: { found: true },
+				},
+			}
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true, {
+				stopOnMatch: true,
+			})
+			expect(result[0]).toBe(o.k0)
+			expect(result.length).toBe(1)
+		})
+		it('Can stop on test.', () => {
+			let o = {
+				k0: {
+					found: true,
+					k1: { found: true },
+				},
+			}
+			let result = findObject<{ found: boolean }>(o, _ => _.found === true, {
+				parents: true,
+				stopOn: (o, parents) => parents[0] && parents[0].key === 'k0',
+			})
+			expect(result[0].match).toBe(o.k0)
+			expect(result.length).toBe(1)
 		})
 	})
 })
