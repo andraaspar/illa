@@ -1,24 +1,24 @@
-import { assign, findObject, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
-import { bind, debounce, get, throttle } from './FunctionUtil'
-import { classes, extendAttrs } from './MithrilUtil'
 import { diff, range, removeAll, removeFirst } from './ArrayUtil'
-import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
-import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
-import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil'
-
+import { arrkup } from './Arrkup'
+import { enumValues } from './EnumUtil'
+import { bind, debounce, get, never, throttle } from './FunctionUtil'
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
 import { IllaEvent } from './IllaEvent'
+import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil'
+import { lipsum } from './Lipsum'
 import { LipsumPresetDefault } from './LipsumPresetDefault'
 import { LipsumPresetLabel } from './LipsumPresetLabel'
 import { LipsumPresetName } from './LipsumPresetName'
 import { LipsumPresetTitle } from './LipsumPresetTitle'
 import { Map } from './Map'
-import { Ticker } from './Ticker'
-import { arrkup } from './Arrkup'
-import { enumValues } from './EnumUtil'
-import { lipsum } from './Lipsum'
+import { classes, extendAttrs } from './MithrilUtil'
 import { numberToStringNoLetters } from './NumberUtil'
+import { assign, findObject, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
+import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
+import { Ticker } from './Ticker'
+import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
+
 
 class Parent { }
 class Child extends Parent { }
@@ -227,7 +227,7 @@ describe(`FunctionUtil`, () => {
 	describe(`throttle`, () => {
 		it(`Throttles.`, (done) => {
 			let callCount = 0
-			let f = () => { callCount++ }
+			let f = () => ++callCount
 			let fun = throttle(f, null, 100)
 			fun()
 			setTimeout(fun, 10)
@@ -240,11 +240,77 @@ describe(`FunctionUtil`, () => {
 				done()
 			}, 200)
 		})
+		it(`Can be cancelled.`, (done) => {
+			let callCount = 0
+			let result: number[] = []
+			let f = () => ++callCount
+			let fun = throttle(f, null, 100)
+			fun()
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 10)
+			setTimeout(() => {
+				fun.cancel()
+			}, 20)
+			setTimeout(() => {
+				expect(callCount).toBe(1)
+				expect(result).toEqual([1])
+				done()
+			}, 200)
+		})
+		it(`Can be forced.`, (done) => {
+			let callCount = 0
+			let result: number[] = []
+			let f = () => ++callCount
+			let fun = throttle(f, null, 100)
+			fun()
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 10)
+			setTimeout(() => {
+				expect(fun.callNow()).toBe(2)
+			}, 20)
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 30)
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 40)
+			setTimeout(() => {
+				expect(callCount).toBe(3)
+				expect(result).toEqual([1, 3])
+				done()
+			}, 200)
+		})
+		it(`Can be fed args.`, (done) => {
+			let result: string[] = []
+			let f = (a: string, b: number, c: boolean) => a + b + c
+			let fun = throttle(f, null, 100)
+			fun('a', 0, false)
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun('b', 1, true)
+					.then(value => result.push(value))
+			}, 10)
+			setTimeout(() => {
+				expect(fun.callNow('c', 2, false)).toBe('c2false')
+			}, 20)
+			setTimeout(() => {
+				expect(result).toEqual(['a0false'])
+				done()
+			}, 100)
+		})
 	})
 	describe(`debounce`, () => {
 		it(`Debounces.`, (done) => {
 			let callCount = 0
-			let f = () => { callCount++ }
+			let f = () => ++callCount
 			let fun = debounce(f, null, 100)
 			fun()
 			setTimeout(fun, 10)
@@ -259,21 +325,69 @@ describe(`FunctionUtil`, () => {
 		})
 		it(`Can be cancelled.`, (done) => {
 			let callCount = 0
-			let f = () => { callCount++ }
+			let result: number[] = []
+			let f = () => ++callCount
 			let fun = debounce(f, null, 100)
 			fun()
-			setTimeout(fun, 10)
-			setTimeout(fun, 20)
-			setTimeout(fun, 30)
-			setTimeout(fun, 40)
-			setTimeout(fun, 50)
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 10)
 			setTimeout(() => {
 				fun.cancel()
-			}, 60)
+			}, 20)
 			setTimeout(() => {
 				expect(callCount).toBe(0)
+				expect(result).toEqual([])
 				done()
 			}, 200)
+		})
+		it(`Can be forced.`, (done) => {
+			let callCount = 0
+			let result: number[] = []
+			let f = () => ++callCount
+			let fun = debounce(f, null, 100)
+			fun()
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 10)
+			setTimeout(() => {
+				expect(fun.callNow()).toBe(1)
+			}, 20)
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 30)
+			setTimeout(() => {
+				fun()
+					.then(value => result.push(value))
+			}, 40)
+			setTimeout(() => {
+				expect(callCount).toBe(2)
+				expect(result).toEqual([2])
+				done()
+			}, 200)
+		})
+		it(`Can be fed args.`, (done) => {
+			let result: string[] = []
+			let f = (a: string, b: number, c: boolean) => a + b + c
+			let fun = debounce(f, null, 100)
+			fun('a', 0, false)
+				.then(value => result.push(value))
+			setTimeout(() => {
+				fun('b', 1, true)
+					.then(value => result.push(value))
+			}, 10)
+			setTimeout(() => {
+				expect(fun.callNow('c', 2, false)).toBe('c2false')
+			}, 20)
+			setTimeout(() => {
+				expect(result).toEqual([])
+				done()
+			}, 100)
 		})
 	})
 	describe('get', () => {
