@@ -306,6 +306,36 @@ describe(`FunctionUtil`, () => {
 				done()
 			}, 100)
 		})
+		it(`Can be scheduled.`, (done) => {
+			let callCount = 0
+			let result: boolean[] = []
+			let f = () => ++callCount
+			let fun = throttle(f, null, 50)
+			expect(fun.isScheduled()).toBe(false)
+			fun() // 1
+			expect(fun.isScheduled()).toBe(false)
+			fun()
+			expect(fun.isScheduled()).toBe(true)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+			}, 10)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+				fun.callNow() // 2
+				result.push(fun.isScheduled()) // false
+				fun() // 3
+				result.push(fun.isScheduled()) // true
+			}, 20)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+			}, 30)
+			setTimeout(() => {
+				expect(fun.isScheduled()).toBe(false)
+				expect(callCount).toBe(3)
+				expect(result).toEqual([true, true, false, true, true])
+				done()
+			}, 100)
+		})
 	})
 	describe(`debounce`, () => {
 		it(`Debounces.`, (done) => {
@@ -386,6 +416,34 @@ describe(`FunctionUtil`, () => {
 			}, 20)
 			setTimeout(() => {
 				expect(result).toEqual([])
+				done()
+			}, 100)
+		})
+		it(`Can be scheduled.`, (done) => {
+			let callCount = 0
+			let result: boolean[] = []
+			let f = () => ++callCount
+			let fun = debounce(f, null, 50)
+			expect(fun.isScheduled()).toBe(false)
+			fun()
+			expect(fun.isScheduled()).toBe(true)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+			}, 10)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+				fun.callNow() // 1
+				result.push(fun.isScheduled()) // false
+				fun() // 2
+				result.push(fun.isScheduled()) // true
+			}, 20)
+			setTimeout(() => {
+				result.push(fun.isScheduled()) // true
+			}, 30)
+			setTimeout(() => {
+				expect(fun.isScheduled()).toBe(false)
+				expect(callCount).toBe(2)
+				expect(result).toEqual([true, true, false, true, true])
 				done()
 			}, 100)
 		})
