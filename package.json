@@ -1,6 +1,6 @@
 {
   "name": "illa",
-  "version": "9.2.0",
+  "version": "10.0.0",
   "description": "TypeScript helper classes.",
   "author": {
     "name": "András Parditka"
@@ -23,5 +23,8 @@
   "scripts": {
     "compile": "rimraf *.js *.d.ts && tsc && yarn run test",
     "test": "jasmine"
+  },
+  "dependencies": {
+    "@andraaspar/function-queue": "^0.0.1"
   }
 }
