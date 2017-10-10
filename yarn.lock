@@ -29,9 +29,9 @@ fs.realpath@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
 
-fun-q@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/fun-q/-/fun-q-0.1.0.tgz#13adb22031b30fd128aa4bcd6813ef30504e4b2d"
+fun-q@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/fun-q/-/fun-q-0.2.0.tgz#566a6163435274c820f57b6f2440943b09258fc9"
 
 glob@^7.0.5, glob@^7.0.6:
   version "7.1.2"
