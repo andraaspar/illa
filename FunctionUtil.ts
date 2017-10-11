@@ -19,8 +19,12 @@ export var bind = <IBind>function(fn: () => any, obj: Object, ...args: any[]): (
  */
 export var bindUnsafe: (fn: () => any, obj: Object, ...args: any[]) => () => any = bind
 
-export interface IDelayedFunction<R, V extends { value: R | undefined } = { value: R | undefined }> {
-	(...args: any[]): FunQ<V>
+export interface IDelayedFunQData<T> {
+	value: T
+}
+
+export interface IDelayedFunction<R, V extends object = {}> {
+	(...args: any[]): FunQ<IDelayedFunQData<R> & V>
 	callNow(...args: any[]): R
 	cancel(): void
 	lastCalled: number
@@ -28,12 +32,10 @@ export interface IDelayedFunction<R, V extends { value: R | undefined } = { valu
 	isScheduled(): boolean
 }
 
-function delayInternal<R, V extends { value: R | undefined } = { value: R | undefined }>(fn: (...args: any[]) => R, thisArg: {} | null, delay: number, isDebounce: boolean): IDelayedFunction<R> {
-	let result: IDelayedFunction<R> = <any>function(...args3: any[]): FunQ<V> {
-		return new FunQ<V>({
-			value: undefined
-		})
-			.onSuccess((v, resolve, reject) => {
+function delayInternal<R, V extends object = {}>(fn: (...args: any[]) => R, thisArg: {} | null, delay: number, isDebounce: boolean): IDelayedFunction<R, V> {
+	let result: IDelayedFunction<R, V> = <any>function(...args3: any[]): FunQ<IDelayedFunQData<R> & V> {
+		return new FunQ<IDelayedFunQData<R> & V>()
+			.onSuccessAwait((q) => {
 				result.cancel()
 
 				let now = Date.now()
@@ -46,13 +48,13 @@ function delayInternal<R, V extends { value: R | undefined } = { value: R | unde
 				if (nextTrigger > now) {
 					// Should not call yet
 					result.timeoutRef = setTimeout(function() {
-						v.value = result.callNow(...args3)
-						resolve()
+						q.data.value = result.callNow(...args3)
+						q.resolve()
 					}, nextTrigger - now)
 				} else {
 					// Should call now
-					v.value = result.callNow(...args3)
-					resolve()
+					q.data.value = result.callNow(...args3)
+					q.resolve()
 				}
 			})
 	}
