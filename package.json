@@ -1,6 +1,6 @@
 {
   "name": "illa",
-  "version": "12.0.0",
+  "version": "13.0.0",
   "description": "TypeScript helper classes.",
   "author": {
     "name": "András Parditka"
@@ -25,6 +25,6 @@
     "test": "jasmine"
   },
   "dependencies": {
-    "fun-q": "^0.2.0"
+    "fun-q": "^0.3.0"
   }
 }

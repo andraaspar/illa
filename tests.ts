@@ -246,10 +246,10 @@ describe(`FunctionUtil`, () => {
 			let f = () => ++callCount
 			let fun = throttle(f, null, 100)
 			fun()
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				fun.cancel()
@@ -266,21 +266,21 @@ describe(`FunctionUtil`, () => {
 			let f = () => ++callCount
 			let fun = throttle(f, null, 100)
 			fun()
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				expect(fun.callNow()).toBe(2)
 			}, 20)
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 30)
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 40)
 			setTimeout(() => {
 				expect(callCount).toBe(3)
@@ -293,10 +293,10 @@ describe(`FunctionUtil`, () => {
 			let f = (a: string, b: number, c: boolean) => a + b + c
 			let fun = throttle(f, null, 100)
 			fun('a', 0, false)
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun('b', 1, true)
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				expect(fun.callNow('c', 2, false)).toBe('c2false')
@@ -359,10 +359,10 @@ describe(`FunctionUtil`, () => {
 			let f = () => ++callCount
 			let fun = debounce(f, null, 100)
 			fun()
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				fun.cancel()
@@ -379,21 +379,21 @@ describe(`FunctionUtil`, () => {
 			let f = () => ++callCount
 			let fun = debounce(f, null, 100)
 			fun()
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				expect(fun.callNow()).toBe(1)
 			}, 20)
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 30)
 			setTimeout(() => {
 				fun()
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 40)
 			setTimeout(() => {
 				expect(callCount).toBe(2)
@@ -406,10 +406,10 @@ describe(`FunctionUtil`, () => {
 			let f = (a: string, b: number, c: boolean) => a + b + c
 			let fun = debounce(f, null, 100)
 			fun('a', 0, false)
-				.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+				.onSuccess((v, resolve) => { result.push(v.value!) })
 			setTimeout(() => {
 				fun('b', 1, true)
-					.onSuccess((v, resolve) => { result.push(v.value!); resolve() })
+					.onSuccess((v, resolve) => { result.push(v.value!) })
 			}, 10)
 			setTimeout(() => {
 				expect(fun.callNow('c', 2, false)).toBe('c2false')
