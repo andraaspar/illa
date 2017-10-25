@@ -145,3 +145,13 @@ export function cancelGet(): never {
 export function never(): never {
 	throw '[otabps] never'
 }
+
+export function getIf<T>(predicate: (_: T | undefined) => boolean, value: T | (() => T), fallbackValue: T | (() => T)) {
+	let v = get(value)
+	return predicate(v) ? v : get(fallbackValue)
+}
+
+export function getIfNot<T>(predicate: (_: T | undefined) => boolean, value: T | (() => T), fallbackValue: T | (() => T)) {
+	let v = get(value)
+	return predicate(v) ? get(fallbackValue) : v
+}

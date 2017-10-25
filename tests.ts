@@ -1,7 +1,7 @@
 import { diff, range, removeAll, removeFirst } from './ArrayUtil'
 import { arrkup } from './Arrkup'
 import { enumValues } from './EnumUtil'
-import { bind, debounce, get, never, throttle } from './FunctionUtil'
+import { bind, debounce, get, getIf, getIfNot, never, throttle } from './FunctionUtil'
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
 import { IllaEvent } from './IllaEvent'
@@ -454,6 +454,34 @@ describe(`FunctionUtil`, () => {
 			expect(get(() => o.a.b.c)).toBe(undefined!)
 			expect(get(() => o.a.b.c, true)).toBe(true)
 			expect(get(() => o.a.d)).toBe(true)
+		})
+	})
+	describe('getIfNot', () => {
+		it(`Works with isNaN.`, () => {
+			expect(getIfNot(isNaN, NaN, 42)).toBe(42)
+			expect(getIfNot(isNaN, undefined, 42)).toBe(42)
+			expect(getIfNot(isNaN, null, 42)).toBe(null)
+			expect(getIfNot<boolean | number>(isNaN, false, 42)).toBe(false)
+			expect(getIfNot<string | number>(isNaN, '', 42)).toBe('')
+			expect(getIfNot(isNaN, {}, 42)).toBe(42)
+			expect(getIfNot(isNaN, () => NaN, () => 42)).toBe(42)
+		})
+		it(`Works with isFinite.`, () => {
+			expect(getIfNot(isFinite, Infinity, 42)).toBe(Infinity)
+		})
+	})
+	describe('getIf', () => {
+		it(`Works with isNaN.`, () => {
+			expect(getIf(isNaN, NaN, 42)).toBeNaN()
+			expect(getIf(isNaN, undefined, 42)).toBe(undefined)
+			expect(getIf(isNaN, null, 42)).toBe(42)
+			expect(getIf<boolean | number>(isNaN, false, 42)).toBe(42)
+			expect(getIf<string | number>(isNaN, '', 42)).toBe(42)
+			expect(getIf(isNaN, {}, 42)).toEqual({})
+			expect(getIf(isNaN, () => NaN, () => 42)).toBeNaN()
+		})
+		it(`Works with isFinite.`, () => {
+			expect(getIf(isFinite, Infinity, 42)).toBe(42)
 		})
 	})
 })
