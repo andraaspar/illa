@@ -155,3 +155,11 @@ export function getIfNot<T>(predicate: (_: T | undefined) => boolean, value: T |
 	let v = get(value)
 	return predicate(v) ? get(fallbackValue) : v
 }
+
+export function getIfIn<T, K extends keyof T>(o: T, key: K, ...fallbacks: ((() => T[K]) | T[K])[]): T[K] | undefined {
+	if (o) {
+		if (key in o) return o[key]
+		else if (fallbacks.length) return get.apply(null, fallbacks)
+	}
+	return undefined
+}

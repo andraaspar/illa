@@ -1,7 +1,7 @@
 import { diff, range, removeAll, removeFirst } from './ArrayUtil'
 import { arrkup } from './Arrkup'
 import { enumValues } from './EnumUtil'
-import { bind, debounce, get, getIf, getIfNot, never, throttle } from './FunctionUtil'
+import { bind, debounce, get, getIf, getIfNot, never, throttle, getIfIn } from './FunctionUtil'
 import { GLOBAL } from './GLOBAL'
 import { IEventCallback } from './IEventCallback'
 import { IllaEvent } from './IllaEvent'
@@ -482,6 +482,20 @@ describe(`FunctionUtil`, () => {
 		})
 		it(`Works with isFinite.`, () => {
 			expect(getIf(isFinite, Infinity, 42)).toBe(42)
+		})
+	})
+	describe('getIfIn', () => {
+		it(`Gets a value.`, () => {
+			expect(getIfIn({a: true}, 'a')).toBe(true)
+		})
+		it(`If not found, gets undefined.`, () => {
+			expect(getIfIn({} as {a: boolean}, 'a')).toBeUndefined()
+		})
+		it(`If not found, gets fallback value.`, () => {
+			expect(getIfIn({} as {a: boolean}, 'a', true)).toBe(true)
+		})
+		it(`If not found, calls fallback function.`, () => {
+			expect(getIfIn({} as {a: boolean}, 'a', () => true)).toBe(true)
 		})
 	})
 })
