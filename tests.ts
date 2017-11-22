@@ -742,6 +742,14 @@ describe('ObjectUtil', () => {
 
 			expect(result.foo).toBe('')
 		})
+		it('Lets the last override the first.', () => {
+			let a = { foo: 0 }
+			let b = { foo: 1 }
+			let c = { foo: 2 }
+			let result = assign(a, b, c)
+
+			expect(result.foo).toBe(2)
+		})
 	})
 	describe('findInObject', () => {
 		it('Finds the object itself.', () => {
