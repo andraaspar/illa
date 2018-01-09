@@ -1,6 +1,13 @@
 export type TSet<T> = {[_: string]: T}
 
 /**
+ * Based on http://ideasintosoftware.com/typescript-advanced-tricks/
+ */
+export type NotStringIndex = { [key: string]: never }
+export type Diff<Items extends string, OmitItems extends string> = ({[Prop in Items]: Prop } & {[Prop in OmitItems]: never } & NotStringIndex)[Items]
+export type Omit<T, OmitItems extends keyof T> = {[Prop in Diff<keyof T, OmitItems>]: T[Prop]}
+
+/**
  * Returns true if the value is a string primitive.
  */
 export function isString(v: any): v is string {
