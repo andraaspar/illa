@@ -576,6 +576,12 @@ describe(`NumberUtil`, () => {
 		it(`Converts tiny numbers as expected.`, () => {
 			expect(numberToStringNoLetters(1e-7)).toBe('0.00000009999999999999999')
 		})
+		it(`Converts null to empty string.`, () => {
+			expect(numberToStringNoLetters(null as any)).toBe('')
+		})
+		it(`Converts undefined to empty string.`, () => {
+			expect(numberToStringNoLetters(undefined as any)).toBe('')
+		})
 	})
 })
 describe(`ArrayUtil`, () => {

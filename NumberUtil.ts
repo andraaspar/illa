@@ -1,7 +1,9 @@
+import { isNull } from './Type'
+
 export function numberToStringNoLetters(num: number): string {
 	var result = ''
 
-	if (!isNaN(num) && isFinite(num)) {
+	if (!isNaN(num) && isFinite(num) && !isNull(num)) {
 		if (Math.abs(num) < 1.0) {
 			var e = parseInt(num.toString().split('e-')[1])
 			if (e) {
