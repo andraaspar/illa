@@ -21,7 +21,7 @@ export function removeAll<T>(a: T[], v: T): boolean {
 	return removed
 }
 
-export function diff<T>(oldArr: T[], newArr: T[]): IArrayDiffResult<T>[] {
+export function diff<T>(oldArr: ReadonlyArray<T>, newArr: ReadonlyArray<T>): IArrayDiffResult<T>[] {
 	var result: IArrayDiffResult<T>[] = []
 	for (var i = 0, n = oldArr.length; i < n; i++) {
 		var oldItem = oldArr[i]
@@ -58,4 +58,13 @@ export function range(start: number, end?: number): number[] {
 		result.push(firstValue + direction * i)
 	}
 	return result
+}
+
+export function find<T>(arr: ReadonlyArray<T>, predicate: (item: T) => boolean): T | undefined {
+	for (let item of arr) {
+		if (predicate(item)) {
+			return item
+		}
+	}
+	return undefined
 }

@@ -1,4 +1,4 @@
-import { diff, range, removeAll, removeFirst } from './ArrayUtil'
+import { diff, range, removeAll, removeFirst, find } from './ArrayUtil'
 import { arrkup } from './Arrkup'
 import { enumValues } from './EnumUtil'
 import { bind, debounce, get, getIf, getIfNot, never, throttle, getIfIn } from './FunctionUtil'
@@ -639,6 +639,14 @@ describe(`ArrayUtil`, () => {
 			expect(() => range(NaN)).toThrow()
 			expect(() => range(Infinity)).toThrow()
 			expect(() => range(3, Infinity)).toThrow()
+		})
+	})
+	describe(`find`, () => {
+		it(`Finds the first matching item.`, () => {
+			expect(find([0, 1, 2], _ => _ > 0)).toEqual(1)
+		})
+		it(`Returns undefined if nothing matches.`, () => {
+			expect(find([0, 1, 2], _ => _ > 2)).toBeUndefined()
 		})
 	})
 })
