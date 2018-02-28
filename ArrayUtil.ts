@@ -68,3 +68,12 @@ export function find<T>(arr: ReadonlyArray<T>, predicate: (item: T) => boolean):
 	}
 	return undefined
 }
+
+export function findIndex<T>(arr: ReadonlyArray<T>, predicate: (item: T) => boolean): number {
+	for (let i = 0; i < arr.length; i++) {
+		if (predicate(arr[i])) {
+			return i
+		}
+	}
+	return -1
+}
