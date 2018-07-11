@@ -1,4 +1,6 @@
 export type TSet<T> = {[_: string]: T}
+export type TOmit<T, K> = Pick<T, Exclude<keyof T, K>>
+export type TDiff<T, O> = Pick<T, Exclude<keyof T, keyof O>>
 
 /**
  * Returns true if the value is a string primitive.
