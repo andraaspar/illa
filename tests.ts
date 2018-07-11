@@ -1,23 +1,22 @@
-import { diff, range, removeAll, removeFirst, find, findIndex } from './ArrayUtil'
-import { arrkup } from './Arrkup'
-import { enumValues } from './EnumUtil'
-import { bind, debounce, get, getIf, getIfNot, never, throttle, getIfIn } from './FunctionUtil'
-import { GLOBAL } from './GLOBAL'
-import { IEventCallback } from './IEventCallback'
-import { IllaEvent } from './IllaEvent'
-import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil'
-import { lipsum } from './Lipsum'
-import { LipsumPresetDefault } from './LipsumPresetDefault'
-import { LipsumPresetLabel } from './LipsumPresetLabel'
-import { LipsumPresetName } from './LipsumPresetName'
-import { LipsumPresetTitle } from './LipsumPresetTitle'
-import { Map } from './Map'
-import { classes, extendAttrs } from './MithrilUtil'
-import { numberToStringNoLetters } from './NumberUtil'
-import { assign, findObject, getKeyOfValue, getKeysOfValue } from './ObjectUtil'
-import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil'
-import { Ticker } from './Ticker'
-import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type'
+import { diff, find, findIndex, range, removeAll, removeFirst } from './ArrayUtil';
+import { arrkup } from './Arrkup';
+import { enumValues } from './EnumUtil';
+import { bind, debounce, get, getIf, getIfIn, getIfNot, throttle } from './FunctionUtil';
+import { GLOBAL } from './GLOBAL';
+import { IEventCallback } from './IEventCallback';
+import { jsonFromUri, jsonObjectsEqual, jsonToUri } from './JsonUtil';
+import { lipsum } from './Lipsum';
+import { LipsumPresetDefault } from './LipsumPresetDefault';
+import { LipsumPresetLabel } from './LipsumPresetLabel';
+import { LipsumPresetName } from './LipsumPresetName';
+import { LipsumPresetTitle } from './LipsumPresetTitle';
+import { Map } from './Map';
+import { classes, extendAttrs } from './MithrilUtil';
+import { numberToStringNoLetters } from './NumberUtil';
+import { assign, findObject, getKeyOfValue, getKeysOfValue } from './ObjectUtil';
+import { escapeHtml, escapeRegExp, hash, optionalString, parseQuery, trim, uuid } from './StringUtil';
+import { Ticker } from './Ticker';
+import { ifInstanceOf, isArray, isBoolean, isFunction, isNull, isNumber, isObjectNotNull, isString, isUndefined, isUndefinedOrNull } from './Type';
 
 
 class Parent { }
@@ -1030,10 +1029,16 @@ describe('JsonUtil', () => {
 		it('Works.', () => {
 			expect(jsonToUri({ a: '', b: 0, c: { d: true }, e: [0, '', true] })).toBe(`('a'~''_'b'~0_'c'~('d'~true)_'e'~!0_''_true*)`)
 		})
+		it('Can escape escape sequences for double quote.', () => {
+			expect(jsonToUri('"foo"')).toBe(`'%5C'foo%5C''`)
+		})
 	})
 	describe('jsonFromUri', () => {
 		it('Works.', () => {
 			expect(jsonFromUri(`('a'~''_'b'~0_'c'~('d'~true)_'e'~!0_''_true*)`)).toEqual({ a: '', b: 0, c: { d: true }, e: [0, '', true] })
+		})
+		it('Can unescape escape sequences for double quote.', () => {
+			expect(jsonFromUri(`'%5C'foo%5C''`)).toBe('"foo"')
 		})
 	})
 })
