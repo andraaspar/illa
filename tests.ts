@@ -1,4 +1,4 @@
-import { diff, find, findIndex, range, removeAll, removeFirst } from './ArrayUtil';
+import { diff, find, findIndex, range, removeAll, removeFirst, stringArrayToBooleanSet } from './ArrayUtil';
 import { arrkup } from './Arrkup';
 import { enumValues } from './EnumUtil';
 import { bind, debounce, get, getIf, getIfIn, getIfNot, throttle } from './FunctionUtil';
@@ -654,6 +654,27 @@ describe(`ArrayUtil`, () => {
 		})
 		it(`Returns -1 if nothing matches.`, () => {
 			expect(findIndex(['a', 'b', 'b'], _ => _ == 'c')).toEqual(-1)
+		})
+	})
+	describe(`stringArrayToBooleanSet`, () => {
+		it(`Works with an empty array.`, () => {
+			expect(stringArrayToBooleanSet([])).toEqual({})
+		})
+		it(`Works with a regular string array.`, () => {
+			expect(stringArrayToBooleanSet(['a', 'b', 'c'])).toEqual({
+				a: true,
+				b: true,
+				c: true,
+			})
+		})
+		it(`Does not throw on undefined.`, () => {
+			expect(stringArrayToBooleanSet(undefined as any)).toEqual({})
+		})
+		it(`Omits undefined or null items.`, () => {
+			expect(stringArrayToBooleanSet(['a', undefined as any, null as any, 'c'])).toEqual({
+				a: true,
+				c: true,
+			})
 		})
 	})
 })

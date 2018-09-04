@@ -1,5 +1,5 @@
-import { IArrayDiffResult } from './IArrayDiffResult'
-import { isUndefined } from './Type'
+import { IArrayDiffResult } from './IArrayDiffResult';
+import { isString, isUndefined, TSet } from './Type';
 
 export function removeFirst<T>(a: T[], v: T): boolean {
 	var i = a.indexOf(v)
@@ -76,4 +76,16 @@ export function findIndex<T>(arr: ReadonlyArray<T>, predicate: (item: T) => bool
 		}
 	}
 	return -1
+}
+
+export function stringArrayToBooleanSet(arr: string[]): TSet<boolean> {
+	const result: TSet<boolean> = {}
+	if (arr) {
+		for (const item of arr) {
+			if (item || isString(item)) {
+				result[item] = true
+			}
+		}
+	}
+	return result
 }
