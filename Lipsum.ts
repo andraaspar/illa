@@ -1,7 +1,121 @@
-import { LipsumPreset } from './LipsumPreset'
-import { LipsumPresetDefault } from './LipsumPresetDefault'
+export interface LipsumPreset {
+	words: string[]
+	wordCountMin: number
+	wordCountMax: number
+	capitalStart: boolean
+	fullStopAtEnd: boolean
+	fullStopAfterMin: number
+	fullStopAfterMax: number
+	commaAfterMin: number
+	commaAfterMax: number
+	semicolonChance: number
+	colonChance: number
+	hyphenAfterMin: number
+	hyphenAfterMax: number
+	capitalStartAfterMin: number
+	capitalStartAfterMax: number
+	enDashAfterMin: number
+	enDashAfterMax: number
+	highlightChance: number
+	highlightBefore: string
+	highlightAfter: string
+}
 
-export function lipsum(preset = new LipsumPresetDefault()): string {
+export const WORDS = ['a', 'ac', 'accumsan', 'adipiscing', 'aenean', 'aliquam', 'aliquet', 'amet', 'ante', 'arcu', 'at', 'auctor', 'augue', 'bibendum', 'blandit', 'commodo', 'condimentum', 'congue', 'consectetur', 'consequat', 'convallis', 'cras', 'curabitur', 'cursus', 'dapibus', 'diam', 'dictum', 'dolor', 'donec', 'dui', 'duis', 'eget', 'eleifend', 'elementum', 'elit', 'enim', 'erat', 'eros', 'est', 'et', 'eu', 'euismod', 'ex', 'facilisis', 'faucibus', 'feugiat', 'finibus', 'fringilla', 'fusce', 'gravida', 'hendrerit', 'iaculis', 'id', 'in', 'interdum', 'ipsum', 'justo', 'lacinia', 'lacus', 'lectus', 'leo', 'libero', 'ligula', 'lorem', 'luctus', 'magna', 'massa', 'mattis', 'mauris', 'maximus', 'metus', 'mi', 'molestie', 'mollis', 'morbi', 'nam', 'nec', 'neque', 'nibh', 'nisi', 'nisl', 'non', 'nulla', 'nullam', 'nunc', 'orci', 'ornare', 'pellentesque', 'phasellus', 'placerat', 'porta', 'porttitor', 'posuere', 'praesent', 'pretium', 'proin', 'pulvinar', 'purus', 'quam', 'quis', 'rhoncus', 'risus', 'rutrum', 'sagittis', 'sapien', 'sed', 'sem', 'semper', 'sit', 'sodales', 'sollicitudin', 'suscipit', 'tempor', 'tempus', 'tortor', 'turpis', 'ullamcorper', 'ultrices', 'ultricies', 'urna', 'ut', 'vehicula', 'vel', 'velit', 'venenatis', 'vestibulum', 'vitae', 'vivamus', 'viverra', 'volutpat', 'vulputate']
+
+export const PRESET_DEFAULT: LipsumPreset = {
+	wordCountMin: 3,
+	wordCountMax: 100,
+	capitalStart: true,
+	fullStopAtEnd: true,
+	fullStopAfterMin: 3,
+	fullStopAfterMax: 25,
+	commaAfterMin: 2,
+	commaAfterMax: 25,
+	semicolonChance: .05,
+	colonChance: .05,
+	hyphenAfterMin: 5,
+	hyphenAfterMax: 50,
+	capitalStartAfterMin: 5,
+	capitalStartAfterMax: 50,
+	enDashAfterMin: 5,
+	enDashAfterMax: 50,
+	highlightChance: 0,
+	highlightBefore: '<mark>',
+	highlightAfter: '</mark>',
+	words: WORDS,
+}
+
+export const PRESET_LABEL: LipsumPreset = {
+	wordCountMin: 1,
+	wordCountMax: 4,
+	capitalStart: true,
+	fullStopAtEnd: false,
+	fullStopAfterMin: Infinity,
+	fullStopAfterMax: Infinity,
+	commaAfterMin: Infinity,
+	commaAfterMax: Infinity,
+	semicolonChance: 0,
+	colonChance: 0,
+	hyphenAfterMin: 2,
+	hyphenAfterMax: 32,
+	capitalStartAfterMin: Infinity,
+	capitalStartAfterMax: Infinity,
+	enDashAfterMin: Infinity,
+	enDashAfterMax: Infinity,
+	highlightChance: 0,
+	highlightBefore: '<mark>',
+	highlightAfter: '</mark>',
+	words: WORDS,
+}
+
+export const PRESET_NAME: LipsumPreset = {
+	wordCountMin: 2,
+	wordCountMax: 3,
+	capitalStart: true,
+	fullStopAtEnd: false,
+	fullStopAfterMin: Infinity,
+	fullStopAfterMax: Infinity,
+	commaAfterMin: Infinity,
+	commaAfterMax: Infinity,
+	semicolonChance: 0,
+	colonChance: 0,
+	hyphenAfterMin: 2,
+	hyphenAfterMax: 10,
+	capitalStartAfterMin: 0,
+	capitalStartAfterMax: 0,
+	enDashAfterMin: Infinity,
+	enDashAfterMax: Infinity,
+	highlightChance: 0,
+	highlightBefore: '<mark>',
+	highlightAfter: '</mark>',
+	words: WORDS,
+}
+
+export const PRESET_TITLE: LipsumPreset = {
+	wordCountMin: 2,
+	wordCountMax: 8,
+	capitalStart: true,
+	fullStopAtEnd: false,
+	fullStopAfterMin: Infinity,
+	fullStopAfterMax: Infinity,
+	commaAfterMin: 2,
+	commaAfterMax: 32,
+	semicolonChance: 0,
+	colonChance: .5,
+	hyphenAfterMin: 2,
+	hyphenAfterMax: 32,
+	capitalStartAfterMin: 0,
+	capitalStartAfterMax: 0,
+	enDashAfterMin: 2,
+	enDashAfterMax: 32,
+	highlightChance: 0,
+	highlightBefore: '<mark>',
+	highlightAfter: '</mark>',
+	words: WORDS,
+}
+
+export function lipsum(preset: LipsumPreset = PRESET_DEFAULT): string {
 	var result = ""
 	var isFirstWord = true
 	var wordsRemaining = getRandomWordCount(preset)
