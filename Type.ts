@@ -53,7 +53,7 @@ export function isNull(v: any): boolean {
  * Returns true if the value is undefined or null.
  */
 export function isUndefinedOrNull(v: any): v is (undefined | null) {
-	return typeof v == 'undefined' || v === null
+	return v == null
 }
 
 /**
