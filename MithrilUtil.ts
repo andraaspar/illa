@@ -1,6 +1,6 @@
-import { TSet, isArray, isUndefinedOrNull } from './Type'
+import { assign } from './ObjectUtil';
+import { isArray, isUndefinedOrNull, TSet } from './Type';
 
-import { assign } from './ObjectUtil'
 
 /**
  * Create a class string, ignoring null, undefined and false items.
@@ -18,14 +18,20 @@ export function classes(...a: any[]): string {
  */
 export function extendAttrs(vAttrs: TSet<any>, baseAttrs: TSet<any>, keepUnderscores?: boolean) {
 	let result: TSet<any> = {}
-	if (keepUnderscores) {
-		assign(result, vAttrs)
-	} else {
-		for (let key of Object.keys(vAttrs)) {
-			if (key[0] != '_') {
-				result[key] = vAttrs[key]
-			}
+	for (let key of Object.keys(vAttrs)) {
+		switch (key) {
+			case 'oninit':
+			case 'oncreate':
+			case 'onupdate':
+			case 'onbeforeremove':
+			case 'onremove':
+			case 'onbeforeupdate':
+				continue
 		}
+		if (!keepUnderscores && key[0] === '_') {
+			continue
+		}
+		result[key] = vAttrs[key]
 	}
 	result = assign(result, baseAttrs)
 	if (vAttrs.class && baseAttrs.class) result.class = `${baseAttrs.class} ${vAttrs.class}`

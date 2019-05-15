@@ -1072,6 +1072,13 @@ describe('MithrilUtil', () => {
 					bar: true,
 					_baz: 5,
 					class: 'extended',
+					oninit: null,
+					oncreate: null,
+					onupdate: null,
+					onbeforeremove: null,
+					onremove: null,
+					onbeforeupdate: null,
+					onclick: null,
 				},
 				{
 					bar: false,
@@ -1081,6 +1088,7 @@ describe('MithrilUtil', () => {
 				foo: '',
 				bar: false,
 				class: 'base extended',
+				onclick: null,
 			})
 		})
 	})
