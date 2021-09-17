@@ -462,7 +462,7 @@ describe(`FunctionUtil`, () => {
 			expect(getIfNot(isNaN, null, 42)).toBe(null)
 			expect(getIfNot<boolean | number>(isNaN, false, 42)).toBe(false)
 			expect(getIfNot<string | number>(isNaN, '', 42)).toBe('')
-			expect(getIfNot(isNaN, {}, 42)).toBe(42)
+			expect(getIfNot(isNaN, {} as any, 42)).toBe(42)
 			expect(getIfNot(isNaN, () => NaN, () => 42)).toBe(42)
 		})
 		it(`Works with isFinite.`, () => {
@@ -476,7 +476,7 @@ describe(`FunctionUtil`, () => {
 			expect(getIf(isNaN, null, 42)).toBe(42)
 			expect(getIf<boolean | number>(isNaN, false, 42)).toBe(42)
 			expect(getIf<string | number>(isNaN, '', 42)).toBe(42)
-			expect(getIf(isNaN, {}, 42)).toEqual({})
+			expect(getIf(isNaN, {} as any, 42)).toEqual({})
 			expect(getIf(isNaN, () => NaN, () => 42)).toBeNaN()
 		})
 		it(`Works with isFinite.`, () => {
@@ -780,7 +780,7 @@ describe('ObjectUtil', () => {
 		})
 		it('Works with a single param.', () => {
 			let a = { foo: '' }
-			let result = assign(a, undefined)
+			let result: typeof a = assign(a, undefined)
 
 			expect(result.foo).toBe('')
 		})
